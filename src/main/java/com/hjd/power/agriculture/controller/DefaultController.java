@@ -16,8 +16,8 @@ public class DefaultController {
 		logger.trace(name+"日志输出 trace");
         logger.debug(name+"日志输出 debug.");
         logger.info(name+"日志输出 info.");
-        logger.warn(name+"日志输出 warn");
-        logger.error(name+"日志输出 error");
+        logger.warn(name+"日志输出 warn.");
+        logger.error(name+"日志输出 error.");
 		return "My , "+ name;
 	}
 }
