@@ -18,6 +18,6 @@ public class DefaultController {
         logger.info(name+"日志输出 info");
         logger.warn(name+"日志输出 warn");
         logger.error(name+"日志输出 error");
-		return "my "+ name;
+		return "My , "+ name;
 	}
 }
