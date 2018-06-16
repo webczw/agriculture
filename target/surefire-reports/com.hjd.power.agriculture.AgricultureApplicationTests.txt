@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.hjd.power.agriculture.AgricultureApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.743 s - in com.hjd.power.agriculture.AgricultureApplicationTests
