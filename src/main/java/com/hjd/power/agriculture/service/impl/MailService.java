@@ -10,13 +10,11 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.test.context.ActiveProfiles;
 
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
 import com.hjd.power.agriculture.service.IMailService;
 
 @Service
-@ActiveProfiles("163")
 public class MailService implements IMailService {
 	@Autowired
 	private JavaMailSender mailSender; // 自动注入的Bean
