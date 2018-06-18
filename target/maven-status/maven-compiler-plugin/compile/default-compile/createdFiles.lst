@@ -1,6 +1,0 @@
-com\hjd\power\agriculture\controller\DefaultController.class
-com\hjd\power\agriculture\Swagger2.class
-com\hjd\power\agriculture\domain\SimpleMailMessageVO.class
-com\hjd\power\agriculture\service\impl\MailService.class
-com\hjd\power\agriculture\service\IMailService.class
-com\hjd\power\agriculture\AgricultureApplication.class
