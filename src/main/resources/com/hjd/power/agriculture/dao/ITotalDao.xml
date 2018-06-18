@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjd.power.agriculture.dao.ITotalDao">
+	<resultMap type="com.hjd.power.agriculture.domain.TotalVO"
+		id="resultMap">
+		<id column="total_id" property="totalId" />
+		<result column="total_site" property="totalSite" />
+		<result column="link_site" property="linkSite" />
+		<result column="fault_site" property="faultSite" />
+		<result column="wait_open" property="waitPpen" />
+		<result column="distributed_rate" property="distributedRate" />
+		<result column="link_status" property="linkStatus" />
+		<result column="create_date" property="createDate" />
+		<result column="last_update_date" property="lastUpdateDate" />
+		
+	</resultMap>
+	
+	<sql id="selectSQL">
+	SELECT 
+		  total_id,
+		  total_site,
+		  link_site,
+		  fault_site,
+		  wait_open,
+		  distributed_rate,
+		  link_status,
+		  create_date,
+		  last_update_date 
+		FROM
+		  total_t where enable_flag = 'Y' 
+	</sql>
+
+	<select id="findList" resultMap="resultMap">
+		<include refid="selectSQL" />
+	</select>
+
+	<select id="find" resultMap="resultMap">
+		<include refid="selectSQL" />
+		 and total_id=#{totalId,jdbcType=INTEGER}  
+	</select>
+
+	<insert id="create" parameterType="com.hjd.power.agriculture.domain.TotalVO">
+		<selectKey keyProperty="totalId" resultType="java.lang.Integer"
+			order="AFTER">
+			SELECT LAST_INSERT_ID() as totalId
+		</selectKey>
+		insert into
+		total_t(total_id,
+		  total_site,
+		  link_site,
+		  fault_site,
+		  wait_open,
+		  distributed_rate,
+		  link_status,
+		  create_date,
+		  last_update_date,
+		  enable_flag)
+		values(
+		#{totalId,jdbcType=INTEGER}, 
+		#{totalSite,jdbcType=INTEGER}, 
+		#{linkSite,jdbcType=INTEGER}, 
+		#{faultSite,jdbcType=INTEGER},
+		#{waitPpen,jdbcType=INTEGER}, 
+		#{distributedRate,jdbcType=NUMERIC}, 
+		#{linkStatus,jdbcType=INTEGER}, 
+		sysdate(),
+		sysdate(),
+		'Y')
+	</insert>
+
+	<update id="update" parameterType="com.hjd.power.agriculture.domain.TotalVO">
+		update total_t set
+		<if test="totalSite!=null">
+			total_site = #{totalSite,jdbcType=INTEGER},
+		</if>
+		<if test="linkSite!=null">
+			link_site = #{linkSite,jdbcType=INTEGER},
+		</if>
+		<if test="faultSite!=null">
+			fault_site = #{faultSite,jdbcType=INTEGER},
+		</if>
+		<if test="waitPpen!=null">
+			wait_open = #{waitPpen,jdbcType=INTEGER},
+		</if>
+		<if test="distributedRate!=null">
+			distributed_rate = #{distributedRate,jdbcType=NUMERIC},
+		</if>
+		<if test="linkStatus!=null">
+			link_status = #{linkStatus,jdbcType=INTEGER},
+		</if>
+		last_update_date = sysdate()
+		where enable_flag = 'Y' and total_id = #{totalId,jdbcType=INTEGER}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		update total_t set
+		enable_flag = 'N',
+		last_update_date = sysdate()
+		 where enable_flag = 'Y' and total_id = #{totalId,jdbcType=INTEGER}  
+	</delete>
+
+</mapper>
