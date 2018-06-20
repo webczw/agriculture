@@ -43,4 +43,24 @@ public class MailService implements IMailService {
 
 	}
 
+	@Override
+	public void sendMail(SimpleMailMessageVO vo, File file) throws Exception {
+		MimeMessage message = null;
+		try {
+			message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			helper.setFrom(Sender);
+			helper.setTo(vo.getTo());
+			helper.setSubject(vo.getSubject());
+			helper.setText(vo.getText());
+			// 注意项目路径问题，自动补用项目路径
+			FileSystemResource resource = new FileSystemResource(file);
+			// 加入邮件
+			helper.addAttachment(file.getName(), resource);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mailSender.send(message);
+	}
+
 }
