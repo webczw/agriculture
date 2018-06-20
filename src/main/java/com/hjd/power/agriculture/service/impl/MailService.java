@@ -4,6 +4,8 @@ import java.io.File;
 
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -16,6 +18,7 @@ import com.hjd.power.agriculture.service.IMailService;
 
 @Service
 public class MailService implements IMailService {
+	private Logger logger = LoggerFactory.getLogger(MailService.class);
 	@Autowired
 	private JavaMailSender mailSender; // 自动注入的Bean
 
@@ -38,6 +41,7 @@ public class MailService implements IMailService {
 			helper.addAttachment("图片.jpg", file);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("sendSimpleMail-->Error", e);
 		}
 		mailSender.send(message);
 
@@ -57,8 +61,10 @@ public class MailService implements IMailService {
 			FileSystemResource resource = new FileSystemResource(file);
 			// 加入邮件
 			helper.addAttachment(file.getName(), resource);
+			logger.info("sendMail-->End");
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("sendMail-->Error", e);
 		}
 		mailSender.send(message);
 	}
