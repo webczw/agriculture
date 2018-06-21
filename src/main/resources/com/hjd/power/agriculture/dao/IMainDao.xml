@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjd.power.agriculture.dao.IMainDao">
+	<resultMap type="com.hjd.power.agriculture.domain.MainVO"
+		id="resultMap">
+		<id column="main_id" property="mainId" />
+		<result column="link_status" property="linkStatus" />
+		<result column="site_number" property="siteNumber" />
+		<result column="province" property="province" />
+		<result column="city" property="city" />
+		<result column="county" property="county" />
+		<result column="site_code" property="siteCode" />
+		<result column="client_name" property="clientName" />
+		<result column="date_time" property="dateTime" />
+		<result column="temperature" property="temperature" />
+		<result column="voltage" property="voltage" />
+		<result column="light_status" property="lightStatus" />
+		<result column="photovoltaic" property="photovoltaic" />
+		<result column="sensor_status" property="sensorStatus" />
+		<result column="create_date" property="createDate" />
+		<result column="last_update_date" property="lastUpdateDate" />
+		
+	</resultMap>
+	
+	<sql id="selectSQL">
+		SELECT 
+		  main_id,
+		  link_status,
+		  site_number,
+		  province,
+		  city,
+		  county,
+		  site_code,
+		  client_name,
+		  date_time,
+		  temperature,
+		  voltage,
+		  light_status,
+		  photovoltaic,
+		  sensor_status,
+		  create_date,
+		  last_update_date
+		FROM
+		  main_t where enable_flag = 'Y' 
+	</sql>
+
+	<select id="findList" resultMap="resultMap">
+		<include refid="selectSQL" />
+	</select>
+
+	<select id="find" resultMap="resultMap">
+		<include refid="selectSQL" />
+		 and main_id=#{mainId,jdbcType=INTEGER}  
+	</select>
+
+	<insert id="create" parameterType="com.hjd.power.agriculture.domain.MainVO">
+		<selectKey keyProperty="mainId" resultType="java.lang.Integer"
+			order="AFTER">
+			SELECT LAST_INSERT_ID() as mainId
+		</selectKey>
+		INSERT INTO main_t (
+		  main_id,
+		  link_status,
+		  site_number,
+		  province,
+		  city,
+		  county,
+		  site_code,
+		  client_name,
+		  date_time,
+		  temperature,
+		  voltage,
+		  light_status,
+		  photovoltaic,
+		  sensor_status,
+		  create_date,
+		  last_update_date,
+		  enable_flag
+		) 
+		values(
+		#{mainId,jdbcType=INTEGER}, 
+		#{linkStatus,jdbcType=INTEGER}, 
+		#{siteNumber,jdbcType=VARCHAR}, 
+		#{province,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR}, 
+		#{county,jdbcType=VARCHAR}, 
+		#{siteCode,jdbcType=VARCHAR}, 
+		#{clientName,jdbcType=VARCHAR}, 
+		#{dateTime,jdbcType=TIMESTAMP}, 
+		#{temperature,jdbcType=VARCHAR}, 
+		#{voltage,jdbcType=VARCHAR}, 
+		#{lightStatus,jdbcType=INTEGER}, 
+		#{photovoltaic,jdbcType=VARCHAR}, 
+		#{sensorStatus,jdbcType=VARCHAR}, 
+		sysdate(),
+		sysdate(),
+		'Y')
+	</insert>
+
+	<update id="update" parameterType="com.hjd.power.agriculture.domain.MainVO">
+		update main_t set
+		<if test="linkStatus!=null">
+			link_status = #{linkStatus,jdbcType=INTEGER},
+		</if>
+		<if test="siteNumber!=null">
+			site_number = #{siteNumber,jdbcType=VARCHAR},
+		</if>
+		<if test="province">
+			province = #{province,jdbcType=VARCHAR},
+		</if>
+		<if test="city!=null">
+			city = #{city,jdbcType=VARCHAR},
+		</if>
+		<if test="county!=null">
+			county = #{county,jdbcType=VARCHAR},
+		</if>
+		<if test="siteCode!=null">
+			site_code = #{siteCode,jdbcType=VARCHAR},
+		</if>
+		<if test="clientName!=null">
+			client_name = #{clientName,jdbcType=VARCHAR},
+		</if>
+		<if test="dateTime!=null">
+			date_time = #{dateTime,jdbcType=TIMESTAMP},
+		</if>
+		<if test="temperature!=null">
+			temperature = #{temperature,jdbcType=VARCHAR},
+		</if>
+		<if test="voltage!=null">
+			voltage = #{voltage,jdbcType=VARCHAR},
+		</if>
+		<if test="lightStatus!=null">
+			light_status = #{lightStatus,jdbcType=INTEGER},
+		</if>
+		<if test="photovoltaic!=null">
+			photovoltaic = #{photovoltaic,jdbcType=VARCHAR},
+		</if>
+		<if test="sensorStatus!=null">
+			sensor_status = #{sensorStatus,jdbcType=VARCHAR},
+		</if>
+		last_update_date = sysdate()
+		where enable_flag = 'Y' and main_id = #{mainId,jdbcType=INTEGER}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		update main_t set
+		enable_flag = 'N',
+		last_update_date = sysdate()
+		 where enable_flag = 'Y' and main_id = #{mainId,jdbcType=INTEGER}  
+	</delete>
+
+</mapper>

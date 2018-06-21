@@ -14,11 +14,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
-import com.hjd.power.agriculture.service.IMailService;
+import com.hjd.power.agriculture.service.IEmailService;
 
 @Service
-public class MailService implements IMailService {
-	private Logger logger = LoggerFactory.getLogger(MailService.class);
+public class EmailService implements IEmailService {
+	private Logger logger = LoggerFactory.getLogger(EmailService.class);
 	@Autowired
 	private JavaMailSender mailSender; // 自动注入的Bean
 

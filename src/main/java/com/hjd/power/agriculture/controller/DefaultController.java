@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
-import com.hjd.power.agriculture.service.IMailService;
+import com.hjd.power.agriculture.service.IEmailService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 public class DefaultController {
 	private Logger logger = LoggerFactory.getLogger(DefaultController.class);
 	@Autowired
-	private IMailService mailService;
+	private IEmailService emailServicemailService;
 
 	@ApiOperation(value = "日志测试", notes = "根据入参内容测试日志")
 	@GetMapping("/test/{name}")
@@ -36,6 +36,6 @@ public class DefaultController {
 	@ApiOperation(value = "发送邮件", notes = "根据入参内容发送邮件")
 	@PostMapping("/send")
 	public void send(@RequestBody SimpleMailMessageVO vo) throws Exception {
-		mailService.sendSimpleMail(vo);
+		emailServicemailService.sendSimpleMail(vo);
 	}
 }

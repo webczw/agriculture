@@ -17,8 +17,6 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
 import com.hjd.power.agriculture.domain.TotalVO;
-import com.hjd.power.agriculture.service.IMailService;
+import com.hjd.power.agriculture.service.IEmailService;
 import com.hjd.power.agriculture.service.ITotalService;
 
 import io.swagger.annotations.ApiOperation;
@@ -40,73 +38,43 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/total")
 public class TotalController {
-	private Logger logger = LoggerFactory.getLogger(TotalController.class);
 	@Autowired
 	private ITotalService totalService;
 	@Autowired
-	private IMailService mailService;
+	private IEmailService emailService;
 
 	@ApiOperation(value = "查询汇总信息", notes = "根据入参ID查询汇总信息")
 	@GetMapping("/{totalId}")
 	public TotalVO find(@PathVariable("totalId") Integer totalId) throws Exception {
-		try {
-			return totalService.find(totalId);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("TotalController_find_error", e);
-			throw e;
-		}
+		return totalService.find(totalId);
 	}
 
 	@ApiOperation(value = "查询汇总信息集合", notes = "查询汇总信息集合")
 	@GetMapping("/list")
 	public List<TotalVO> findList() throws Exception {
-		try {
-			return totalService.findList();
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("TotalController_findList_error", e);
-			throw e;
-		}
+		return totalService.findList();
 	}
 
 	@ApiOperation(value = "创建汇总信息", notes = "创建汇总信息")
 	@PostMapping()
 	public Integer create(@RequestBody TotalVO vo) throws Exception {
-		try {
-			return totalService.create(vo);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("TotalController_create_error", e);
-			throw e;
-		}
+		return totalService.create(vo);
 	}
 
 	@ApiOperation(value = "更新汇总信息", notes = "更新汇总信息")
 	@PutMapping()
 	public Integer update(@RequestBody TotalVO vo) throws Exception {
-		try {
-			return totalService.update(vo);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("TotalController_update_error", e);
-			throw e;
-		}
+		return totalService.update(vo);
 	}
 
 	@ApiOperation(value = "删除汇总信息", notes = "删除汇总信息")
 	@DeleteMapping("/{totalId}")
 	public Integer delete(@PathVariable("totalId") Integer totalId) throws Exception {
-		try {
-			return totalService.delete(totalId);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("TotalController_delete_error", e);
-			throw e;
-		}
+		return totalService.delete(totalId);
 	}
 
 	@SuppressWarnings("resource")
+	@ApiOperation(value = "导出下载Excel文档", notes = "导出下载Excel文档")
 	@GetMapping("/download")
 	public void downstudents(HttpServletResponse response) throws Exception {
 		String fileName = "download.xlsx";
@@ -177,10 +145,10 @@ public class TotalController {
 		out.close();
 
 		SimpleMailMessageVO vo = new SimpleMailMessageVO();
-		vo.setSubject("Export Total Data");
+		vo.setSubject("Export Total Data " + UUID.randomUUID().toString());
 		vo.setText("Export Total Data Rows Size " + dataset.size());
 		vo.setTo("305805395@qq.com");
-		mailService.sendMail(vo, f);
+		emailService.sendMail(vo, f);
 
 		response.setHeader("content-Type", "application/vnd.ms-excel");
 		response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));

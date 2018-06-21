@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
 
-public interface IMailService {
+public interface IEmailService {
 	void sendSimpleMail(SimpleMailMessageVO vo) throws Exception;
 
 	void sendMail(SimpleMailMessageVO vo, File file) throws Exception;
