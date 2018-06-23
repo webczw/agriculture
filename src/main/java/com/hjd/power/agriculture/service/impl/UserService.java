@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hjd.power.agriculture.Constants;
 import com.hjd.power.agriculture.dao.IUserDao;
 import com.hjd.power.agriculture.domain.UserVO;
 import com.hjd.power.agriculture.service.IUserService;
+import com.hjd.power.agriculture.utils.AESUtils;
 
 @Service
 public class UserService implements IUserService {
@@ -26,11 +28,17 @@ public class UserService implements IUserService {
 
 	@Override
 	public Integer create(UserVO vo) throws Exception {
+		String password = vo.getPassword();
+		password = AESUtils.encrypt(password, Constants.AES_KEY, Constants.AES_IV);
+		vo.setPassword(password);
 		return userDao.create(vo);
 	}
 
 	@Override
 	public Integer update(UserVO vo) throws Exception {
+		String password = vo.getPassword();
+		password = AESUtils.encrypt(password, Constants.AES_KEY, Constants.AES_IV);
+		vo.setPassword(password);
 		return userDao.update(vo);
 	}
 
