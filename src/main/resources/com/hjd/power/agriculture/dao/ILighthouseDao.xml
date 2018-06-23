@@ -40,7 +40,7 @@
 
 	<select id="find" resultMap="resultMap">
 		<include refid="selectSQL" />
-		 and main_id=#{mainId,jdbcType=INTEGER}  
+		 and lighthouse_id=#{lighthouseId,jdbcType=INTEGER}  
 	</select>
 
 	<insert id="create" parameterType="com.hjd.power.agriculture.domain.LighthouseVO">
