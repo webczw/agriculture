@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjd.power.agriculture.dao.ILighthouseDao">
+	<resultMap type="com.hjd.power.agriculture.domain.LighthouseVO"
+		id="resultMap">
+		<id column="lighthouse_id" property="lighthouseId" />
+		<result column="main_id" property="mainId" />
+		<result column="number" property="number" />
+		<result column="address_code" property="addressCode" />
+		<result column="photovoltaic" property="photovoltaic" />
+		<result column="voltage" property="voltage" />
+		<result column="temperature" property="temperature" />
+		<result column="ph_value" property="phValue" />
+		<result column="fault" property="fault" />
+		<result column="create_date" property="createDate" />
+		<result column="last_update_date" property="lastUpdateDate" />
+		
+	</resultMap>
+	
+	<sql id="selectSQL">
+		SELECT 
+		  lighthouse_id,
+		  main_id,
+		  number,
+		  address_code,
+		  photovoltaic,
+		  voltage,
+		  temperature,
+		  ph_value,
+		  fault,
+		  create_date,
+		  last_update_date
+		FROM
+		  lighthouse_t where enable_flag = 'Y' 
+	</sql>
+
+	<select id="findList" resultMap="resultMap">
+		<include refid="selectSQL" />
+	</select>
+
+	<select id="find" resultMap="resultMap">
+		<include refid="selectSQL" />
+		 and main_id=#{mainId,jdbcType=INTEGER}  
+	</select>
+
+	<insert id="create" parameterType="com.hjd.power.agriculture.domain.LighthouseVO">
+		<selectKey keyProperty="lighthouseId" resultType="java.lang.Integer"
+			order="AFTER">
+			SELECT LAST_INSERT_ID() as lighthouseId
+		</selectKey>
+		INSERT INTO lighthouse_t (
+		  lighthouse_id,
+		  main_id,
+		  number,
+		  address_code,
+		  photovoltaic,
+		  voltage,
+		  temperature,
+		  ph_value,
+		  fault,
+		  create_date,
+		  last_update_date,
+		  enable_flag
+		) 
+		values(
+		#{lighthouseId,jdbcType=INTEGER}, 
+		#{mainId,jdbcType=INTEGER}, 
+		#{number,jdbcType=VARCHAR}, 
+		#{addressCode,jdbcType=VARCHAR},
+		#{photovoltaic,jdbcType=VARCHAR}, 
+		#{voltage,jdbcType=VARCHAR}, 
+		#{temperature,jdbcType=VARCHAR}, 
+		#{phValue,jdbcType=NUMERIC}, 
+		#{fault,jdbcType=VARCHAR}, 
+		sysdate(),
+		sysdate(),
+		'Y')
+	</insert>
+
+	<update id="update" parameterType="com.hjd.power.agriculture.domain.LighthouseVO">
+		update lighthouse_t set
+		<if test="number!=null">
+			number = #{number,jdbcType=VARCHAR},
+		</if>
+		<if test="addressCode!=null">
+			address_code = #{addressCode,jdbcType=VARCHAR},
+		</if>
+		<if test="photovoltaic!=null">
+			photovoltaic = #{photovoltaic,jdbcType=VARCHAR},
+		</if>
+		<if test="voltage!=null">
+			voltage = #{voltage,jdbcType=VARCHAR},
+		</if>
+		<if test="temperature!=null">
+			temperature = #{temperature,jdbcType=VARCHAR},
+		</if>
+		<if test="phValue!=null">
+			ph_value = #{phValue,jdbcType=NUMERIC},
+		</if>
+		<if test="fault!=null">
+			fault = #{fault,jdbcType=VARCHAR},
+		</if>
+		last_update_date = sysdate()
+		where enable_flag = 'Y' and lighthouse_id = #{lighthouseId,jdbcType=INTEGER}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		update lighthouse_t set
+		enable_flag = 'N',
+		last_update_date = sysdate()
+		 where enable_flag = 'Y' and lighthouse_id = #{lighthouseId,jdbcType=INTEGER}  
+	</delete>
+
+</mapper>

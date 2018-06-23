@@ -105,7 +105,7 @@
 		<if test="siteNumber!=null">
 			site_number = #{siteNumber,jdbcType=VARCHAR},
 		</if>
-		<if test="province">
+		<if test="province!=null">
 			province = #{province,jdbcType=VARCHAR},
 		</if>
 		<if test="city!=null">

@@ -1,35 +1,35 @@
 package com.hjd.power.agriculture.domain;
 
-public class IighthouseVO extends BaseVO {
+public class LighthouseVO extends BaseVO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -155354627258031311L;
-	private Integer lighthouse_id;// 主键标识
-	private Integer main_id;// 主站点ID
+	private Integer lighthouseId;// 主键标识
+	private Integer mainId;// 主站点ID
 	private String number;// 编号
-	private String address_code;// 地址码
+	private String addressCode;// 地址码
 	private String photovoltaic;// 光伏电压
 	private String voltage;// 电池电压
 	private String temperature;// 温度
-	private Double ph_value;// PH值
+	private Double phValue;// PH值
 	private String fault;// 故障
 
-	public Integer getLighthouse_id() {
-		return lighthouse_id;
+	public Integer getLighthouseId() {
+		return lighthouseId;
 	}
 
-	public void setLighthouse_id(Integer lighthouse_id) {
-		this.lighthouse_id = lighthouse_id;
+	public void setLighthouseId(Integer lighthouseId) {
+		this.lighthouseId = lighthouseId;
 	}
 
-	public Integer getMain_id() {
-		return main_id;
+	public Integer getMainId() {
+		return mainId;
 	}
 
-	public void setMain_id(Integer main_id) {
-		this.main_id = main_id;
+	public void setMainId(Integer mainId) {
+		this.mainId = mainId;
 	}
 
 	public String getNumber() {
@@ -40,12 +40,12 @@ public class IighthouseVO extends BaseVO {
 		this.number = number;
 	}
 
-	public String getAddress_code() {
-		return address_code;
+	public String getAddressCode() {
+		return addressCode;
 	}
 
-	public void setAddress_code(String address_code) {
-		this.address_code = address_code;
+	public void setAddressCode(String addressCode) {
+		this.addressCode = addressCode;
 	}
 
 	public String getPhotovoltaic() {
@@ -72,12 +72,12 @@ public class IighthouseVO extends BaseVO {
 		this.temperature = temperature;
 	}
 
-	public Double getPh_value() {
-		return ph_value;
+	public Double getPhValue() {
+		return phValue;
 	}
 
-	public void setPh_value(Double ph_value) {
-		this.ph_value = ph_value;
+	public void setPhValue(Double phValue) {
+		this.phValue = phValue;
 	}
 
 	public String getFault() {
