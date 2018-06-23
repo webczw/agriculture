@@ -16,4 +16,6 @@ public interface IUserDao {
 	Integer update(UserVO vo);
 
 	Integer delete(@Param("userId") Integer userId);
+
+	UserVO findUser(UserVO vo);
 }

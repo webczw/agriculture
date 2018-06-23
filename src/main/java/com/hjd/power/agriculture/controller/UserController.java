@@ -2,6 +2,9 @@ package com.hjd.power.agriculture.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hjd.power.agriculture.Constants;
+import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.UserVO;
 import com.hjd.power.agriculture.service.IUserService;
+import com.hjd.power.agriculture.utils.ResutUtils;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -30,7 +37,8 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "查询用户信息集合", notes = "查询用户信息集合")
-	@GetMapping("/list")
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@Access(roles = { "admin" })
 	public List<UserVO> findList() throws Exception {
 		return userService.findList();
 	}
@@ -51,5 +59,25 @@ public class UserController {
 	@DeleteMapping("/{userId}")
 	public Integer delete(@PathVariable("userId") Integer userId) throws Exception {
 		return userService.delete(userId);
+	}
+
+	@ApiOperation(value = "登录", notes = "登录")
+	@PostMapping("/loggin")
+	public ResutUtils<UserVO> loggin(HttpServletRequest request, @RequestBody UserVO vo) throws Exception {
+		ResutUtils<UserVO> resut = userService.loggin(vo);
+		if (ResutUtils.successStatus == resut.getStatus()) {
+			HttpSession httpSession = request.getSession();
+			httpSession.setAttribute(Constants.SESSION_KEY_USER, resut.getData());
+		}
+		return resut;
+	}
+
+	@ApiOperation(value = "注销", notes = "注销")
+	@GetMapping("/exit")
+	public void exit(HttpServletRequest request) throws Exception {
+		HttpSession httpSession = request.getSession();
+		if (httpSession.getAttribute(Constants.SESSION_KEY_USER) != null) {
+			httpSession.removeAttribute(Constants.SESSION_KEY_USER);
+		}
 	}
 }

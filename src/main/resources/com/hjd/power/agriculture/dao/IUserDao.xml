@@ -44,6 +44,11 @@
 		<include refid="selectSQL" />
 		 and user_id=#{userId,jdbcType=INTEGER}  
 	</select>
+	
+	<select id="findUser" resultMap="resultMap">
+	<include refid="selectSQL" />
+		 and login_name=#{loginName,jdbcType=VARCHAR} 
+	</select>
 
 	<insert id="create" parameterType="com.hjd.power.agriculture.domain.UserVO">
 		<selectKey keyProperty="userId" resultType="java.lang.Integer"
@@ -64,7 +69,7 @@
 		) 
 		values(
 		#{userId,jdbcType=INTEGER}, 
-		#{loginName,jdbcType=INTEGER}, 
+		#{loginName,jdbcType=VARCHAR}, 
 		#{password,jdbcType=VARCHAR}, 
 		#{vsername,jdbcType=VARCHAR},
 		#{mobile,jdbcType=VARCHAR}, 
