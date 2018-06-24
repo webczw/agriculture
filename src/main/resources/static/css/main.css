@@ -1,0 +1,24 @@
+@charset "utf-8";
+.active { color: #228ae6; }
+.normal { color: #399; }
+.error { color: #f00; }
+
+.fas { font-family: FontAwesome; font-style: normal; }
+.webix_template, .webix_el_label { padding:0;}
+
+.link ul {list-style: none;padding:0;margin:0;}
+.link li {width:150px;height:150px;float:left;background-image:url(../imgs/link1.jpg);}
+.link li:hover {background-image:url(../imgs/link2.jpg);cursor: pointer;}
+.link li:nth-child(1) {background-position: 0 0;}
+.link li:nth-child(2) {background-position: -150px 0;}
+.link li:nth-child(3) {background-position: 0 -150px;}
+.link li:nth-child(4) {background-position: -150px -150px;}
+
+.gauge ul {list-style: none;padding:0;margin:0;}
+.gauge li {width:200px;height:200px;float:left;}
+
+.sensorStatus ul {list-style: none;padding:0;margin:0;}
+.sensorStatus li {width:50px;height:50px;float:left;text-align: center; vertical-align: middle; display: table-cell;}
+.sensorStatus i {font-size:38px;}
+
+.settings i {font-size:24px;}
