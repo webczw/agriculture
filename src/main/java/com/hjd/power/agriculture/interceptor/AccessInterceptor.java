@@ -25,6 +25,9 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		if (!handler.getClass().getName().equalsIgnoreCase(HandlerMethod.class.getName())) {
+			return true;
+		}
 		// 将handler强转为HandlerMethod, 前面已经证实这个handler就是HandlerMethod
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
 		// 从方法处理器中获取出要调用的方法
@@ -38,11 +41,11 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
 		}
 		if (access.roles().length > 0) {
 			// 如果权限配置不为空, 则取出配置值
-			String[] authorities = access.roles();
-			Set<String> authSet = new HashSet<>();
-			for (String authority : authorities) {
+			String[] roles = access.roles();
+			Set<String> roleSet = new HashSet<>();
+			for (String role : roles) {
 				// 将权限加入一个set集合中
-				authSet.add(authority);
+				roleSet.add(role);
 			}
 			// 这里我为了方便是直接参数传入权限, 在实际操作中应该是从参数中获取用户Id
 			// 到数据库权限表中查询用户拥有的权限集合, 与set集合中的权限进行对比完成权限校验
@@ -59,11 +62,14 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
 				return false;
 			}
 			UserVO userVO = (UserVO) object;
-			String role = userVO.getRole();
-			if (!StringUtils.isEmpty(role)) {
-				if (authSet.contains(role)) {
-					// 校验通过返回true, 否则拦截请求
-					return true;
+			String userRole = userVO.getRole();
+			if (!StringUtils.isEmpty(userRole)) {
+				String[] userRoles = userRole.split(",");
+				for (int i = 0; i < userRoles.length; i++) {
+					if (roleSet.contains(userRoles[i])) {
+						// 校验通过返回true, 否则拦截请求
+						return true;
+					}
 				}
 			}
 		}

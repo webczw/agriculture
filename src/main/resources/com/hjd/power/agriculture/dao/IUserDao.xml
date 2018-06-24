@@ -15,7 +15,8 @@
 		<result column="login_count" property="loginCount" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
-		
+		<result column="create_id" property="createId" />
+		<result column="last_update_id" property="lastUpdateId" />
 	</resultMap>
 	
 	<sql id="selectSQL">
@@ -31,7 +32,9 @@
 		  last_login_time,
 		  login_count,
 		  create_date,
-		  last_update_date
+		  last_update_date,
+		   create_id,
+		  last_update_id
 		FROM
 		  user_t where enable_flag = 'Y' 
 	</sql>
@@ -65,7 +68,9 @@
 		  role,
 		  create_date,
 		  last_update_date,
-		  enable_flag
+		  enable_flag,
+		  create_id,
+		  last_update_id
 		) 
 		values(
 		#{userId,jdbcType=INTEGER}, 
@@ -77,7 +82,9 @@
 		#{role,jdbcType=VARCHAR}, 
 		sysdate(),
 		sysdate(),
-		'Y')
+		'Y',
+		#{createId,jdbcType=INTEGER},
+		#{lastUpdateId,jdbcType=INTEGER})
 	</insert>
 
 	<update id="update" parameterType="com.hjd.power.agriculture.domain.UserVO">
@@ -106,7 +113,8 @@
 		<if test="loginCount!=null">
 			login_count = #{loginCount,jdbcType=INTEGER},
 		</if>
-		last_update_date = sysdate()
+		last_update_date = sysdate(),
+		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
 		where enable_flag = 'Y' and user_id = #{userId,jdbcType=INTEGER}
 	</update>
 

@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hjd.power.agriculture.Constants;
+import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
 import com.hjd.power.agriculture.domain.TotalVO;
 import com.hjd.power.agriculture.service.IEmailService;
@@ -57,18 +59,21 @@ public class TotalController {
 
 	@ApiOperation(value = "创建汇总信息", notes = "创建汇总信息")
 	@PostMapping()
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public Integer create(@RequestBody TotalVO vo) throws Exception {
 		return totalService.create(vo);
 	}
 
 	@ApiOperation(value = "更新汇总信息", notes = "更新汇总信息")
 	@PutMapping()
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public Integer update(@RequestBody TotalVO vo) throws Exception {
 		return totalService.update(vo);
 	}
 
 	@ApiOperation(value = "删除汇总信息", notes = "删除汇总信息")
 	@DeleteMapping("/{totalId}")
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public Integer delete(@PathVariable("totalId") Integer totalId) throws Exception {
 		return totalService.delete(totalId);
 	}
@@ -76,6 +81,7 @@ public class TotalController {
 	@SuppressWarnings("resource")
 	@ApiOperation(value = "导出下载Excel文档", notes = "导出下载Excel文档")
 	@GetMapping("/download")
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public void downstudents(HttpServletResponse response) throws Exception {
 		String fileName = "download.xlsx";
 

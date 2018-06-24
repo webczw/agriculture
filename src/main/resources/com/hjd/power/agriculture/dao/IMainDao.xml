@@ -19,7 +19,8 @@
 		<result column="sensor_status" property="sensorStatus" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
-		
+		<result column="create_id" property="createId" />
+		<result column="last_update_id" property="lastUpdateId" />
 	</resultMap>
 	
 	<sql id="selectSQL">
@@ -39,7 +40,9 @@
 		  photovoltaic,
 		  sensor_status,
 		  create_date,
-		  last_update_date
+		  last_update_date,
+		   create_id,
+		  last_update_id
 		FROM
 		  main_t where enable_flag = 'Y' 
 	</sql>
@@ -75,7 +78,9 @@
 		  sensor_status,
 		  create_date,
 		  last_update_date,
-		  enable_flag
+		  enable_flag,
+		  create_id,
+		  last_update_id
 		) 
 		values(
 		#{mainId,jdbcType=INTEGER}, 
@@ -94,7 +99,9 @@
 		#{sensorStatus,jdbcType=VARCHAR}, 
 		sysdate(),
 		sysdate(),
-		'Y')
+		'Y',
+		#{createId,jdbcType=INTEGER},
+		#{lastUpdateId,jdbcType=INTEGER})
 	</insert>
 
 	<update id="update" parameterType="com.hjd.power.agriculture.domain.MainVO">
@@ -138,7 +145,8 @@
 		<if test="sensorStatus!=null">
 			sensor_status = #{sensorStatus,jdbcType=VARCHAR},
 		</if>
-		last_update_date = sysdate()
+		last_update_date = sysdate(),
+		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
 		where enable_flag = 'Y' and main_id = #{mainId,jdbcType=INTEGER}
 	</update>
 

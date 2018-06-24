@@ -15,5 +15,5 @@ public interface IMainDao {
 
 	Integer update(MainVO vo);
 
-	Integer delete(@Param("mainId") Integer mainId);
+	Integer delete(MainVO vo);
 }

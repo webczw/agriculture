@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hjd.power.agriculture.Constants;
+import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.MainVO;
 import com.hjd.power.agriculture.service.IMainService;
 
@@ -37,18 +39,21 @@ public class MainController {
 
 	@ApiOperation(value = "创建主站点信息", notes = "创建主站点信息")
 	@PostMapping()
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public Integer create(@RequestBody MainVO vo) throws Exception {
 		return mainService.create(vo);
 	}
 
 	@ApiOperation(value = "更新主站点信息", notes = "更新主站点信息")
 	@PutMapping()
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public Integer update(@RequestBody MainVO vo) throws Exception {
 		return mainService.update(vo);
 	}
 
 	@ApiOperation(value = "删除主站点信息", notes = "删除主站点信息")
 	@DeleteMapping("/{mainId}")
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public Integer delete(@PathVariable("mainId") Integer mainId) throws Exception {
 		return mainService.delete(mainId);
 	}

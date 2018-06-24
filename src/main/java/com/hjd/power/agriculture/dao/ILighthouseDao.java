@@ -15,5 +15,5 @@ public interface ILighthouseDao {
 
 	Integer update(LighthouseVO vo);
 
-	Integer delete(@Param("lighthouseId") Integer lighthouseId);
+	Integer delete(LighthouseVO vo);
 }

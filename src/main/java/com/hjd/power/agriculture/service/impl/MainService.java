@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.hjd.power.agriculture.dao.IMainDao;
 import com.hjd.power.agriculture.domain.MainVO;
 import com.hjd.power.agriculture.service.IMainService;
+import com.hjd.power.agriculture.utils.CommonUtils;
 
 @Service
 public class MainService implements IMainService {
@@ -26,17 +27,22 @@ public class MainService implements IMainService {
 
 	@Override
 	public Integer create(MainVO vo) throws Exception {
+		CommonUtils.initCreate(vo);
 		return mainDao.create(vo);
 	}
 
 	@Override
 	public Integer update(MainVO vo) throws Exception {
+		CommonUtils.initUpdate(vo);
 		return mainDao.update(vo);
 	}
 
 	@Override
 	public Integer delete(Integer mainId) throws Exception {
-		return mainDao.delete(mainId);
+		MainVO vo = new MainVO();
+		vo.setMainId(mainId);
+		CommonUtils.initUpdate(vo);
+		return mainDao.delete(vo);
 	}
 
 }

@@ -5,7 +5,8 @@ public interface Enums {
 		COM_HJD_POWER_00001("COM_HJD_POWER_00001","user is null."),
 		COM_HJD_POWER_00002("COM_HJD_POWER_00002","password error."),
 		COM_HJD_POWER_00003("COM_HJD_POWER_00003","session is invalid,please login again!"),
-		COM_HJD_POWER_00004("COM_HJD_POWER_00004","No permission operation.");
+		COM_HJD_POWER_00004("COM_HJD_POWER_00004","No permission operation."),
+		COM_HJD_POWER_00005("COM_HJD_POWER_00005","session user is null.");
 		
 		//
 		private String code;

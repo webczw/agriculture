@@ -15,5 +15,5 @@ public interface ITotalDao {
 
 	Integer update(TotalVO vo);
 
-	Integer delete(@Param("totalId") Integer totalId);
+	Integer delete(TotalVO vo);
 }

@@ -1,5 +1,6 @@
 package com.hjd.power.agriculture.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.hjd.power.agriculture.dao.IUserDao;
 import com.hjd.power.agriculture.domain.UserVO;
 import com.hjd.power.agriculture.service.IUserService;
 import com.hjd.power.agriculture.utils.AESUtils;
+import com.hjd.power.agriculture.utils.CommonUtils;
 import com.hjd.power.agriculture.utils.ResutUtils;
 
 @Service
@@ -33,6 +35,7 @@ public class UserService implements IUserService {
 		String password = vo.getPassword();
 		password = AESUtils.encrypt(password, Constants.AES_KEY, Constants.AES_IV);
 		vo.setPassword(password);
+		CommonUtils.initCreate(vo);
 		return userDao.create(vo);
 	}
 
@@ -41,12 +44,16 @@ public class UserService implements IUserService {
 		String password = vo.getPassword();
 		password = AESUtils.encrypt(password, Constants.AES_KEY, Constants.AES_IV);
 		vo.setPassword(password);
+		CommonUtils.initUpdate(vo);
 		return userDao.update(vo);
 	}
 
 	@Override
 	public Integer delete(Integer userId) throws Exception {
-		return userDao.delete(userId);
+		UserVO userVO = new UserVO();
+		userVO.setUserId(userId);
+		CommonUtils.initUpdate(userVO);
+		return userDao.delete(userVO);
 	}
 
 	@Override
@@ -56,6 +63,16 @@ public class UserService implements IUserService {
 			String password = vo.getPassword();
 			password = AESUtils.encrypt(password, Constants.AES_KEY, Constants.AES_IV);
 			if (password.equalsIgnoreCase(userVO.getPassword())) {
+				int loginCount = userVO.getLoginCount();
+				loginCount = loginCount + 1;
+				Date loginTime = userVO.getLoginTime();
+				UserVO upUserVO = new UserVO();
+				upUserVO.setLastLoginTime(loginTime);
+				upUserVO.setLoginTime(new Date());
+				upUserVO.setLoginCount(loginCount);
+				upUserVO.setUserId(userVO.getUserId());
+				upUserVO.setLastUpdateId(userVO.getUserId());
+				userDao.update(upUserVO);
 				return ResutUtils.success(userVO);
 			} else {
 				return ResutUtils.fail(FailEnum.COM_HJD_POWER_00002);

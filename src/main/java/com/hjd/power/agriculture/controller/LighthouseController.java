@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hjd.power.agriculture.Constants;
+import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.LighthouseVO;
 import com.hjd.power.agriculture.service.ILighthouseService;
 
@@ -37,18 +39,21 @@ public class LighthouseController {
 
 	@ApiOperation(value = "创建灯塔站点信息", notes = "创建灯塔站点信息")
 	@PostMapping()
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public Integer create(@RequestBody LighthouseVO vo) throws Exception {
 		return lighthouseService.create(vo);
 	}
 
 	@ApiOperation(value = "更新灯塔站点信息", notes = "更新灯塔站点信息")
 	@PutMapping()
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public Integer update(@RequestBody LighthouseVO vo) throws Exception {
 		return lighthouseService.update(vo);
 	}
 
 	@ApiOperation(value = "删除灯塔站点信息", notes = "删除灯塔站点信息")
 	@DeleteMapping("/{lighthouseId}")
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public Integer delete(@PathVariable("lighthouseId") Integer lighthouseId) throws Exception {
 		return lighthouseService.delete(lighthouseId);
 	}

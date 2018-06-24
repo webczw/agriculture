@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hjd.power.agriculture.Constants;
+import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
 import com.hjd.power.agriculture.service.IEmailService;
 
@@ -24,6 +26,7 @@ public class DefaultController {
 
 	@ApiOperation(value = "日志测试", notes = "根据入参内容测试日志")
 	@GetMapping("/test/{name}")
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public String test(@PathVariable("name") String name) throws Exception {
 		logger.trace(name + "日志输出 trace");
 		logger.debug(name + "日志输出 debug.");
@@ -35,6 +38,7 @@ public class DefaultController {
 
 	@ApiOperation(value = "发送邮件", notes = "根据入参内容发送邮件")
 	@PostMapping("/send")
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public void send(@RequestBody SimpleMailMessageVO vo) throws Exception {
 		emailServicemailService.sendSimpleMail(vo);
 	}

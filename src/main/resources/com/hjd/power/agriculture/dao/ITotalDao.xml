@@ -12,7 +12,8 @@
 		<result column="link_status" property="linkStatus" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
-		
+		<result column="create_id" property="createId" />
+		<result column="last_update_id" property="lastUpdateId" />
 	</resultMap>
 	
 	<sql id="selectSQL">
@@ -25,7 +26,9 @@
 		  distributed_rate,
 		  link_status,
 		  create_date,
-		  last_update_date 
+		  last_update_date,
+		   create_id,
+		  last_update_id 
 		FROM
 		  total_t where enable_flag = 'Y' 
 	</sql>
@@ -54,7 +57,9 @@
 		  link_status,
 		  create_date,
 		  last_update_date,
-		  enable_flag)
+		  enable_flag,
+		  create_id,
+		  last_update_id)
 		values(
 		#{totalId,jdbcType=INTEGER}, 
 		#{totalSite,jdbcType=INTEGER}, 
@@ -65,7 +70,9 @@
 		#{linkStatus,jdbcType=INTEGER}, 
 		sysdate(),
 		sysdate(),
-		'Y')
+		'Y',
+		#{createId,jdbcType=INTEGER},
+		#{lastUpdateId,jdbcType=INTEGER})
 	</insert>
 
 	<update id="update" parameterType="com.hjd.power.agriculture.domain.TotalVO">
@@ -88,7 +95,8 @@
 		<if test="linkStatus!=null">
 			link_status = #{linkStatus,jdbcType=INTEGER},
 		</if>
-		last_update_date = sysdate()
+		last_update_date = sysdate(),
+		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
 		where enable_flag = 'Y' and total_id = #{totalId,jdbcType=INTEGER}
 	</update>
 
