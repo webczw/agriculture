@@ -1,4 +1,4 @@
-var baseUrl = '/agri-remote/';
+var baseUrl = '/agriculture/';
 requirejs.config({
 	baseUrl: baseUrl,
 	map: {
