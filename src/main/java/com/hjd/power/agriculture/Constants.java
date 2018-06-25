@@ -6,4 +6,5 @@ public class Constants {
 	public static final String SESSION_KEY_USER = "user";
 
 	public static final String ACCESS_ROLE_USER = "user";
+	public static final String ACCESS_ROLE_ADMIN = "admin";
 }
