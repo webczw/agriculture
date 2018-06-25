@@ -2,13 +2,14 @@ package com.hjd.power.agriculture.domain;
 
 import java.util.Date;
 
-public class MainVO extends BaseVO {
+public class LighthouseVO extends BaseVO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2620365619464442126L;
-	private Integer mainId;// 主键表示
+	private Integer lighthouseId;// 主键表示
+	private Integer siteId;
 	private Integer linkStatus;// 连接状态
 	private String siteNumber;// 站点编号
 	private String province;// 省
@@ -22,13 +23,39 @@ public class MainVO extends BaseVO {
 	private Integer lightStatus;// 灯状态
 	private String photovoltaic;// 光伏电压
 	private String sensorStatus;// 传感器状态
+	private Date refreshDate;// 表头数据刷新时间
+	private String phone;// 关连手机
 
-	public Integer getMainId() {
-		return mainId;
+	public Integer getLighthouseId() {
+		return lighthouseId;
 	}
 
-	public void setMainId(Integer mainId) {
-		this.mainId = mainId;
+	public void setLighthouseId(Integer lighthouseId) {
+		this.lighthouseId = lighthouseId;
+	}
+
+	public Integer getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(Integer siteId) {
+		this.siteId = siteId;
+	}
+
+	public Date getRefreshDate() {
+		return refreshDate;
+	}
+
+	public void setRefreshDate(Date refreshDate) {
+		this.refreshDate = refreshDate;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public Integer getLinkStatus() {
