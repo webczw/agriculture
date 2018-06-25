@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hjd.power.agriculture.dao.ILighthouseDao">
-	<resultMap type="com.hjd.power.agriculture.domain.LighthouseVO"
+<mapper namespace="com.hjd.power.agriculture.dao.ISensorDao">
+	<resultMap type="com.hjd.power.agriculture.domain.SensorVO"
 		id="resultMap">
-		<id column="lighthouse_id" property="lighthouseId" />
-		<result column="main_id" property="mainId" />
+		<id column="sensor_id" property="sensorId" />
+		<result column="lighthouse_id" property="lighthouseId" />
+		<result column="site_id" property="siteId" />
 		<result column="number" property="number" />
 		<result column="address_code" property="addressCode" />
 		<result column="photovoltaic" property="photovoltaic" />
@@ -12,6 +13,9 @@
 		<result column="temperature" property="temperature" />
 		<result column="ph_value" property="phValue" />
 		<result column="fault" property="fault" />
+		<result column="fan_flag" property="fanFlag" />
+		<result column="light_flag" property="lightFlag" />
+		<result column="boot_date_delay" property="bootDateDelay" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -20,8 +24,9 @@
 	
 	<sql id="selectSQL">
 		SELECT 
+		sensor_id,
 		  lighthouse_id,
-		  main_id,
+		  site_id,
 		  number,
 		  address_code,
 		  photovoltaic,
@@ -29,12 +34,15 @@
 		  temperature,
 		  ph_value,
 		  fault,
+		  fan_flag,
+		  light_flag,
+		  boot_date_delay,
 		  create_date,
 		  last_update_date,
 		  create_id,
 		  last_update_id
 		FROM
-		  lighthouse_t where enable_flag = 'Y' 
+		  sensor_t where enable_flag = 'Y' 
 	</sql>
 
 	<select id="findList" resultMap="resultMap">
@@ -43,17 +51,18 @@
 
 	<select id="find" resultMap="resultMap">
 		<include refid="selectSQL" />
-		 and lighthouse_id=#{lighthouseId,jdbcType=INTEGER}  
+		 and sensor_id=#{sensorId,jdbcType=INTEGER}  
 	</select>
 
-	<insert id="create" parameterType="com.hjd.power.agriculture.domain.LighthouseVO">
-		<selectKey keyProperty="lighthouseId" resultType="java.lang.Integer"
+	<insert id="create" parameterType="com.hjd.power.agriculture.domain.SensorVO">
+		<selectKey keyProperty="sensorId" resultType="java.lang.Integer"
 			order="AFTER">
-			SELECT LAST_INSERT_ID() as lighthouseId
+			SELECT LAST_INSERT_ID() as sensorId
 		</selectKey>
-		INSERT INTO lighthouse_t (
+		INSERT INTO sensor_t (
+		sensor_id,
 		  lighthouse_id,
-		  main_id,
+		  site_id,
 		  number,
 		  address_code,
 		  photovoltaic,
@@ -61,6 +70,9 @@
 		  temperature,
 		  ph_value,
 		  fault,
+		  fan_flag,
+		  light_flag,
+		  boot_date_delay,
 		  create_date,
 		  last_update_date,
 		  enable_flag,
@@ -68,8 +80,9 @@
 		  last_update_id
 		) 
 		values(
+		#{sensorId,jdbcType=INTEGER}, 
 		#{lighthouseId,jdbcType=INTEGER}, 
-		#{mainId,jdbcType=INTEGER}, 
+		#{siteId,jdbcType=INTEGER}, 
 		#{number,jdbcType=VARCHAR}, 
 		#{addressCode,jdbcType=VARCHAR},
 		#{photovoltaic,jdbcType=VARCHAR}, 
@@ -77,6 +90,9 @@
 		#{temperature,jdbcType=VARCHAR}, 
 		#{phValue,jdbcType=NUMERIC}, 
 		#{fault,jdbcType=VARCHAR}, 
+		#{fanFlag,jdbcType=VARCHAR},
+		#{lightFlag,jdbcType=VARCHAR},
+		#{bootDateDelay,jdbcType=INTEGER}, 
 		sysdate(),
 		sysdate(),
 		'Y',
@@ -84,8 +100,8 @@
 		#{lastUpdateId,jdbcType=INTEGER})
 	</insert>
 
-	<update id="update" parameterType="com.hjd.power.agriculture.domain.LighthouseVO">
-		update lighthouse_t set
+	<update id="update" parameterType="com.hjd.power.agriculture.domain.SensorVO">
+		update sensor_t set
 		<if test="number!=null">
 			number = #{number,jdbcType=VARCHAR},
 		</if>
@@ -107,17 +123,26 @@
 		<if test="fault!=null">
 			fault = #{fault,jdbcType=VARCHAR},
 		</if>
+		<if test="fanFlag!=null">
+			fan_flag = #{fanFlag,jdbcType=VARCHAR},
+		</if>
+		<if test="lightFlag!=null">
+			light_flag = #{lightFlag,jdbcType=VARCHAR},
+		</if>
+		<if test="bootDateDelay!=null">
+			boot_date_delay = #{bootDateDelay,jdbcType=INTEGER},
+		</if>
 		last_update_date = sysdate(),
 		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
-		where enable_flag = 'Y' and lighthouse_id = #{lighthouseId,jdbcType=INTEGER}
+		where enable_flag = 'Y' and sensor_id = #{sensorId,jdbcType=INTEGER}
 	</update>
 
 	<delete id="delete" parameterType="java.lang.Integer">
-		update lighthouse_t set
+		update sensor_t set
 		enable_flag = 'N',
 		last_update_date = sysdate(),
 		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
-		 where enable_flag = 'Y' and lighthouse_id = #{lighthouseId,jdbcType=INTEGER}  
+		 where enable_flag = 'Y' and sensor_id = #{sensorId,jdbcType=INTEGER}  
 	</delete>
 
 </mapper>

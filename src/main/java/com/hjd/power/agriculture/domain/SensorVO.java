@@ -1,13 +1,14 @@
 package com.hjd.power.agriculture.domain;
 
-public class LighthouseVO extends BaseVO {
+public class SensorVO extends BaseVO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -155354627258031311L;
-	private Integer lighthouseId;// 主键标识
-	private Integer mainId;// 主站点ID
+	private Integer sensorId;// 主键标识
+	private Integer lighthouseId;// 灯塔站点ID
+	private Integer siteId;// 主站点ID
 	private String number;// 编号
 	private String addressCode;// 地址码
 	private String photovoltaic;// 光伏电压
@@ -15,6 +16,9 @@ public class LighthouseVO extends BaseVO {
 	private String temperature;// 温度
 	private Double phValue;// PH值
 	private String fault;// 故障
+	private String fanFlag;// 风机开关 ON/OFF
+	private String lightFlag;// 灯开开关 ON/OFF
+	private Integer bootDateDelay;// 开关时间延时设置 （4-10 小时）
 
 	public Integer getLighthouseId() {
 		return lighthouseId;
@@ -22,14 +26,6 @@ public class LighthouseVO extends BaseVO {
 
 	public void setLighthouseId(Integer lighthouseId) {
 		this.lighthouseId = lighthouseId;
-	}
-
-	public Integer getMainId() {
-		return mainId;
-	}
-
-	public void setMainId(Integer mainId) {
-		this.mainId = mainId;
 	}
 
 	public String getNumber() {
@@ -86,6 +82,46 @@ public class LighthouseVO extends BaseVO {
 
 	public void setFault(String fault) {
 		this.fault = fault;
+	}
+
+	public Integer getSensorId() {
+		return sensorId;
+	}
+
+	public void setSensorId(Integer sensorId) {
+		this.sensorId = sensorId;
+	}
+
+	public Integer getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(Integer siteId) {
+		this.siteId = siteId;
+	}
+
+	public String getFanFlag() {
+		return fanFlag;
+	}
+
+	public void setFanFlag(String fanFlag) {
+		this.fanFlag = fanFlag;
+	}
+
+	public String getLightFlag() {
+		return lightFlag;
+	}
+
+	public void setLightFlag(String lightFlag) {
+		this.lightFlag = lightFlag;
+	}
+
+	public Integer getBootDateDelay() {
+		return bootDateDelay;
+	}
+
+	public void setBootDateDelay(Integer bootDateDelay) {
+		this.bootDateDelay = bootDateDelay;
 	}
 
 }
