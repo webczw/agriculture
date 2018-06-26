@@ -14,4 +14,6 @@ public interface ILighthouseService {
 	Integer update(LighthouseVO vo) throws Exception;
 
 	Integer delete(Integer lighthouseId) throws Exception;
+
+	List<LighthouseVO> findListDetail(Integer siteId) throws Exception;
 }

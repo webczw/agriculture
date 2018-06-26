@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hjd.power.agriculture.Constants;
 import com.hjd.power.agriculture.annotation.Access;
+import com.hjd.power.agriculture.domain.SearchVO;
 import com.hjd.power.agriculture.domain.SiteVO;
 import com.hjd.power.agriculture.service.ISiteService;
 
@@ -35,6 +36,12 @@ public class SiteController {
 	@GetMapping("/list")
 	public List<SiteVO> findList() throws Exception {
 		return siteService.findList();
+	}
+
+	@ApiOperation(value = "查询站点信息集合", notes = "查询站点信息集合")
+	@GetMapping("/search")
+	public List<SiteVO> findListBySearch(SearchVO vo) throws Exception {
+		return siteService.findListBySearch(vo);
 	}
 
 	@ApiOperation(value = "创建站点信息", notes = "创建站点信息")

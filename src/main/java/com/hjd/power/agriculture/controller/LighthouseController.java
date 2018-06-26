@@ -57,4 +57,10 @@ public class LighthouseController {
 	public Integer delete(@PathVariable("lighthouseId") Integer lighthouseId) throws Exception {
 		return lighthouseService.delete(lighthouseId);
 	}
+
+	@ApiOperation(value = "根据主站点ID查询灯塔站点信息集合详情", notes = "根据主站点ID查询灯塔站点信息集合详情，包含传感器信息")
+	@GetMapping("/list/detail/{siteId}")
+	public List<LighthouseVO> findListDetail(@PathVariable("siteId") Integer siteId) throws Exception {
+		return lighthouseService.findListDetail(siteId);
+	}
 }

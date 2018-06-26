@@ -2,10 +2,13 @@ package com.hjd.power.agriculture.service;
 
 import java.util.List;
 
+import com.hjd.power.agriculture.domain.SearchVO;
 import com.hjd.power.agriculture.domain.SiteVO;
 
 public interface ISiteService {
 	List<SiteVO> findList() throws Exception;
+
+	List<SiteVO> findListBySearch(SearchVO vo) throws Exception;
 
 	SiteVO find(Integer siteId) throws Exception;
 

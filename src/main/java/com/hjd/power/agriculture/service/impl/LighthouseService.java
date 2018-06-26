@@ -45,4 +45,9 @@ public class LighthouseService implements ILighthouseService {
 		return lighthouseDao.delete(vo);
 	}
 
+	@Override
+	public List<LighthouseVO> findListDetail(Integer siteId) throws Exception {
+		return lighthouseDao.findListDetail(siteId);
+	}
+
 }

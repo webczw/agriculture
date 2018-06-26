@@ -176,4 +176,97 @@
 		 where enable_flag = 'Y' and lighthouse_id = #{lighthouseId,jdbcType=INTEGER}  
 	</delete>
 
+
+	<resultMap type="com.hjd.power.agriculture.domain.LighthouseVO"
+		id="resultDetailMap">
+		<id column="lighthouse_id" property="lighthouseId" />
+		<result column="site_id" property="siteId" />
+		<result column="link_status" property="linkStatus" />
+		<result column="site_number" property="siteNumber" />
+		<result column="province" property="province" />
+		<result column="city" property="city" />
+		<result column="county" property="county" />
+		<result column="site_code" property="siteCode" />
+		<result column="client_name" property="clientName" />
+		<result column="date_time" property="dateTime" />
+		<result column="temperature" property="temperature" />
+		<result column="voltage" property="voltage" />
+		<result column="light_status" property="lightStatus" />
+		<result column="photovoltaic" property="photovoltaic" />
+		<result column="sensor_status" property="sensorStatus" />
+		<result column="refresh_date" property="refreshDate" />
+		<result column="phone" property="phone" />
+		<result column="create_date" property="createDate" />
+		<result column="last_update_date" property="lastUpdateDate" />
+		<result column="create_id" property="createId" />
+		<result column="last_update_id" property="lastUpdateId" />
+		<collection property="sensorList" ofType="com.hjd.power.agriculture.domain.SensorVO">
+            <id column="sensor_id" property="sensorId" />
+			<result column="t1_lighthouse_id" property="lighthouseId" />
+			<result column="t1_site_id" property="siteId" />
+			<result column="number" property="number" />
+			<result column="address_code" property="addressCode" />
+			<result column="t1_photovoltaic" property="photovoltaic" />
+			<result column="t1_voltage" property="voltage" />
+			<result column="t1_temperature" property="temperature" />
+			<result column="ph_value" property="phValue" />
+			<result column="fault" property="fault" />
+			<result column="fan_flag" property="fanFlag" />
+			<result column="light_flag" property="lightFlag" />
+			<result column="boot_date_delay" property="bootDateDelay" />
+			<result column="t1_create_date" property="createDate" />
+			<result column="t1_last_update_date" property="lastUpdateDate" />
+			<result column="t1_create_id" property="createId" />
+			<result column="t1_last_update_id" property="lastUpdateId" />
+        </collection>
+	</resultMap>
+	
+	<select id="findListDetail" resultMap="resultDetailMap">
+			  SELECT 
+				  t.lighthouse_id,
+				  t.site_id,
+				  t.link_status,
+				  t.site_number,
+				  t.province,
+				  t.city,
+				  t.county,
+				  t.site_code,
+				  t.client_name,
+				  t.date_time,
+				  t.temperature,
+				  t.voltage,
+				  t.light_status,
+				  t.photovoltaic,
+				  t.sensor_status,
+				  t.refresh_date,
+				  t.phone,
+				  t.create_date,
+				  t.last_update_date,
+				  t.create_id,
+				  t.last_update_id,
+				  t1.sensor_id,
+				  t1.lighthouse_id t1_lighthouse_id,
+				  t1.site_id t1_site_id,
+				  t1.number,
+				  t1.address_code,
+				  t1.photovoltaic t1_photovoltaic,
+				  t1.voltage t1_voltage,
+				  t1.temperature t1_temperature,
+				  t1.ph_value,
+				  t1.fault,
+				  t1.fan_flag,
+				  t1.light_flag,
+				  t1.boot_date_delay,
+				  t1.create_date t1_create_date,
+				  t1.last_update_date t1_last_update_date,
+				  t1.create_id t1_create_id,
+				  t1.last_update_id t1_last_update_id
+				FROM
+				  lighthouse_t t 
+				  INNER JOIN sensor_t t1 
+				    ON t.lighthouse_id = t1.lighthouse_id 
+				WHERE t.enable_flag = 'Y' 
+				  AND t.site_id = #{siteId,jdbcType=INTEGER}
+				  AND t1.enable_flag = 'Y'
+	</select>
 </mapper>

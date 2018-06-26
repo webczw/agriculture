@@ -1,6 +1,7 @@
 package com.hjd.power.agriculture.domain;
 
 import java.util.Date;
+import java.util.List;
 
 public class LighthouseVO extends BaseVO {
 
@@ -25,6 +26,7 @@ public class LighthouseVO extends BaseVO {
 	private String sensorStatus;// 传感器状态
 	private Date refreshDate;// 表头数据刷新时间
 	private String phone;// 关连手机
+	private List<SensorVO> sensorList;
 
 	public Integer getLighthouseId() {
 		return lighthouseId;
@@ -160,6 +162,14 @@ public class LighthouseVO extends BaseVO {
 
 	public void setSensorStatus(String sensorStatus) {
 		this.sensorStatus = sensorStatus;
+	}
+
+	public List<SensorVO> getSensorList() {
+		return sensorList;
+	}
+
+	public void setSensorList(List<SensorVO> sensorList) {
+		this.sensorList = sensorList;
 	}
 
 }

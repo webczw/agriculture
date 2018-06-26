@@ -16,4 +16,6 @@ public interface ILighthouseDao {
 	Integer update(LighthouseVO vo);
 
 	Integer delete(LighthouseVO vo);
+
+	List<LighthouseVO> findListDetail(@Param("siteId") Integer siteId);
 }

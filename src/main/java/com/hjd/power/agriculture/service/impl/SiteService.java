@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hjd.power.agriculture.dao.ISiteDao;
+import com.hjd.power.agriculture.domain.SearchVO;
 import com.hjd.power.agriculture.domain.SiteVO;
 import com.hjd.power.agriculture.service.ISiteService;
 import com.hjd.power.agriculture.utils.CommonUtils;
@@ -43,6 +44,11 @@ public class SiteService implements ISiteService {
 		vo.setSiteId(siteId);
 		CommonUtils.initUpdate(vo);
 		return siteDao.delete(vo);
+	}
+
+	@Override
+	public List<SiteVO> findListBySearch(SearchVO vo) throws Exception {
+		return siteDao.findListBySearch(vo);
 	}
 
 }

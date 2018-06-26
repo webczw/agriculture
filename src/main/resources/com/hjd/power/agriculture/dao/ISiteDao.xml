@@ -30,6 +30,11 @@
 		FROM
 		  site_t where enable_flag = 'Y' 
 	</sql>
+	
+	<select id="findListBySearch" resultMap="resultMap">
+		<include refid="selectSQL" />
+		and (site_code like concat('%',#{key},'%') or site_name like concat('%',#{key},'%'))
+	</select>
 
 	<select id="findList" resultMap="resultMap">
 		<include refid="selectSQL" />
