@@ -14,7 +14,6 @@ define([
     function Module(){
         this._linkId = webix.uid();
         this._mapId = webix.uid();
-        this._settingWindowId = webix.uid();
         this._statusTableId = webix.uid();
         Module._super.constructor.call(this);
     }
@@ -44,11 +43,11 @@ define([
                             {
                                 height: 50,
                                 borderless: true,
-                                template: '<div style="font-size:48px;"><i class="fas fa-angle-right"></i><i class="fas fa-angle-right"></i><i class="fas fa-angle-right"></i><i class="fas fa-angle-right"></i></div>',
+                                template: '<div style="font-size:60px;"><i class="fas fa-angle-right"></i><i class="fas fa-angle-right"></i><i class="fas fa-angle-right"></i><i class="fas fa-angle-right"></i></div>',
                             },
                             {},
                         ] },
-                        {},
+                        { width: 20 },
                         { width: 500, height: 400, id: this._mapId, borderless: true, template: '<div class="map" style="height:100%;"></div>'}
                     ],
                 },
@@ -58,7 +57,7 @@ define([
                     borderless: true,
                     template: function(){
                         var percents = 37;
-                        return '<div class="progress" style="height:100%;background-color:#999;"><div class="progress_percents" style="background-color:#228ae6; height:100%; width:'+percents+'%;"></div></div>';
+                        return '<div class="loading" style="height:100%;"><div class="loaded" style="height:100%; width:'+percents+'%;"></div></div>';
                     },
                 },
                 {
@@ -68,22 +67,30 @@ define([
                 },
                 { height: 30, },
                 {
-                    view: 'datatable',
-                    id: this._statusTableId,
-                    autoheight: true,
-                    scroll: false,
-                    columns: [
-                        { id: 'total', header: '总站点', fillspace: 1, },
-                        { id: 'connected', header: '连接站点', fillspace: 1, },
-                        { id: 'faulty', header: '故障站点', fillspace: 1, },
-                        { id: 'toBeOpened', header: '待开通站点', fillspace: 1, },
-                        { id: 'distributionRate', header: '全国分布率', fillspace: 1, },
-                        { id: 'status', header: '连接状态', fillspace: 1, template: function(){
-                            var isConnected = 1;
-                            return '<i class="fas '+(isConnected?'fa-link active':'fa-unlink')+'"></i>';
-                        } },
+                    cols: [
+                        {},
+                        {
+                            view: 'datatable',
+                            id: this._statusTableId,
+                            width: 500,
+                            autoheight: true,
+                            scroll: false,
+                            columns: [
+                                { id: 'total', header: '总站点', fillspace: 1, },
+                                { id: 'connected', header: '连接站点', fillspace: 1, },
+                                { id: 'faulty', header: '故障站点', fillspace: 1, },
+                                { id: 'toBeOpened', header: '待开通站点', fillspace: 1, },
+                                { id: 'distributionRate', header: '全国分布率', fillspace: 1, },
+                                { id: 'status', header: '连接状态', fillspace: 1, template: function(){
+                                    var isConnected = 1;
+                                    return '<i class="fas '+(isConnected?'fa-link active':'fa-unlink')+'"></i>';
+                                } },
+                            ],
+                        },
+                        {},
                     ],
                 },
+                
                 { height: 30, },
                 {
                     cols: [
@@ -99,6 +106,9 @@ define([
                                         } },
                                         { view: 'button', label: '导出', },
                                         { view: 'button', label: '连接', },
+                                        { view: 'button', label: '登录', on: {
+                                            'onItemClick': this._showLogin.bind(this),
+                                        } },
                                     ],
                                 }
                             ],
@@ -110,47 +120,17 @@ define([
                 { height: 30, },
             ],
         });
+        setTimeout(function(){
+            new Map($$(this._mapId).getNode().children[0].children[0]);
+        }.bind(this), 0);
     };
 
     Module.prototype._showSetting = function(){
-        if(!$$(this._settingWindowId)){
-            var view = webix.ui({
-                view: 'window',
-                id: this._settingWindowId,
-                head: '设置',
-                position: 'center',
-                modal: true,
-                body: {
-                    view: 'form',
-                    width: 400, height: 400,
-                    borderless: true,
-                    rows: [
-                        { view: 'text', label: '自动更新时间', labelWidth: 120, },
-                        { view: 'combo', label: '导出文件格式', labelWidth: 120, options: [{id:'pdf',value:'PDF'},{id:'word',value:'WORD'},] },
-                        { view: 'text', label: '导出文件路径', labelWidth: 120, },
-                        { view: 'text', label: '自动存储时间', labelWidth: 120, },
-                        { view: 'text', label: '可进行数据存储的站点', labelWidth: 120, },
-                        { view: 'text', label: '常备的存储文件', labelWidth: 120, },
-                        {},
-                        {
-                            height: 30,
-                            cols: [
-                                {},
-                                { view: 'button', label: '确定', },
-                                { view: 'button', label: '取消', on: {
-                                    'onItemClick': function(){
-                                        $$(this._settingWindowId).close();
-                                    }.bind(this),
-                                } },
-                                {},
-                            ],
-                        },
-                    ]
-                }
-            });
-            view.show();
-            view.resize();
-        }
+        this.trigger('SETTING_CLICK');
+    };
+
+    Module.prototype._showLogin = function(){
+        this.trigger('LOGIN_CLICK');
     };
 
     Module.prototype.ready = function(){
@@ -159,7 +139,6 @@ define([
             { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
         ];
         $$(this._statusTableId).parse(data);
-        new Map($$(this._mapId).getNode().children[0].children[0]);
     };
 
     return Module;

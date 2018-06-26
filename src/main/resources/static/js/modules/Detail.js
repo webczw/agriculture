@@ -15,6 +15,7 @@ define([
         this._gaugeId = webix.uid();
         this._datatableId = webix.uid();
         this._settingWindowId = webix.uid();
+        this._propertyId = webix.uid();
         this._popup = null;
         Module._super.constructor.call(this);
     }
@@ -34,9 +35,11 @@ define([
                         },
                         {},
                         {
+                            id: this._propertyId,
                             view: 'property',
-                            width: 300,
+                            width: 200,
                             editable: false,
+                            borderless: true,
                             elements: [
                                 { label:"当前站点", type:"text", id:"width",},
                                 { label:"传感器数量", type:"text", id:"height"},
@@ -56,6 +59,7 @@ define([
                 { height: 5, },
                 { cols: [
                     { view: 'label', width: 100, height: 30, borderless: true, template: '<div style="height:100%;text-align:center;background-color:#399;color:#fff;">正常</div>'},
+                    { width: 10 },
                     {
                         rows: [
                             {},
@@ -64,12 +68,13 @@ define([
                                 borderless: true,
                                 template: function(){
                                     var percents = 37;
-                                    return '<div class="progress" style="height:100%;background-color:#999;"><div class="progress_percents" style="background-color:#228ae6; height:100%; width:'+percents+'%;"></div></div>';
+                                    return '<div class="loading" style="height:100%;"><div class="loaded" style="height:100%; width:'+percents+'%;"></div></div>';
                                 },
                             },
                             {},
                         ]
                     },
+                    { width: 10 },
                     {
                         view: 'label', width: 30, height: 30, template: '<div class="settings" style="text-align:center;"><i class="fas fa-cog"></i></div>',
                     },
@@ -79,10 +84,11 @@ define([
                 {
                     view: 'treetable',
                     id: this._datatableId,
+                    css: 'no_border',
                     autoheight: true,
                     scroll: false,
                     columns: [
-                        { header: '', template: '{common.icon()}', width:50, },
+                        //{ header: '', template: '{common.icon()}', width:50, },
                         { header: '<i class="fas fa-plus-circle"></i> <i class="fas fa-cog"></i>', template: '<i class="fas fa-minus-circle"></i>', width: 60, },
                         { id: 'connectionStatus', header: '连接状态', fillspace: 1, template: function(){
                             var isConnected = 1;
@@ -119,6 +125,9 @@ define([
                                             'onItemClick': this._showSetting.bind(this),
                                         } },
                                         { view: 'button', label: '导出', },
+                                        { view: 'button', label: '返回', on: {
+                                            'onItemClick': this._goBack.bind(this),
+                                        } },
                                     ],
                                 }
                             ],
@@ -138,31 +147,109 @@ define([
 
     Module.prototype.ready = function(){
         var data = [
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', data: [
-                { total: '100', connected: '90' }
-            ] },
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
         ];
         $$(this._datatableId).parse(data);
+        $$(this._propertyId).parse({
+            width: '1108-01',
+            height: '08',
+            pass: '1100',
+            aa: '1',
+            url: '30',
+        });
     };
 
     Module.prototype._createGauge = function(){
         var $nodes = $($$(this._gaugeId).getNode()).find('li');
-        var option = {
-            tooltip : {
-                formatter: "{a} <br/>{b} : {c}%"
+        var option = [
+            {
+                series: [
+                    {
+                        title: '',
+                        type: 'gauge',
+                        radius: 75,
+                        min: 10, max: 35, // 最小/大的数据值
+                        splitNumber: 5, // 仪表盘刻度的分割段数
+                        // 刻度样式
+                        axisTick:{length:5,lineStyle:{color:'#fff'}},
+                        // 轴线
+                        axisLine: {show:true,lineStyle:{width:10,color:[[0.4, '#f00'], [0.8, '#399'], [1, '#fff']]}},
+                        // 分隔线样式
+                        splitLine: {length: 15},
+                        pointer: {width: 5},
+                        detail: {formatter:'V', fontSize:14, padding: [55,0,0,0] },
+                        data: [{value: 21}]
+                    }
+                ]
             },
-            series: [
-                {
-                    name: '业务指标',
-                    type: 'gauge',
-                    detail: {formatter:'{value}%'},
-                    data: [{value: 50, name: '完成率'}]
-                }
-            ]
-        };
+            {
+                series: [
+                    {
+                        title: '',
+                        type: 'gauge',
+                        radius: 75,
+                        min: -20, max: 100, // 最小/大的数据值
+                        splitNumber: 12, // 仪表盘刻度的分割段数
+                        // 刻度样式
+                        axisTick:{length:5,lineStyle:{color:'#fff'}},
+                        // 轴线
+                        axisLine: {show:true,lineStyle:{width:10,color:[[1, '#eee']]}},
+                        // 分隔线样式
+                        splitLine: {length: 15},
+                        pointer: {width: 5},
+                        detail: {formatter:'温度: ℃', fontSize:14, padding: [55,0,0,0] },
+                        data: [{value: 30}]
+                    }
+                ]
+            },
+            {
+                series: [
+                    {
+                        title: '',
+                        type: 'gauge',
+                        radius: 75,
+                        min: 0, max: 100, // 最小/大的数据值
+                        splitNumber: 10, // 仪表盘刻度的分割段数
+                        // 刻度样式
+                        axisTick:{length:5,lineStyle:{color:'#fff'}},
+                        // 轴线
+                        axisLine: {show:true,lineStyle:{width:10,color:[[1, '#eee']]}},
+                        // 分隔线样式
+                        splitLine: {length: 15},
+                        pointer: {width: 5},
+                        detail: {formatter:'RH: %', fontSize:14, padding: [55,0,0,0] },
+                        data: [{value: 52}]
+                    }
+                ]
+            },
+            {
+                series: [
+                    {
+                        title: '',
+                        type: 'gauge',
+                        radius: 75,
+                        min: 4, max: 9, // 最小/大的数据值
+                        splitNumber: 10, // 仪表盘刻度的分割段数
+                        // 刻度样式
+                        axisTick:{length:5,lineStyle:{color:'#fff'}},
+                        // 轴线
+                        axisLine: {show:true,lineStyle:{width:10,color:[[0.3, '#f00'], [0.7, '#399'], [1, '#0000ff']]}},
+                        // 分隔线样式
+                        splitLine: {length: 15},
+                        pointer: {width: 5},
+                        detail: {formatter:'PH值', fontSize:14, padding: [55,0,0,0] },
+                        data: [{value: 4.5}]
+                    }
+                ]
+            },
+        ];
         $nodes.each(function(n, node){
             var gauge = echarts.init(node);
-            gauge.setOption(option);
+            gauge.setOption(option[n]);
         });
         
     };
@@ -177,77 +264,61 @@ define([
     Module.prototype._createRowPopup = function(){
         this._popup = webix.ui({
             view: 'popup',
+            css: 'has_background',
             head: false,
             position:"center",
-            width: 1280,
+            width: 1000,
+            padding: 0, margin: 0, 
+            borderless: true,
             body: {
                 cols: [
                     {
                         view: 'datatable',
                         columns: [
                             { header: '<i class="fas fa-plus-circle"></i>', template: '<i class="fas fa-minus-circle"></i>', width:50, },
-                            { header: '编号', fillspace: 1, },
-                            { header: '地址码', fillspace: 1, },
-                            { header: '光伏电压', fillspace: 1, },
-                            { header: '电池电压', fillspace: 1, },
-                            { header: '温度', fillspace: 1, },
-                            { header: '湿度', fillspace: 1, },
-                            { header: 'PH值', fillspace: 1, },
-                            { header: '故障', fillspace: 1, },
+                            { id: 'no', header: '编号', fillspace: 1, },
+                            { id: 'no', header: '地址码', fillspace: 1, },
+                            { id: 'no', header: '光伏电压', fillspace: 1, },
+                            { id: 'no', header: '电池电压', fillspace: 1, },
+                            { id: 'no', header: '温度', fillspace: 1, },
+                            { id: 'no', header: '湿度', fillspace: 1, },
+                            { id: 'ph', header: 'PH值', fillspace: 1, },
+                            { id: 'error', header: '故障', fillspace: 1, },
                         ],
                     },
                     { width: 10 },
                     {
                         width: 150,
                         rows: [
-                            { borderless: true, template: '<div class="sensorStatus"><ul><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li></ul></div>' }
+                            { height: 10 },
+                            { borderless: true, height: 200, template: '<div class="sensorStatus"><ul><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li></ul></div>' },
+                            {},
+                            { height: 10 },
                         ],
                     },
                 ],
                 
             },
         });
+        var data = [
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
+        ];
+        this._popup.getBody().getChildViews()[0].parse(data);
     };
 
     Module.prototype._showSetting = function(){
-        if(!$$(this._settingWindowId)){
-            var view = webix.ui({
-                view: 'window',
-                id: this._settingWindowId,
-                head: '设置',
-                position: 'center',
-                modal: true,
-                body: {
-                    view: 'form',
-                    width: 400, height: 400,
-                    borderless: true,
-                    rows: [
-                        { view: 'text', label: '自动更新时间', labelWidth: 120, },
-                        { view: 'combo', label: '导出文件格式', labelWidth: 120, options: [{id:'pdf',value:'PDF'},{id:'word',value:'WORD'},] },
-                        { view: 'text', label: '导出文件路径', labelWidth: 120, },
-                        { view: 'text', label: '自动存储时间', labelWidth: 120, },
-                        { view: 'text', label: '可进行数据存储的站点', labelWidth: 120, },
-                        { view: 'text', label: '常备的存储文件', labelWidth: 120, },
-                        {},
-                        {
-                            height: 30,
-                            cols: [
-                                {},
-                                { view: 'button', label: '确定', },
-                                { view: 'button', label: '取消', on: {
-                                    'onItemClick': function(){
-                                        $$(this._settingWindowId).close();
-                                    }.bind(this),
-                                } },
-                                {},
-                            ],
-                        },
-                    ]
-                }
-            });
-            view.show();
-            view.resize();
-        }
+        this.trigger('SETTING_CLICK');
+    };
+
+    Module.prototype._goBack = function(){
+        this.trigger('BACK_OVERVIEW_CLICK');
     };
 
     return Module;

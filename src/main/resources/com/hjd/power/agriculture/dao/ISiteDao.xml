@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjd.power.agriculture.dao.ISiteDao">
+	<resultMap type="com.hjd.power.agriculture.domain.SiteVO"
+		id="resultMap">
+		<id column="site_id" property="siteId" />
+		<result column="site_code" property="siteCode" />
+		<result column="site_name" property="siteName" />
+		<result column="province" property="province" />
+		<result column="city" property="city" />
+		<result column="county" property="county" />
+		<result column="create_date" property="createDate" />
+		<result column="last_update_date" property="lastUpdateDate" />
+		<result column="create_id" property="createId" />
+		<result column="last_update_id" property="lastUpdateId" />
+	</resultMap>
+	
+	<sql id="selectSQL">
+		SELECT 
+		  site_id,
+		  site_code,
+		  site_name,
+		  province,
+		  city,
+		  county,
+		  create_id,
+		  create_date,
+		  last_update_id,
+		  last_update_date
+		FROM
+		  site_t where enable_flag = 'Y' 
+	</sql>
+
+	<select id="findList" resultMap="resultMap">
+		<include refid="selectSQL" />
+	</select>
+
+	<select id="find" resultMap="resultMap">
+		<include refid="selectSQL" />
+		 and site_id=#{siteId,jdbcType=INTEGER}  
+	</select>
+
+	<insert id="create" parameterType="com.hjd.power.agriculture.domain.SiteVO">
+		<selectKey keyProperty="siteId" resultType="java.lang.Integer"
+			order="AFTER">
+			SELECT LAST_INSERT_ID() as siteId
+		</selectKey>
+		INSERT INTO site_t (
+		  site_id,
+		  site_code,
+		  site_name,
+		  province,
+		  city,
+		  county,
+		  create_date,
+		  last_update_date,
+		  enable_flag,
+		  create_id,
+		  last_update_id
+		) 
+		values(
+		#{siteId,jdbcType=INTEGER}, 
+		#{siteCode,jdbcType=VARCHAR}, 
+		#{siteName,jdbcType=VARCHAR}, 
+		#{province,jdbcType=VARCHAR}, 
+		#{city,jdbcType=VARCHAR},
+		#{county,jdbcType=VARCHAR}, 
+		sysdate(),
+		sysdate(),
+		'Y',
+		#{createId,jdbcType=INTEGER},
+		#{lastUpdateId,jdbcType=INTEGER})
+	</insert>
+
+	<update id="update" parameterType="com.hjd.power.agriculture.domain.SiteVO">
+		update site_t set
+		<if test="siteCode!=null">
+			site_code = #{siteCode,jdbcType=VARCHAR},
+		</if>
+		<if test="siteName!=null">
+			site_name = #{siteName,jdbcType=VARCHAR},
+		</if>
+		<if test="province!=null">
+			province = #{province,jdbcType=VARCHAR},
+		</if>
+		<if test="city!=null">
+			city = #{city,jdbcType=VARCHAR},
+		</if>
+		<if test="county!=null">
+			county = #{county,jdbcType=VARCHAR},
+		</if>
+		last_update_date = sysdate(),
+		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
+		where enable_flag = 'Y' and site_id = #{siteId,jdbcType=INTEGER}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		update site_t set
+		enable_flag = 'N',
+		last_update_date = sysdate(),
+		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
+		 where enable_flag = 'Y' and site_id = #{siteId,jdbcType=INTEGER}  
+	</delete>
+
+</mapper>
