@@ -2,6 +2,8 @@ package com.hjd.power.agriculture.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,4 +66,12 @@ public class LighthouseController {
 	public List<LighthouseVO> findListDetail(LighthouseQueryVO vo) throws Exception {
 		return lighthouseService.findListDetail(vo);
 	}
+
+	@ApiOperation(value = "导出下载Excel文档", notes = "导出下载Excel文档")
+	@GetMapping("/download")
+	@Access(roles = { Constants.ACCESS_ROLE_USER })
+	public void downstudents(HttpServletResponse response) throws Exception {
+
+	}
+
 }
