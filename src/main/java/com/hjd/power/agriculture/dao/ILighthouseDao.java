@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.hjd.power.agriculture.domain.LighthouseQueryVO;
 import com.hjd.power.agriculture.domain.LighthouseVO;
 
 public interface ILighthouseDao {
@@ -17,5 +18,5 @@ public interface ILighthouseDao {
 
 	Integer delete(LighthouseVO vo);
 
-	List<LighthouseVO> findListDetail(@Param("siteId") Integer siteId);
+	List<LighthouseVO> findListDetail(LighthouseQueryVO vo);
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hjd.power.agriculture.dao.ILighthouseDao;
+import com.hjd.power.agriculture.domain.LighthouseQueryVO;
 import com.hjd.power.agriculture.domain.LighthouseVO;
 import com.hjd.power.agriculture.service.ILighthouseService;
 import com.hjd.power.agriculture.utils.CommonUtils;
@@ -46,8 +47,8 @@ public class LighthouseService implements ILighthouseService {
 	}
 
 	@Override
-	public List<LighthouseVO> findListDetail(Integer siteId) throws Exception {
-		return lighthouseDao.findListDetail(siteId);
+	public List<LighthouseVO> findListDetail(LighthouseQueryVO vo) throws Exception {
+		return lighthouseDao.findListDetail(vo);
 	}
 
 }

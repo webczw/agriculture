@@ -2,6 +2,7 @@ package com.hjd.power.agriculture.service;
 
 import java.util.List;
 
+import com.hjd.power.agriculture.domain.LighthouseQueryVO;
 import com.hjd.power.agriculture.domain.LighthouseVO;
 
 public interface ILighthouseService {
@@ -15,5 +16,5 @@ public interface ILighthouseService {
 
 	Integer delete(Integer lighthouseId) throws Exception;
 
-	List<LighthouseVO> findListDetail(Integer siteId) throws Exception;
+	List<LighthouseVO> findListDetail(LighthouseQueryVO vo) throws Exception;
 }

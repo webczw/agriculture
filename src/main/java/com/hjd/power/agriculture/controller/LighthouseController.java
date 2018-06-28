@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hjd.power.agriculture.Constants;
 import com.hjd.power.agriculture.annotation.Access;
+import com.hjd.power.agriculture.domain.LighthouseQueryVO;
 import com.hjd.power.agriculture.domain.LighthouseVO;
 import com.hjd.power.agriculture.service.ILighthouseService;
 
@@ -59,8 +60,8 @@ public class LighthouseController {
 	}
 
 	@ApiOperation(value = "根据主站点ID查询灯塔站点信息集合详情", notes = "根据主站点ID查询灯塔站点信息集合详情，包含传感器信息")
-	@GetMapping("/list/detail/{siteId}")
-	public List<LighthouseVO> findListDetail(@PathVariable("siteId") Integer siteId) throws Exception {
-		return lighthouseService.findListDetail(siteId);
+	@GetMapping("/list/detail")
+	public List<LighthouseVO> findListDetail(LighthouseQueryVO vo) throws Exception {
+		return lighthouseService.findListDetail(vo);
 	}
 }

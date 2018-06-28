@@ -266,7 +266,12 @@
 				  INNER JOIN sensor_t t1 
 				    ON t.lighthouse_id = t1.lighthouse_id 
 				WHERE t.enable_flag = 'Y' 
-				  AND t.site_id = #{siteId,jdbcType=INTEGER}
+					<if test="siteId!=null">
+				  	AND t.site_id = #{siteId,jdbcType=INTEGER}
+				  </if>
+				  <if test="lighthouseId!=null">
+				  AND t.lighthouse_id = #{lighthouseId,jdbcType=INTEGER}
+				  </if>
 				  AND t1.enable_flag = 'Y'
 	</select>
 </mapper>
