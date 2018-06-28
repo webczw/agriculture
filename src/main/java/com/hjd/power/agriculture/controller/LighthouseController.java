@@ -1,10 +1,13 @@
 package com.hjd.power.agriculture.controller;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +30,8 @@ import io.swagger.annotations.ApiOperation;
 public class LighthouseController {
 	@Autowired
 	private ILighthouseService lighthouseService;
+	@Value("${agriculture.lighthouse.excel.fileName:LighthouseDownload.xlsx}")
+	private String fileName;
 
 	@ApiOperation(value = "查询灯塔站点信息", notes = "根据入参ID查询灯塔站点信息")
 	@GetMapping("/{lighthouseId}")
@@ -71,7 +76,14 @@ public class LighthouseController {
 	@GetMapping("/download")
 	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public void downstudents(HttpServletResponse response, LighthouseQueryVO vo) throws Exception {
-
+		XSSFWorkbook workbook = lighthouseService.workbook(vo, fileName);
+		if (workbook == null) {
+			return;
+		}
+		response.setHeader("content-Type", "application/vnd.ms-excel");
+		response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+		response.flushBuffer();
+		workbook.write(response.getOutputStream());
 	}
 
 }

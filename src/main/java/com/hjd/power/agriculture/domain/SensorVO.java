@@ -13,6 +13,7 @@ public class SensorVO extends BaseVO {
 	private String addressCode;// 地址码
 	private String photovoltaic;// 光伏电压
 	private String voltage;// 电池电压
+	private String humidity;// 湿度
 	private String temperature;// 温度
 	private Double phValue;// PH值
 	private String fault;// 故障
@@ -58,6 +59,14 @@ public class SensorVO extends BaseVO {
 
 	public void setVoltage(String voltage) {
 		this.voltage = voltage;
+	}
+
+	public String getHumidity() {
+		return humidity;
+	}
+
+	public void setHumidity(String humidity) {
+		this.humidity = humidity;
 	}
 
 	public String getTemperature() {

@@ -208,6 +208,7 @@
 			<result column="address_code" property="addressCode" />
 			<result column="t1_photovoltaic" property="photovoltaic" />
 			<result column="t1_voltage" property="voltage" />
+			<result column="humidity" property="humidity" />
 			<result column="t1_temperature" property="temperature" />
 			<result column="ph_value" property="phValue" />
 			<result column="fault" property="fault" />
@@ -251,6 +252,7 @@
 				  t1.address_code,
 				  t1.photovoltaic t1_photovoltaic,
 				  t1.voltage t1_voltage,
+				  t1.humidity,
 				  t1.temperature t1_temperature,
 				  t1.ph_value,
 				  t1.fault,

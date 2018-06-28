@@ -2,6 +2,8 @@ package com.hjd.power.agriculture.service;
 
 import java.util.List;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import com.hjd.power.agriculture.domain.LighthouseQueryVO;
 import com.hjd.power.agriculture.domain.LighthouseVO;
 
@@ -17,4 +19,6 @@ public interface ILighthouseService {
 	Integer delete(Integer lighthouseId) throws Exception;
 
 	List<LighthouseVO> findListDetail(LighthouseQueryVO vo) throws Exception;
+
+	XSSFWorkbook workbook(LighthouseQueryVO vo, String fileName) throws Exception;
 }

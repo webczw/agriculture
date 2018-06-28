@@ -30,7 +30,7 @@ public class TotalController {
 	@Autowired
 	private ITotalService totalService;
 
-	@Value("${agriculture.total.excel.fileName:download.xlsx}")
+	@Value("${agriculture.total.excel.fileName:TotalDownload.xlsx}")
 	private String fileName;
 
 	@ApiOperation(value = "查询汇总信息", notes = "根据入参ID查询汇总信息")

@@ -10,6 +10,7 @@
 		<result column="address_code" property="addressCode" />
 		<result column="photovoltaic" property="photovoltaic" />
 		<result column="voltage" property="voltage" />
+		<result column="humidity" property="humidity" />
 		<result column="temperature" property="temperature" />
 		<result column="ph_value" property="phValue" />
 		<result column="fault" property="fault" />
@@ -31,6 +32,7 @@
 		  address_code,
 		  photovoltaic,
 		  voltage,
+		  humidity,
 		  temperature,
 		  ph_value,
 		  fault,
@@ -67,6 +69,7 @@
 		  address_code,
 		  photovoltaic,
 		  voltage,
+		  humidity,
 		  temperature,
 		  ph_value,
 		  fault,
@@ -87,6 +90,7 @@
 		#{addressCode,jdbcType=VARCHAR},
 		#{photovoltaic,jdbcType=VARCHAR}, 
 		#{voltage,jdbcType=VARCHAR}, 
+		#{humidity,jdbcType=VARCHAR}, 
 		#{temperature,jdbcType=VARCHAR}, 
 		#{phValue,jdbcType=NUMERIC}, 
 		#{fault,jdbcType=VARCHAR}, 
@@ -113,6 +117,9 @@
 		</if>
 		<if test="voltage!=null">
 			voltage = #{voltage,jdbcType=VARCHAR},
+		</if>
+		<if test="humidity!=null">
+			humidity = #{humidity,jdbcType=VARCHAR},
 		</if>
 		<if test="temperature!=null">
 			temperature = #{temperature,jdbcType=VARCHAR},
