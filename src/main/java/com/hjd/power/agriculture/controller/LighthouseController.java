@@ -70,7 +70,7 @@ public class LighthouseController {
 	@ApiOperation(value = "导出下载Excel文档", notes = "导出下载Excel文档")
 	@GetMapping("/download")
 	@Access(roles = { Constants.ACCESS_ROLE_USER })
-	public void downstudents(HttpServletResponse response) throws Exception {
+	public void downstudents(HttpServletResponse response, LighthouseQueryVO vo) throws Exception {
 
 	}
 

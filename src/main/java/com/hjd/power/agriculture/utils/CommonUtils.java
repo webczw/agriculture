@@ -1,5 +1,7 @@
 package com.hjd.power.agriculture.utils;
 
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -43,5 +45,13 @@ public class CommonUtils {
 		if (vo.getLastUpdateId() == null) {
 			vo.setLastUpdateId(getCurrentUserId());
 		}
+	}
+
+	public static boolean isNumeric(String str) {
+		// 就是判断是否为整数(正负)
+		Pattern pattern = Pattern.compile("^\\d+$|-\\d+$");
+		// 判断是否为小数(正负)
+		Pattern pattern2 = Pattern.compile("\\d+\\.\\d+$|-\\d+\\.\\d+$");
+		return (pattern.matcher(str).matches() || pattern2.matcher(str).matches());
 	}
 }
