@@ -27,10 +27,13 @@ define([
             rows: [
                 { height: 5, },
                 {
+                    height: 250,
                     cols: [
                         {
-                            cols: [
+                            rows: [
+                                {},
                                 { id: this._gaugeId, width: 800, height: 200, borderless: true, template: '<div class="gauge"><ul><li></li><li></li><li></li><li></li></ul></div>'},
+                                {},
                             ],
                         },
                         {},
@@ -68,7 +71,7 @@ define([
                                 borderless: true,
                                 template: function(){
                                     var percents = 37;
-                                    return '<div class="loading" style="height:100%;"><div class="loaded" style="height:100%; width:'+percents+'%;"></div></div>';
+                                    return '<div class="loading" style="height:100%;"><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i></div>';
                                 },
                             },
                             {},
@@ -116,16 +119,15 @@ define([
                     cols: [
                         {},
                         {
-                            width: 200,
                             rows: [
                                 {
                                     cols: [
-                                        { view: 'button', label: '搜索', },
-                                        { view: 'button', label: '设置', on: {
+                                        { view: 'button', label: '搜索', width: 90, type:"iconButton", icon: 'search' },
+                                        { view: 'button', label: '设置', width: 90, type:"iconButton", icon: 'cog', on: {
                                             'onItemClick': this._showSetting.bind(this),
                                         } },
-                                        { view: 'button', label: '导出', },
-                                        { view: 'button', label: '返回', on: {
+                                        { view: 'button', label: '导出', width: 90, type:"iconButton", icon: 'file', },
+                                        { view: 'button', label: '返回', width: 90, type:"iconButton", icon: 'long-arrow-left', on: {
                                             'onItemClick': this._goBack.bind(this),
                                         } },
                                     ],
@@ -147,6 +149,11 @@ define([
 
     Module.prototype.ready = function(){
         var data = [
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
+            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
             { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
             { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
             { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
@@ -267,15 +274,20 @@ define([
             css: 'has_background',
             head: false,
             position:"center",
-            width: 1000,
+            width: this.Constant.default.BODY_WIDTH,
             padding: 0, margin: 0, 
             borderless: true,
             body: {
                 cols: [
                     {
                         view: 'datatable',
+                        css: 'no_border',
                         columns: [
                             { header: '<i class="fas fa-plus-circle"></i>', template: '<i class="fas fa-minus-circle"></i>', width:50, },
+                            { id: 'connectionStatus', header: '连接状态', fillspace: 1, template: function(){
+                                var isConnected = 1;
+                                return '<i class="fas fa-circle '+(isConnected?'normal':'error')+'"></i>';
+                            } },
                             { id: 'no', header: '编号', fillspace: 1, },
                             { id: 'no', header: '地址码', fillspace: 1, },
                             { id: 'no', header: '光伏电压', fillspace: 1, },
@@ -286,14 +298,15 @@ define([
                             { id: 'error', header: '故障', fillspace: 1, },
                         ],
                     },
-                    { width: 10 },
                     {
-                        width: 150,
                         rows: [
-                            { height: 10 },
-                            { borderless: true, height: 200, template: '<div class="sensorStatus"><ul><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li></ul></div>' },
+                            { height: 20, },
+                            { cols: [
+                                { width: 20, },
+                                { borderless: true, width: 150, height: 200, padding:20, template: '<div class="sensorStatus"><ul><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li></ul></div>' },
+                                { width: 20, },
+                            ] },
                             {},
-                            { height: 10 },
                         ],
                     },
                 ],
@@ -301,6 +314,10 @@ define([
             },
         });
         var data = [
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
+            {no:1,ph:5,error:1},
             {no:1,ph:5,error:1},
             {no:1,ph:5,error:1},
             {no:1,ph:5,error:1},

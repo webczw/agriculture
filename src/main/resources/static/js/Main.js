@@ -46,14 +46,15 @@ require([
             id: this.viewId,
             container: 'app',
             cols: [
-                {},
+                { css: 'sider_bg' },
+                { width: 50 },
                 {
-                    width: 1000,
+                    width: this.Constant.default.BODY_WIDTH,
                     rows: [
                         {
                             height: 120,
                             borderless: true,
-                            template: '<div id="header"><div id="banner"><img src="'+baseUrl+'imgs/banner.jpg"></div></div>',
+                            template: '<div id="header"><div id="banner"><img src="'+baseUrl+'imgs/banner.png"></div></div>',
                         },
                         { id: this._containerId, rows: [] },
                         {
@@ -63,7 +64,8 @@ require([
                         },
                     ],
                 },
-                {},
+                { width: 50 },
+                { css: 'sider_bg' },
             ],
             
         });

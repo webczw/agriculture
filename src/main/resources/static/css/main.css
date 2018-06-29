@@ -1,26 +1,35 @@
 @charset "utf-8";
 
-body { background-color: #070779;}
+body { background-color: #041d55;}
 
 .webix_view { background-color: transparent;}
+.sider_bg { background-color: #ccc;}
 .no_border .webix_column>div,
 .no_border .webix_table_cell,
 .no_border .webix_ss_header td { border-color: transparent;}
 .webix_dd_drag_column, .webix_ss_header, .webix_ss_header TD, .webix_ss_vscroll_header { background-color: #001448; color:#eee;}
-.webix_property_label, .webix_property_value {font-size:12px;height: 20px; line-height: 20px;}
+.webix_property_label {color:#eee;}
+.webix_property_value {color:#672701;}
+.webix_property_label, .webix_property_value {font-size:12px;height: 20px; line-height: 20px;border: none;}
 .webix_property_line {min-height: 20px;}
-.webix_property_label, .webix_property_value {border: none;}
+.webix_cell {color:#672701;}
+.webix_window {box-shadow: none;}
+.webix_el_button button {text-align: center;}
+.webix_el_button .webix_icon { margin-left:0;}
 
-.active { color: #228ae6; }
-.normal { color: #399; }
-.error { color: #f00; }
-.has_background { background-color: #eee;}
+.fas.active { color: #228ae6 !important; }
+.fas.normal { color: #399 !important; }
+.fas.error { color: #f00 !important; }
+.has_background { background-color: #041d55;}
 
 .fas { font-family: FontAwesome; font-style: normal; }
+.webix_cell .fas {color:#eee;}
 .webix_template, .webix_el_label { padding:0;}
 
-.loading {background-color: #999;}
-.loading .loaded {background-color: #b8c726;}
+.loading {}
+.loading i {display: inline-block; width:10%; padding:auto; height: 100%;}
+.loading i:after {content:''; display: inline-block; height: 100%; width: 90%; background-color: #ccc;}
+.loading i.loaded:after {background-color: #b8c726;}
 
 .link ul {list-style: none;padding:0;margin:0;}
 .link li {width:150px;height:150px;float:left;background-image:url(../imgs/link1.png);}
@@ -35,6 +44,6 @@ body { background-color: #070779;}
 
 .sensorStatus ul {list-style: none;padding:0;margin:0;}
 .sensorStatus li {width:50px;height:50px;float:left;text-align: center; vertical-align: middle; display: table-cell;}
-.sensorStatus i {font-size:38px;}
+.sensorStatus i {font-size:38px; color:#399;}
 
 .settings i {font-size:24px;}

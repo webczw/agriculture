@@ -56,8 +56,8 @@ define([
                     height: 20,
                     borderless: true,
                     template: function(){
-                        var percents = 37;
-                        return '<div class="loading" style="height:100%;"><div class="loaded" style="height:100%; width:'+percents+'%;"></div></div>';
+                        var percents = 40;
+                        return '<div class="loading" style="height:100%;"><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>';
                     },
                 },
                 {
@@ -83,7 +83,7 @@ define([
                                 { id: 'distributionRate', header: '全国分布率', fillspace: 1, },
                                 { id: 'status', header: '连接状态', fillspace: 1, template: function(){
                                     var isConnected = 1;
-                                    return '<i class="fas '+(isConnected?'fa-link active':'fa-unlink')+'"></i>';
+                                    return '<i class="fas '+(isConnected?'fa-link normal':'fa-unlink')+'"></i>';
                                 } },
                             ],
                         },
@@ -96,21 +96,24 @@ define([
                     cols: [
                         {},
                         {
-                            width: 200,
                             rows: [
-                                { view: 'button', label: '搜索', },
                                 {
                                     cols: [
-                                        { view: 'button', label: '设置', on: {
+                                        { view: 'button', label: '搜索', width: 90, type:"iconButton", icon: 'search' },
+                                        { view: 'button', label: '设置', width: 90, type:"iconButton", icon: 'cog', on: {
                                             'onItemClick': this._showSetting.bind(this),
                                         } },
-                                        { view: 'button', label: '导出', },
-                                        { view: 'button', label: '连接', },
-                                        { view: 'button', label: '登录', on: {
-                                            'onItemClick': this._showLogin.bind(this),
-                                        } },
+                                        { view: 'button', label: '导出', width: 90, type:"iconButton", icon: 'file', },
+                                        { view: 'button', label: '连接', width: 90, type:"iconButton", icon: 'link', },
                                     ],
-                                }
+                                },
+                                { cols: [
+                                    {},
+                                    { view: 'button', label: '登录', width: 90, type:"iconButton", icon: 'user', on: {
+                                        'onItemClick': this._showLogin.bind(this),
+                                    } },
+                                    {},
+                                ] },
                             ],
                         },
                         {},

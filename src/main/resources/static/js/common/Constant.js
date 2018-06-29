@@ -4,12 +4,10 @@ define([], function(){
 	var Constant = {};
 
 	Constant.default = {
-		lang: 'zh-cn',
-		module: {name:'index'}
+		BODY_WIDTH: 1020,
 	};
 
 	Constant.events = {
-		hashChanged: 'HASH_CHANGED'
     };
 
     return Constant;
