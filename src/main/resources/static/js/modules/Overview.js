@@ -15,6 +15,8 @@ define([
         this._linkId = webix.uid();
         this._mapId = webix.uid();
         this._statusTableId = webix.uid();
+        this._loginBtnId = webix.uid();
+        this._logoutBtnId = webix.uid();
         Module._super.constructor.call(this);
     }
     
@@ -53,11 +55,11 @@ define([
                 },
                 { height: 5, },
                 {
-                    height: 20,
+                    height: 25,
                     borderless: true,
                     template: function(){
                         var percents = 40;
-                        return '<div class="loading" style="height:100%;"><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>';
+                        return '<div class="loading" style="height:100%;"><div><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="spacer"></div></div>';
                     },
                 },
                 {
@@ -72,18 +74,20 @@ define([
                         {
                             view: 'datatable',
                             id: this._statusTableId,
-                            width: 500,
+                            width: 600,
                             autoheight: true,
                             scroll: false,
                             columns: [
-                                { id: 'total', header: '总站点', fillspace: 1, },
-                                { id: 'connected', header: '连接站点', fillspace: 1, },
-                                { id: 'faulty', header: '故障站点', fillspace: 1, },
-                                { id: 'toBeOpened', header: '待开通站点', fillspace: 1, },
-                                { id: 'distributionRate', header: '全国分布率', fillspace: 1, },
-                                { id: 'status', header: '连接状态', fillspace: 1, template: function(){
+                                { id: 'totalSite', header: '总站点', fillspace: 1, },
+                                { id: 'linkSite', header: '连接站点', fillspace: 1, },
+                                { id: 'faultSite', header: '故障站点', fillspace: 1, },
+                                { id: 'waitPpen', header: '待开通站点', fillspace: 1, },
+                                { id: 'distributedRate', header: '全国分布率', fillspace: 1, template: function(obj, common, value){
+                                    return value + '%';
+                                } },
+                                { id: 'linkStatus', header: '连接状态', fillspace: 1, template: function(){
                                     var isConnected = 1;
-                                    return '<i class="fas '+(isConnected?'fa-link normal':'fa-unlink')+'"></i>';
+                                    return '<i class="fas '+(isConnected?'fa-link normal':'fa-unlink error')+'"></i>';
                                 } },
                             ],
                         },
@@ -103,15 +107,20 @@ define([
                                         { view: 'button', label: '设置', width: 90, type:"iconButton", icon: 'cog', on: {
                                             'onItemClick': this._showSetting.bind(this),
                                         } },
-                                        { view: 'button', label: '导出', width: 90, type:"iconButton", icon: 'file', },
+                                        { view: 'button', label: '导出', width: 90, type:"iconButton", icon: 'file', on: {
+                                            'onItemClick': this._doExport.bind(this),
+                                        } },
                                         { view: 'button', label: '连接', width: 90, type:"iconButton", icon: 'link', },
                                     ],
                                 },
                                 { cols: [
                                     {},
-                                    { view: 'button', label: '登录', width: 90, type:"iconButton", icon: 'user', on: {
+                                    { view: 'button', id: this._loginBtnId, label: '登录', width: 90, type:"iconButton", icon: 'user', on: {
                                         'onItemClick': this._showLogin.bind(this),
                                     } },
+                                    { view: 'button', id: this._logoutBtnId, label: '退出', width: 90, type:"iconButton", icon: 'user', on: {
+                                        'onItemClick': this._doLogout.bind(this),
+                                    }, hidden: true },
                                     {},
                                 ] },
                             ],
@@ -129,19 +138,43 @@ define([
     };
 
     Module.prototype._showSetting = function(){
-        this.trigger('SETTING_CLICK');
+        if(this.checkLogin()){
+            this.trigger('SETTING_CLICK');
+        }
     };
 
     Module.prototype._showLogin = function(){
         this.trigger('LOGIN_CLICK');
     };
+    Module.prototype._doLogout = function(){
+        this.trigger('LOGOUT_CLICK');
+    };
+    Module.prototype._doExport = function(){
+        window.open(this.Constant.serviceUrls.BASE_URL + this.Constant.serviceUrls.EXPORT_TOTAL);
+    };
+
+    Module.prototype.addListners = function(){
+        this.on('LOGIN_SUCCESS', this._loginSuccess.bind(this));
+        this.on('LOGOUT_SUCCESS', this._logoutSuccess.bind(this));
+    };
+
+    Module.prototype._loginSuccess = function(){
+        $$(this._loginBtnId).hide();
+        $$(this._logoutBtnId).show();
+    };
+    Module.prototype._logoutSuccess = function(){
+        $$(this._logoutBtnId).hide();
+        $$(this._loginBtnId).show();
+    };
+
+    Module.prototype._getTotalSuccess = function(data){
+        var table = $$(this._statusTableId);
+        table.clearAll();
+        table.parse(data);
+    };
 
     Module.prototype.ready = function(){
-        //this.ajax('get');
-        var data = [
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-        ];
-        $$(this._statusTableId).parse(data);
+        this.ajax('get', this.Constant.serviceUrls.GET_TOTAL, this._getTotalSuccess.bind(this));
     };
 
     return Module;

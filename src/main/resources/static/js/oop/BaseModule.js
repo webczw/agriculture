@@ -47,9 +47,30 @@ define([
 		return $$(this.viewId);
 	};
 
+	BaseModule.prototype.info = function(msg){
+		return webix.message(msg);
+	};
+	BaseModule.prototype.checkLogin = function(){
+		var logined = this.Model.getInstance().getValue('USER');
+		if(!logined){
+			this.trigger('LOGIN_CLICK');
+		}
+		return logined;
+	};
+
 	BaseModule.prototype.ajax = function(method, url, data, success, fail){
-		return webix.ajax()[method](url, data, {
-			success: success,
+		url = this.Constant.serviceUrls.BASE_URL + url;
+		fail = fail || function(data){
+			this.info(this.Constant.info.FAIL);
+		}.bind(this);
+		var callback = function(jsonStr, obj, xhr){
+			var data = obj.json();
+			return success && success(data);
+		};
+		return webix.ajax().headers({
+			"Content-type":"application/json"
+		})[method](url, data, {
+			success: callback,
 			error: fail,
 		});
 	};
