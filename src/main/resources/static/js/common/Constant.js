@@ -11,20 +11,21 @@ define([], function(){
 		SUCCESS: '操作成功',
 		FAIL: '操作失败',
 		LOGIN_FAIL: '登录失败',
+		NO_LOGIN: '没有登录或者登录超时，请重新登录',
 	};
 
 	Constant.events = {
 	};
 	
 	Constant.serviceUrls = {
-		BASE_URL: 'agriculture/',
-		LOGIN: 'server/user/loggin',
-		LOGOUT: 'server/user/exit',
+		BASE_URL: '/agriculture/',
+		LOGIN: 'user/loggin',
+		LOGOUT: 'user/exit',
 
-		GET_TOTAL: 'server/total/list',
-		EXPORT_TOTAL: 'server/total/download',
-		GET_SETTING: 'server/config/list',
-		SAVE_SETTING: 'server/config',
+		GET_TOTAL: 'total/list',
+		EXPORT_TOTAL: 'total/download',
+		GET_SETTING: 'config/list',
+		SAVE_SETTING: 'config',
     };
 
     return Constant;

@@ -1,4 +1,4 @@
-var baseUrl = '/agriculture/';
+var baseUrl = '/agriculture/static/';
 requirejs.config({
 	baseUrl: baseUrl,
 	map: {
@@ -37,6 +37,7 @@ require([
         this._containerId = webix.uid();
         this._settingWindowId = webix.uid();
         this._loginWindowId = webix.uid();
+        this._searchWindowId = webix.uid();
 
         this._settingData = null; // 设置的后台数据
 
@@ -81,6 +82,7 @@ require([
         this.on('BACK_OVERVIEW_CLICK', this._showOverview.bind(this));
         this.on('LOGIN_CLICK', this._showLogin.bind(this));
         this.on('LOGOUT_CLICK', this._doLogout.bind(this));
+        this.on('SEARCH_CLICK', this._showSearch.bind(this));
     };
 
     Main.prototype.ready = function(){
@@ -156,6 +158,51 @@ require([
         }
     };
 
+    Main.prototype._showSearch = function(){
+        if(!$$(this._searchWindowId)){
+            var view = webix.ui({
+                view: 'window',
+                id: this._searchWindowId,
+                head: '搜索',
+                position: 'center',
+                modal: true,
+                body: {
+                    view: 'form',
+                    width: 400,
+                    borderless: true,
+                    rows: [
+                        { name: 'userId', view: 'text', label: '用户名', labelWidth: 120, },
+                        { name: 'password', view: 'text', type: 'password', label: '密码', labelWidth: 120, },
+                        {
+                            height: 30,
+                            cols: [
+                                {},
+                                { view: 'button', label: '确定', on: {
+                                    'onItemClick': function(){
+                                        this._doLogin();
+                                    }.bind(this),
+                                } },
+                                { view: 'button', label: '取消', on: {
+                                    'onItemClick': function(){
+                                        $$(this._loginWindowId).close();
+                                    }.bind(this),
+                                } },
+                                {},
+                            ],
+                        },
+                    ],
+                    on: {
+                        'onSubmit': function(){
+                            this._doLogin();
+                        }.bind(this),
+                    } 
+                }
+            });
+            view.show();
+            view.resize();
+        }
+    };
+
     Main.prototype._showLogin = function(){
         if(!$$(this._loginWindowId)){
             var view = webix.ui({
@@ -219,12 +266,14 @@ require([
         if(!this._settingData) return;
         var form = $$(this._settingWindowId).getBody();
         var values = form.getValues();
-        var postData = this._settingData.map(function(item){
-            return {
-                configId: item.configId,
-                configValue: values[item.configCode],
-            };
-        });
+        var postData = {
+            list: this._settingData.map(function(item){
+                return {
+                    configId: item.configId,
+                    configValue: values[item.configCode],
+                };
+            }),
+        };
         this.ajax('put', this.Constant.serviceUrls.SAVE_SETTING, postData, function(){
             this.info(this.Constant.info.SUCCESS);
             $$(this._settingWindowId).close();

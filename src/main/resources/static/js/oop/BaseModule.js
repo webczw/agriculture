@@ -65,7 +65,20 @@ define([
 		}.bind(this);
 		var callback = function(jsonStr, obj, xhr){
 			var data = obj.json();
-			return success && success(data);
+			if(data.status === undefined){
+				return success && success(data);
+			}
+			else if(data.status === 0){
+				return success && success(data.data);
+			}
+			else if(data.status === 1){
+				if(data.errorCode === 'COM_HJD_POWER_00003'){
+					this.info(this.Constant.info.NO_LOGIN);
+				}
+				else{
+					fail(data);
+				}
+			}
 		};
 		return webix.ajax().headers({
 			"Content-type":"application/json"

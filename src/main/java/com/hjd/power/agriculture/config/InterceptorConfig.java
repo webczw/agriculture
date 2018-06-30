@@ -19,7 +19,7 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
 
 		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 
-		registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+		registry.addResourceHandler("/**").addResourceLocations("classpath:/");
 	}
 
 }
