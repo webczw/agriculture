@@ -5,16 +5,16 @@ import java.util.Date;
 public class UserVO extends BaseVO {
 
 	private static final long serialVersionUID = 3368400806152683996L;
-	private Integer userId;
-	private String loginName;
-	private String password;
-	private String vsername;
-	private String mobile;
-	private String email;
-	private String role;
-	private Date loginTime;
-	private Date lastLoginTime;
-	private Integer loginCount;
+	private Integer userId;// 用户ID
+	private String loginName;// 登录帐号
+	private String password;// 用户密码
+	private String vsername;// 用户姓名
+	private String mobile;// 手机号
+	private String email;// 电子邮箱
+	private String role;// 角色
+	private Date loginTime;// 登录时间
+	private Date lastLoginTime;// 上次登录时间
+	private Integer loginCount;// 登录次数
 
 	public Integer getUserId() {
 		return userId;
