@@ -6,9 +6,9 @@ public class SiteVO extends BaseVO {
 	 * 
 	 */
 	private static final long serialVersionUID = 2858876602921515395L;
-	private Integer siteId;
-	private String siteCode;
-	private String siteName;
+	private Integer siteId;// 站点ID
+	private String siteCode;// 站点编码
+	private String siteName;// 站点名称
 	private String province;// 省
 	private String city;// 市
 	private String county;// 县

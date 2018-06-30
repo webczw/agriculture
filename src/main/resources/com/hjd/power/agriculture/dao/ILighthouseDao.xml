@@ -20,6 +20,9 @@
 		<result column="sensor_status" property="sensorStatus" />
 		<result column="refresh_date" property="refreshDate" />
 		<result column="phone" property="phone" />
+		<result column="fan_flag" property="fanFlag" />
+		<result column="light_flag" property="lightFlag" />
+		<result column="boot_date_delay" property="bootDateDelay" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -45,6 +48,9 @@
 		  sensor_status,
 		  refresh_date,
 		  phone,
+		  fan_flag,
+		  light_flag,
+		  boot_date_delay,
 		  create_date,
 		  last_update_date,
 		   create_id,
@@ -85,6 +91,9 @@
 		  sensor_status,
 		  refresh_date,
 		  phone,
+		   fan_flag,
+		  light_flag,
+		  boot_date_delay,
 		  create_date,
 		  last_update_date,
 		  enable_flag,
@@ -109,6 +118,9 @@
 		#{sensorStatus,jdbcType=VARCHAR}, 
 		#{refreshDate,jdbcType=TIMESTAMP}, 
 		#{phone,jdbcType=VARCHAR}, 
+		#{fanFlag,jdbcType=VARCHAR},
+		#{lightFlag,jdbcType=VARCHAR},
+		#{bootDateDelay,jdbcType=INTEGER}, 
 		sysdate(),
 		sysdate(),
 		'Y',
@@ -164,6 +176,15 @@
 		<if test="phone!=null">
 			phone = #{phone,jdbcType=VARCHAR},
 		</if>
+		<if test="fanFlag!=null">
+			fan_flag = #{fanFlag,jdbcType=VARCHAR},
+		</if>
+		<if test="lightFlag!=null">
+			light_flag = #{lightFlag,jdbcType=VARCHAR},
+		</if>
+		<if test="bootDateDelay!=null">
+			boot_date_delay = #{bootDateDelay,jdbcType=INTEGER},
+		</if>
 		last_update_date = sysdate(),
 		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
 		where enable_flag = 'Y' and lighthouse_id = #{lighthouseId,jdbcType=INTEGER}
@@ -196,6 +217,9 @@
 		<result column="sensor_status" property="sensorStatus" />
 		<result column="refresh_date" property="refreshDate" />
 		<result column="phone" property="phone" />
+		<result column="fan_flag" property="fanFlag" />
+		<result column="light_flag" property="lightFlag" />
+		<result column="boot_date_delay" property="bootDateDelay" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -212,9 +236,6 @@
 			<result column="t1_temperature" property="temperature" />
 			<result column="ph_value" property="phValue" />
 			<result column="fault" property="fault" />
-			<result column="fan_flag" property="fanFlag" />
-			<result column="light_flag" property="lightFlag" />
-			<result column="boot_date_delay" property="bootDateDelay" />
 			<result column="t1_create_date" property="createDate" />
 			<result column="t1_last_update_date" property="lastUpdateDate" />
 			<result column="t1_create_id" property="createId" />
@@ -241,6 +262,9 @@
 				  t.sensor_status,
 				  t.refresh_date,
 				  t.phone,
+				  t.fan_flag,
+				  t.light_flag,
+				  t.boot_date_delay,
 				  t.create_date,
 				  t.last_update_date,
 				  t.create_id,
@@ -256,9 +280,6 @@
 				  t1.temperature t1_temperature,
 				  t1.ph_value,
 				  t1.fault,
-				  t1.fan_flag,
-				  t1.light_flag,
-				  t1.boot_date_delay,
 				  t1.create_date t1_create_date,
 				  t1.last_update_date t1_last_update_date,
 				  t1.create_id t1_create_id,

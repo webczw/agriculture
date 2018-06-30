@@ -14,9 +14,6 @@
 		<result column="temperature" property="temperature" />
 		<result column="ph_value" property="phValue" />
 		<result column="fault" property="fault" />
-		<result column="fan_flag" property="fanFlag" />
-		<result column="light_flag" property="lightFlag" />
-		<result column="boot_date_delay" property="bootDateDelay" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -36,9 +33,6 @@
 		  temperature,
 		  ph_value,
 		  fault,
-		  fan_flag,
-		  light_flag,
-		  boot_date_delay,
 		  create_date,
 		  last_update_date,
 		  create_id,
@@ -73,9 +67,6 @@
 		  temperature,
 		  ph_value,
 		  fault,
-		  fan_flag,
-		  light_flag,
-		  boot_date_delay,
 		  create_date,
 		  last_update_date,
 		  enable_flag,
@@ -94,9 +85,6 @@
 		#{temperature,jdbcType=VARCHAR}, 
 		#{phValue,jdbcType=NUMERIC}, 
 		#{fault,jdbcType=VARCHAR}, 
-		#{fanFlag,jdbcType=VARCHAR},
-		#{lightFlag,jdbcType=VARCHAR},
-		#{bootDateDelay,jdbcType=INTEGER}, 
 		sysdate(),
 		sysdate(),
 		'Y',
@@ -129,15 +117,6 @@
 		</if>
 		<if test="fault!=null">
 			fault = #{fault,jdbcType=VARCHAR},
-		</if>
-		<if test="fanFlag!=null">
-			fan_flag = #{fanFlag,jdbcType=VARCHAR},
-		</if>
-		<if test="lightFlag!=null">
-			light_flag = #{lightFlag,jdbcType=VARCHAR},
-		</if>
-		<if test="bootDateDelay!=null">
-			boot_date_delay = #{bootDateDelay,jdbcType=INTEGER},
 		</if>
 		last_update_date = sysdate(),
 		last_update_id = #{lastUpdateId,jdbcType=INTEGER}

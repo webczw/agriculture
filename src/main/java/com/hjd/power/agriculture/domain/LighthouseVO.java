@@ -26,6 +26,9 @@ public class LighthouseVO extends BaseVO {
 	private String sensorStatus;// 传感器状态
 	private Date refreshDate;// 表头数据刷新时间
 	private String phone;// 关连手机
+	private String fanFlag;// 风机开关 ON/OFF
+	private String lightFlag;// 灯开开关 ON/OFF
+	private Integer bootDateDelay;// 开关时间延时设置 （4-10 小时）
 	private List<SensorVO> sensorList;
 
 	public Integer getLighthouseId() {
@@ -162,6 +165,30 @@ public class LighthouseVO extends BaseVO {
 
 	public void setSensorStatus(String sensorStatus) {
 		this.sensorStatus = sensorStatus;
+	}
+
+	public String getFanFlag() {
+		return fanFlag;
+	}
+
+	public void setFanFlag(String fanFlag) {
+		this.fanFlag = fanFlag;
+	}
+
+	public String getLightFlag() {
+		return lightFlag;
+	}
+
+	public void setLightFlag(String lightFlag) {
+		this.lightFlag = lightFlag;
+	}
+
+	public Integer getBootDateDelay() {
+		return bootDateDelay;
+	}
+
+	public void setBootDateDelay(Integer bootDateDelay) {
+		this.bootDateDelay = bootDateDelay;
 	}
 
 	public List<SensorVO> getSensorList() {
