@@ -8,7 +8,7 @@ requirejs.config({
 	},
 	paths: {
         'jquery': 'libs/jquery/jquery-3.3.1.min',
-        'webix': 'libs/webix/webix_debug',
+        'webix': 'libs/webix/webix',
         'echarts': 'libs/echarts.min',
 		'Constant': 'js/common/Constant',
 		'Model': 'js/common/Model',
@@ -90,7 +90,7 @@ require([
 
     Main.prototype.ready = function(){
         this._showOverview();
-        this.ajax('get', this.Constant.serviceUrls.GET_USER_SESSION, {}, this._loginSuccess.bind(this, null));
+        this.ajax('get', this.Constant.serviceUrls.GET_USER_SESSION, {}, this._loginSuccess.bind(this, null), function(){});
     };
 
     Main.prototype._showOverview = function(){
