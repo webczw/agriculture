@@ -8,7 +8,7 @@ requirejs.config({
 	},
 	paths: {
         'jquery': 'libs/jquery/jquery-3.3.1.min',
-        'webix': 'libs/webix/webix',
+        'webix': 'libs/webix/webix_debug',
         'echarts': 'libs/echarts.min',
 		'Constant': 'js/common/Constant',
 		'Model': 'js/common/Model',
@@ -38,6 +38,8 @@ require([
         this._settingWindowId = webix.uid();
         this._loginWindowId = webix.uid();
         this._searchWindowId = webix.uid();
+        this._mainSiteWindowId = webix.uid();
+        this._mainSiteAddWindowId = webix.uid();
 
         this._settingData = null; // 设置的后台数据
 
@@ -77,16 +79,18 @@ require([
 
     Main.prototype.addListners = function(){
         Main._super.addListners.call(this);
-        this.on('LINK_CLICK', this._showDetail.bind(this));
+        this.on('DETAIL_CLICK', this._showDetail.bind(this));
         this.on('SETTING_CLICK', this._showSetting.bind(this));
         this.on('BACK_OVERVIEW_CLICK', this._showOverview.bind(this));
         this.on('LOGIN_CLICK', this._showLogin.bind(this));
         this.on('LOGOUT_CLICK', this._doLogout.bind(this));
         this.on('SEARCH_CLICK', this._showSearch.bind(this));
+        this.on('MAIN_SITE_CLICK', this._showMainSite.bind(this));
     };
 
     Main.prototype.ready = function(){
         this._showOverview();
+        this.ajax('get', this.Constant.serviceUrls.GET_USER_SESSION, {}, this._loginSuccess.bind(this, null));
     };
 
     Main.prototype._showOverview = function(){
@@ -97,10 +101,10 @@ require([
         container.addView(this.overview.getView());
     };
 
-    Main.prototype._showDetail = function(){
+    Main.prototype._showDetail = function(obj, mainSiteData){
         var container = this.getContainer();
         var childView = container.getChildViews()[0];
-        this.detail = new Detail();
+        this.detail = new Detail(mainSiteData);
         if(childView) container.removeView(childView.config.id);
         container.addView(this.detail.getView());
     };
@@ -139,18 +143,154 @@ require([
                             height: 30,
                             cols: [
                                 {},
-                                { view: 'button', label: '确定', on: {
+                                { view: 'button', label: '确定', width: 90, on: {
                                     'onItemClick': this._doSaveSetting.bind(this),
                                 } },
-                                { view: 'button', label: '取消', on: {
+                                { view: 'button', label: '取消', width: 90, on: {
                                     'onItemClick': function(){
                                         $$(this._settingWindowId).close();
+                                    }.bind(this),
+                                } },
+                                { view: 'button', label: '主站点设置', width: 120, on: {
+                                    'onItemClick': function(){
+                                        this._mainSiteClick();
                                     }.bind(this),
                                 } },
                                 {},
                             ],
                         },
                     ]
+                }
+            });
+            view.show();
+            view.resize();
+        }
+    };
+
+    Main.prototype._mainSiteClick = function(){
+        this.trigger('MAIN_SITE_CLICK', '');
+    };
+
+    Main.prototype._showMainSite = function(event, keywords){
+        if(!$$(this._mainSiteWindowId)){
+            var view = webix.ui({
+                view: 'window',
+                id: this._mainSiteWindowId,
+                head: '主站点',
+                position: 'center',
+                modal: true,
+                body: {
+                    width: 800,
+                    height: 400,
+                    padding: 10,
+                    rows: [
+                        {
+                            
+                            view: 'datatable',
+                            width: 400,
+                            columns: [
+                                { id: 'action', header: { text: '<i class="fas fa-plus-circle add normal"></i>' }, template: function(){
+                                    return '<i class="fas fa-minus-circle delete normal"></i>';
+                                }, width: 50 },
+                                { id: 'siteCode', header: '站点编码', fillspace: 1, template: function(obj, common, value){
+                                    return '<a class="detail">'+value+'</a>';
+                                } },
+                                { id: 'siteName', header: '站点名称', fillspace: 1, },
+                                { id: 'province', header: '省', fillspace: 1, },
+                                { id: 'city', header: '市', fillspace: 1, },
+                                { id: 'county', header: '县', fillspace: 1, },
+                            ],
+                            on: {
+                                'onStructureLoad': function(){
+                                    this.ajax('get', this.Constant.serviceUrls.GET_MAIN_SITE_LIST, {key:keywords||''}, function(data){
+                                        var datatable = $$(this._mainSiteWindowId).getBody().getChildViews()[0];
+                                        datatable.parse(data);
+                                    }.bind(this));
+                                }.bind(this),
+                                'onHeaderClick': function(ids, e, node){
+                                    if($(e.target).hasClass('add')){
+                                        webix.ui({
+                                            view: 'window',
+                                            id: this._mainSiteAddWindowId,
+                                            head: '增加主站点',
+                                            position: 'center',
+                                            modal: true,
+                                            body: {
+                                                width: 400,
+                                                view: 'form',
+                                                rows: [
+                                                    { name: 'siteCode', view: 'text', label: '站点编码', labelWidth: 120, },
+                                                    { name: 'siteName', view: 'text', label: '站点名称', labelWidth: 120, },
+                                                    { name: 'province', view: 'text', label: '省', labelWidth: 120, },
+                                                    { name: 'city', view: 'text', label: '市', labelWidth: 120, },
+                                                    { name: 'county', view: 'text', label: '县', labelWidth: 120, },
+                                                    {
+                                                        height: 30,
+                                                        cols: [
+                                                            {},
+                                                            { view: 'button', label: '确定', width: 90, on: {
+                                                                'onItemClick': function(){
+                                                                    var form = $$(this._mainSiteAddWindowId).getBody();
+                                                                    var values = form.getValues();
+                                                                    this.ajax('post', this.Constant.serviceUrls.ADD_MAIN_SITE, values, function(data){
+                                                                        var datatable = $$(this._mainSiteWindowId).getBody().getChildViews()[0];
+                                                                        this.message(this.Constant.info.SUCCESS);
+                                                                        datatable.add(data);
+                                                                        $$(this._mainSiteAddWindowId).close();
+                                                                    }.bind(this));
+                                                                }.bind(this),
+                                                            } },
+                                                            { view: 'button', label: '取消', width: 90, on: {
+                                                                'onItemClick': function(){
+                                                                    $$(this._mainSiteAddWindowId).close();
+                                                                }.bind(this),
+                                                            } },
+                                                            {},
+                                                        ],
+                                                    },
+                                                ],
+                                            }
+                                        }).show();
+                                    }
+                                }.bind(this),
+                                'onItemClick': function(ids, e, node){
+                                    if(ids.column === 'action' && $(e.target).hasClass('delete')){
+                                        this.confirm('确认删除？', function(confirm){
+                                            if(!confirm) return;
+                                            var datatable = $$(this._mainSiteWindowId).getBody().getChildViews()[0];
+                                            var rowData = datatable.getItem(ids.row);
+                                            this.ajax('del', this.Constant.serviceUrls.DELETE_MAIN_SITE+'/'+rowData.siteId, {}, function(){
+                                                this.message(this.Constant.info.SUCCESS);
+                                                datatable.remove(ids.row);
+                                            }.bind(this));
+                                        }.bind(this));
+                                    }
+                                    else if(ids.column === 'siteCode' && $(e.target).hasClass('detail')){
+                                        var datatable = $$(this._mainSiteWindowId).getBody().getChildViews()[0];
+                                        var rowData = datatable.getItem(ids.row);
+                                        this.trigger('DETAIL_CLICK', rowData);
+                                        setTimeout(function(){ // 直接报错，原因不明
+                                            $$(this._mainSiteWindowId).close();
+                                        }.bind(this), 0);
+                                    }
+                                }.bind(this),
+                            },
+                        },
+                        { height: 10 },
+                        {
+                            height: 30,
+                            cols: [
+                                {},
+                                { view: 'button', label: '关闭', width: 90, on: {
+                                    'onItemClick': function(){
+                                        $$(this._mainSiteWindowId).close();
+                                    }.bind(this),
+                                } },
+                                {},
+                            ],
+                        },
+                    ],
+                    
                 }
             });
             view.show();
@@ -171,20 +311,20 @@ require([
                     width: 400,
                     borderless: true,
                     rows: [
-                        { name: 'userId', view: 'text', label: '用户名', labelWidth: 120, },
-                        { name: 'password', view: 'text', type: 'password', label: '密码', labelWidth: 120, },
+                        { name: 'keywords', view: 'text', label: '关键词', labelWidth: 120, },
                         {
                             height: 30,
                             cols: [
                                 {},
-                                { view: 'button', label: '确定', on: {
+                                { view: 'button', label: '搜索', width: 90, on: {
                                     'onItemClick': function(){
-                                        this._doLogin();
+                                        this._doSearch();
+                                        $$(this._searchWindowId).close();
                                     }.bind(this),
                                 } },
-                                { view: 'button', label: '取消', on: {
+                                { view: 'button', label: '取消', width: 90, on: {
                                     'onItemClick': function(){
-                                        $$(this._loginWindowId).close();
+                                        $$(this._searchWindowId).close();
                                     }.bind(this),
                                 } },
                                 {},
@@ -193,7 +333,8 @@ require([
                     ],
                     on: {
                         'onSubmit': function(){
-                            this._doLogin();
+                            this._doSearch();
+                            $$(this._searchWindowId).close();
                         }.bind(this),
                     } 
                 }
@@ -203,7 +344,7 @@ require([
         }
     };
 
-    Main.prototype._showLogin = function(){
+    Main.prototype._showLogin = function(obj, callback){
         if(!$$(this._loginWindowId)){
             var view = webix.ui({
                 view: 'window',
@@ -222,12 +363,12 @@ require([
                             height: 30,
                             cols: [
                                 {},
-                                { view: 'button', label: '确定', on: {
+                                { view: 'button', label: '登录', width: 90, on: {
                                     'onItemClick': function(){
-                                        this._doLogin();
+                                        this._doLogin(callback);
                                     }.bind(this),
                                 } },
-                                { view: 'button', label: '取消', on: {
+                                { view: 'button', label: '取消', width: 90, on: {
                                     'onItemClick': function(){
                                         $$(this._loginWindowId).close();
                                     }.bind(this),
@@ -238,7 +379,7 @@ require([
                     ],
                     on: {
                         'onSubmit': function(){
-                            this._doLogin();
+                            this._doLogin(callback);
                         }.bind(this),
                     } 
                 }
@@ -248,7 +389,12 @@ require([
         }
     };
 
-    Main.prototype._doLogin = function(){
+    Main.prototype._doSearch = function(){
+        var keywords = $$(this._searchWindowId).getBody().elements['keywords'].getValue();
+        this.trigger('MAIN_SITE_CLICK', keywords);
+    };
+
+    Main.prototype._doLogin = function(callback){
         var form = $$(this._loginWindowId).getBody();
         var values = form.getValues();
         var userId = values.userId;
@@ -256,7 +402,7 @@ require([
         this.ajax('post', this.Constant.serviceUrls.LOGIN, {
             loginName: userId,
             password: password,
-        }, this._loginSuccess.bind(this));
+        }, this._loginSuccess.bind(this,callback));
     };
     Main.prototype._doLogout = function(){
         this.ajax('get', this.Constant.serviceUrls.LOGOUT, {
@@ -275,23 +421,20 @@ require([
             }),
         };
         this.ajax('put', this.Constant.serviceUrls.SAVE_SETTING, postData, function(){
-            this.info(this.Constant.info.SUCCESS);
+            this.message(this.Constant.info.SUCCESS);
             $$(this._settingWindowId).close();
         }.bind(this));
     };
 
-    Main.prototype._loginSuccess = function(data){
-        if(data.status == 1){
-            this.info(this.Constant.info.LOGIN_FAIL);
-            return;
-        }
-        this.info(this.Constant.info.SUCCESS);
-        $$(this._loginWindowId).close();
+    Main.prototype._loginSuccess = function(callback, data){
+        this.message(this.Constant.info.SUCCESS);
+        $$(this._loginWindowId) && $$(this._loginWindowId).close();
         this.Model.getInstance().setValue('USER', data);
+        if(callback) callback(data);
         this.trigger('LOGIN_SUCCESS', data);
     };
     Main.prototype._logoutSuccess = function(data){
-        this.info(this.Constant.info.SUCCESS);
+        this.message(this.Constant.info.SUCCESS);
         this.Model.getInstance().deleteValue('USER');
         this.trigger('LOGOUT_SUCCESS', data);
     };

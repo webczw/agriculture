@@ -11,12 +11,18 @@ define([
 
     Oop.extend(Module, BaseModule);
 
-    function Module(){
+    function Module(mainSiteData){
         this._gaugeId = webix.uid();
         this._datatableId = webix.uid();
         this._settingWindowId = webix.uid();
         this._propertyId = webix.uid();
+        this._sensorListStatusId = webix.uid();
+
         this._popup = null;
+        this._gauges = [];
+
+        this._mainSiteData = mainSiteData || {};
+
         Module._super.constructor.call(this);
     }
     
@@ -25,9 +31,8 @@ define([
         var view = webix.ui({
             id: this.viewId,
             rows: [
-                { height: 5, },
+                { height: 25, },
                 {
-                    height: 250,
                     cols: [
                         {
                             rows: [
@@ -38,28 +43,34 @@ define([
                         },
                         {},
                         {
-                            id: this._propertyId,
-                            view: 'property',
-                            width: 200,
-                            editable: false,
-                            borderless: true,
-                            elements: [
-                                { label:"当前站点", type:"text", id:"width",},
-                                { label:"传感器数量", type:"text", id:"height"},
-                                { label:"接入站点", type:"text", id:"pass"},
-                                { label:"故障站点", type:"text", id:"aa"},
-                                { label:"环境温度", type:"text", id:"url"},
-                                { label:"电池电压1", type:"text", id:"type"},
-                                { label:"电池电压2", type:"text", id:"position"},
-                                { label:"光伏电压", type:"text", id:"date"},
-                                { label:"灯状态", type:"text", id:"color"},
-                                { label:"传感器状态", type:"text", id:"jsonp"},
-                                { label:"时间日期", type:"text", id:"dates"},
-                            ]
+                            rows: [
+                                {},
+                                {
+                                    id: this._propertyId,
+                                    view: 'property',
+                                    width: 200,
+                                    height: 200,
+                                    editable: false,
+                                    borderless: true,
+                                    elements: [
+                                        { id:"mainSiteCode", label:"当前站点", type:"text",},
+                                        { id:"sensorCount", label:"传感器数量", type:"text",},
+                                        { id:"siteCode", label:"接入塔点", type:"text",},
+                                        { id:"faultySites", label:"故障塔点数量", type:"text",},
+                                        { id:"temperature", label:"环境温度", type:"text",},
+                                        { id:"voltage", label:"电池电压", type:"text",},
+                                        { id:"photovoltaic", label:"光伏电压", type:"text",},
+                                        { id:"lightStatus", label:"灯状态", type:"text",},
+                                        { id:"sensorStatus", label:"传感器状态", type:"text",},
+                                        { id:"datetime", label:"时间日期", type:"text",},
+                                    ]
+                                },
+                                {},
+                            ],
                         },
                     ],
                 },
-                { height: 5, },
+                { height: 45, },
                 { cols: [
                     { view: 'label', width: 100, height: 30, borderless: true, template: '<div style="height:100%;text-align:center;background-color:#399;color:#fff;">正常</div>'},
                     { width: 10 },
@@ -77,10 +88,6 @@ define([
                             {},
                         ]
                     },
-                    { width: 10 },
-                    {
-                        view: 'label', width: 30, height: 30, template: '<div class="settings" style="text-align:center;"><i class="fas fa-cog"></i></div>',
-                    },
                 ] },
                 
                 { height: 30, },
@@ -90,30 +97,45 @@ define([
                     css: 'no_border',
                     autoheight: true,
                     scroll: false,
+                    select: 'row',
                     columns: [
                         //{ header: '', template: '{common.icon()}', width:50, },
-                        { header: '<i class="fas fa-plus-circle"></i> <i class="fas fa-cog"></i>', template: '<i class="fas fa-minus-circle"></i>', width: 60, },
-                        { id: 'connectionStatus', header: '连接状态', fillspace: 1, template: function(){
-                            var isConnected = 1;
-                            return '<i class="fas fa-circle '+(isConnected?'normal':'error')+'"></i>';
+                        { header: '<i class="fas fa-plus-circle add"></i>', template: '<i class="fas fa-minus-circle delete"></i> <i class="fas fa-cog setting"></i>', width: 60, },
+                        { id: 'linkStatus', header: '连接状态', fillspace: 1, template: function(obj, common, value){
+                            return '<i class="fas fa-circle '+(value === 1? 'linked': 'error')+'"></i>';
                         } },
-                        { id: 'connected', header: '站点编号', fillspace: 1, },
-                        { id: 'faulty', header: '省', fillspace: 1, },
-                        { id: 'toBeOpened', header: '市', fillspace: 1, },
-                        { id: 'distributionRate', header: '县', fillspace: 1, },
-                        { id: 'status', header: '站点代号', fillspace: 1, },
-                        { id: 'status', header: '客户名称', fillspace: 1, },
-                        { id: 'status', header: '时间/日期', fillspace: 1, },
-                        { id: 'status', header: '环境/温度', fillspace: 1, },
-                        { id: 'status', header: '电池电压', fillspace: 1, },
-                        { id: 'status', header: '灯状态', fillspace: 1, },
-                        { id: 'status', header: '光伏电压', fillspace: 1, },
-                        { id: 'status', header: '传感器状态', fillspace: 1, },
+                        { id: 'siteNumber', header: '站点编号', fillspace: 1, },
+                        { id: 'province', header: '省', fillspace: 1, },
+                        { id: 'city', header: '市', fillspace: 1, },
+                        { id: 'county', header: '县', fillspace: 1, },
+                        { id: 'siteCode', header: '站点代号', fillspace: 1, },
+                        { id: 'siteName', header: '站点名称', fillspace: 1, },
+                        { id: 'dateTime', header: '时间/日期', fillspace: 1, format: function(value){
+                            return webix.Date.dateToStr('%Y-%m-%d')(new Date(value));
+                        }, },
+                        { id: 'temperature', header: '环境温度', fillspace: 1, template: function(obj, common, value){
+                            return value+'°C';
+                        } },
+                        { id: 'voltage', header: '电池电压', fillspace: 1, template: function(obj, common, value){
+                            return value+'V';
+                        } },
+                        { id: 'lightStatus', header: '灯状态', fillspace: 1, template: function(obj, common, value){
+                            return value === 1? '正常': '故障';
+                        } },
+                        { id: 'photovoltaic', header: '光伏电压', fillspace: 1, template: function(obj, common, value){
+                            return value+'V';
+                        } },
+                        { id: 'sensorStatus', header: '传感器状态', fillspace: 1, template: function(obj, common, value){
+                            return value === 1? '正常': '故障';
+                        } },
                     ],
                     on: {
                         'onItemClick': this._rowItemClick.bind(this),
+                        'onSelectChange': this._rowItemSelect.bind(this),
+                        'onHeaderClick': this._headerClick.bind(this),
                     },
                 },
+                {},
                 { height: 30, },
                 {
                     cols: [
@@ -122,22 +144,31 @@ define([
                             rows: [
                                 {
                                     cols: [
-                                        { view: 'button', label: '搜索', width: 90, type:"iconButton", icon: 'search' },
-                                        { view: 'button', label: '设置', width: 90, type:"iconButton", icon: 'cog', on: {
-                                            'onItemClick': this._showSetting.bind(this),
+                                        { view: 'button', label: '搜索', width: 90, type:"iconButton", icon: 'search', on: {
+                                            'onItemClick': function(){
+                                                this.trigger('SEARCH_CLICK');
+                                            }.bind(this),
                                         } },
-                                        { view: 'button', label: '导出', width: 90, type:"iconButton", icon: 'file', },
+                                        { view: 'button', label: '设置', width: 90, type:"iconButton", icon: 'cog', on: {
+                                            'onItemClick': function(){
+                                                this.trigger('SETTING_CLICK');
+                                            }.bind(this),
+                                        } },
+                                        { view: 'button', label: '导出', width: 90, type:"iconButton", icon: 'file', on: {
+                                            'onItemClick': this._doExport.bind(this),
+                                        } },
                                         { view: 'button', label: '返回', width: 90, type:"iconButton", icon: 'long-arrow-left', on: {
-                                            'onItemClick': this._goBack.bind(this),
+                                            'onItemClick': function(){
+                                                this.trigger('BACK_OVERVIEW_CLICK');
+                                            }.bind(this),
                                         } },
                                     ],
-                                }
+                                },
                             ],
                         },
                         {},
                     ],
                 },
-                {},
                 { height: 30, },
             ],
         });
@@ -147,26 +178,188 @@ define([
         }.bind(this), 0);
     };
 
+    Module.prototype.addListners = function(){
+        Module._super.addListners.call(this);
+    };
+
     Module.prototype.ready = function(){
-        var data = [
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
-            { total: '100', connected: '90', faulty: '100', toBeOpened: '10', distributionRate: '30%', status: '1', },
+        this.ajax('get', this.Constant.serviceUrls.GET_LIGHT_HOUSE_LIST, {siteId: this._mainSiteData.siteId}, function(data){
+            var datatable = $$(this._datatableId);
+            datatable.parse(data);
+            datatable.select(datatable.getIdByIndex(0));
+            if(data && data.length > 0){
+                this._mainSiteData.siteId = data[0].siteId;
+                this._mainSiteData.siteCode = data[0].mainSiteCode;
+            }
+        }.bind(this));
+    };
+
+
+    Module.prototype._headerClick = function(ids, e, node){
+        if($(e.target).hasClass('add')){
+            webix.ui({
+                view: 'window',
+                head: '增加灯塔',
+                position:"center",
+                borderless: true,
+                body: {
+                    view: 'form',
+                    rows: [
+                        { id: 'siteCode', header: '站点代号' },
+                        {
+                            height: 30,
+                            cols: [
+                                {},
+                                { view: 'button', label: '确定', width: 90, on: {
+                                    'onItemClick': function(){
+                                        this._doSearch();
+                                        $$(this._searchWindowId).close();
+                                    }.bind(this),
+                                } },
+                                { view: 'button', label: '取消', width: 90, on: {
+                                    'onItemClick': function(){
+                                        $$(this._searchWindowId).close();
+                                    }.bind(this),
+                                } },
+                                {},
+                            ],
+                        },
+                    ],
+                }
+            }).show();
+        }
+    };
+
+    Module.prototype._rowItemClick = function(ids, e, node){
+        var datatable = $$(this._datatableId);
+        var rowData = datatable.getItem(ids.row);
+
+        if($(e.target).hasClass('delete')){
+            this.confirm('确认删除？', function(confirm){
+                if(!confirm) return;
+                this.ajax(this.Constant.serviceUrls.DELETE_LIGHT_HOUSE + '/' + rowData.lighthouseId, {}, function(){
+                    this.message(this.Constant.info.SUCCESS);
+                    datatable.remove(ids.row);
+                }.bind(this));
+            }.bind(this));
+            return;
+        }
+
+
+        var sensorList = rowData.sensorList;
+        var popupDatatable = this._popup.getBody().getChildViews()[0];
+        popupDatatable.clearAll();
+        popupDatatable.parse(sensorList);
+        this._popup.show(datatable.getItemNode(ids.row));
+        $$(this._sensorListStatusId).setValues({
+            sensorListStatus: sensorList.map(function(sensor){
+                return sensor.linkStatus;
+            }),
+        });
+    };
+
+    Module.prototype._rowItemSelect = function(){
+        var datatable = $$(this._datatableId);
+        var id = datatable.getSelectedId();
+        var rowData = datatable.getItem(id);
+        var sensorData = rowData.sensorList.filter(function(sensor){
+            return sensor.linkStatus === 1;
+        })[0] || {};
+
+        // 属性
+        var propertyData = {
+            "mainSiteCode": rowData.mainSiteCode,
+            "sensorCount": rowData.sensorList.length,
+            "siteCode": rowData.siteCode,
+            "faultySites": rowData.sensorList.filter(function(sensor){
+                return sensor.linkStatus === 0;
+            }).length,
+            "temperature": rowData.temperature + '°C',
+            "voltage": rowData.voltage + 'V',
+            "photovoltaic": rowData.photovoltaic + 'V',
+            "lightStatus": rowData.lightStatus,
+            "sensorStatus": rowData.sensorStatus,
+            "datetime": webix.Date.dateToStr('%Y-%m-%d')(new Date()),
+        };
+        $$(this._propertyId).parse(propertyData);
+
+        // 仪表盘
+        var gaugeData = [
+            rowData.voltage,
+            sensorData.temperature || 0,
+            sensorData.humidity || 0,
+            sensorData.phValue || 0,
         ];
-        $$(this._datatableId).parse(data);
-        $$(this._propertyId).parse({
-            width: '1108-01',
-            height: '08',
-            pass: '1100',
-            aa: '1',
-            url: '30',
+        this._gauges.forEach(function(gauge, g){
+            gauge.setOption({
+                series: [{
+                    data: [{
+                        value: gaugeData[g],
+                    }],
+                }],
+            });
+        });
+    };
+
+    Module.prototype._createRowPopup = function(){
+        this._popup = webix.ui({
+            view: 'popup',
+            css: 'has_background',
+            head: false,
+            position:"center",
+            width: this.Constant.default.BODY_WIDTH,
+            padding: 0, margin: 0, 
+            borderless: true,
+            body: {
+                cols: [
+                    {
+                        view: 'datatable',
+                        css: 'no_border',
+                        columns: [
+                            { header: '<i class="fas fa-plus-circle add"></i>', template: '<i class="fas fa-minus-circle delete"></i>', width:50, },
+                            { id: 'linkStatus', header: '连接状态', fillspace: 1, template: function(obj, common, value){
+                                return '<i class="fas fa-circle '+(value === 1? 'linked': 'error')+'"></i>';
+                            } },
+                            { id: 'number', header: '编号', fillspace: 1, },
+                            { id: 'addressCode', header: '地址码', fillspace: 1, },
+                            { id: 'photovoltaic', header: '光伏电压', fillspace: 1, template: function(obj, common, value){
+                                return value+'V';
+                            } },
+                            { id: 'voltage', header: '电池电压', fillspace: 1, template: function(obj, common, value){
+                                return value+'V';
+                            } },
+                            { id: 'temperature', header: '温度', fillspace: 1, template: function(obj, common, value){
+                                return value+'°C';
+                            } },
+                            { id: 'humidity', header: '湿度', fillspace: 1, template: function(obj, common, value){
+                                return value+'%';
+                            } },
+                            { id: 'phValue', header: 'PH值', fillspace: 1, },
+                            { id: 'fault', header: '故障', fillspace: 1, },
+                        ],
+                    },
+                    {
+                        rows: [
+                            { height: 20, },
+                            { cols: [
+                                { width: 20, },
+                                { id: this._sensorListStatusId, borderless: true, width: 150, height: 200, padding:20, template: function(values){
+                                    var sensorListStatus = values.sensorListStatus || [];
+                                    var html = '';
+                                    for(var i=0; i<12; i++){
+                                        if(sensorListStatus[i] === undefined) html += '<li><i class="fas fa-square"></i></li>';
+                                        else html += '<li><i class="fas fa-square '+(sensorListStatus[i] === 1? 'linked': 'error')+'"></i></li>';
+                                    }
+                                    return '<div class="sensorStatus"><ul>' + html + '</ul></div>';
+                                } },
+                                { width: 20, },
+                            ] },
+                            {},
+                        ],
+                    },
+                ],
+                
+            },
         });
     };
 
@@ -257,85 +450,22 @@ define([
         $nodes.each(function(n, node){
             var gauge = echarts.init(node);
             gauge.setOption(option[n]);
-        });
+            this._gauges.push(gauge);
+        }.bind(this));
         
     };
 
-
-    Module.prototype._rowItemClick = function(ids, e, node){
-        var datatable = $$(this._datatableId);
-        var id = ids.row;
-        this._popup.show(datatable.getItemNode(id));
+    Module.prototype._doExport = function(){
+        window.open(this.Constant.serviceUrls.BASE_URL + this.Constant.serviceUrls.EXPORT_LIGHT_HOUSE + '?siteId=' + this._mainSiteData.siteId);
     };
 
-    Module.prototype._createRowPopup = function(){
-        this._popup = webix.ui({
-            view: 'popup',
-            css: 'has_background',
-            head: false,
-            position:"center",
-            width: this.Constant.default.BODY_WIDTH,
-            padding: 0, margin: 0, 
-            borderless: true,
-            body: {
-                cols: [
-                    {
-                        view: 'datatable',
-                        css: 'no_border',
-                        columns: [
-                            { header: '<i class="fas fa-plus-circle"></i>', template: '<i class="fas fa-minus-circle"></i>', width:50, },
-                            { id: 'connectionStatus', header: '连接状态', fillspace: 1, template: function(){
-                                var isConnected = 1;
-                                return '<i class="fas fa-circle '+(isConnected?'normal':'error')+'"></i>';
-                            } },
-                            { id: 'no', header: '编号', fillspace: 1, },
-                            { id: 'no', header: '地址码', fillspace: 1, },
-                            { id: 'no', header: '光伏电压', fillspace: 1, },
-                            { id: 'no', header: '电池电压', fillspace: 1, },
-                            { id: 'no', header: '温度', fillspace: 1, },
-                            { id: 'no', header: '湿度', fillspace: 1, },
-                            { id: 'ph', header: 'PH值', fillspace: 1, },
-                            { id: 'error', header: '故障', fillspace: 1, },
-                        ],
-                    },
-                    {
-                        rows: [
-                            { height: 20, },
-                            { cols: [
-                                { width: 20, },
-                                { borderless: true, width: 150, height: 200, padding:20, template: '<div class="sensorStatus"><ul><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li><li><i class="fas fa-square"></i></li></ul></div>' },
-                                { width: 20, },
-                            ] },
-                            {},
-                        ],
-                    },
-                ],
-                
-            },
+    Module.prototype.destroy = function(){
+        this._popup.destructor();
+        this._gauges.forEach(function(gauge){
+            gauge.dispose();
         });
-        var data = [
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-            {no:1,ph:5,error:1},
-        ];
-        this._popup.getBody().getChildViews()[0].parse(data);
-    };
-
-    Module.prototype._showSetting = function(){
-        this.trigger('SETTING_CLICK');
-    };
-
-    Module.prototype._goBack = function(){
-        this.trigger('BACK_OVERVIEW_CLICK');
+        this._gauges = [];
+        Module._super.destroy.call(this);
     };
 
     return Module;

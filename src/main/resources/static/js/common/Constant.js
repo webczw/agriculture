@@ -21,11 +21,21 @@ define([], function(){
 		BASE_URL: '/agriculture/',
 		LOGIN: 'user/loggin',
 		LOGOUT: 'user/exit',
+		GET_USER_SESSION: 'user/session/user',
 
 		GET_TOTAL: 'total/list',
 		EXPORT_TOTAL: 'total/download',
 		GET_SETTING: 'config/list',
 		SAVE_SETTING: 'config',
+		GET_PROVINCE: 'total/province',
+
+		GET_MAIN_SITE_LIST: 'site/search',
+		DELETE_MAIN_SITE: 'site',
+		ADD_MAIN_SITE: 'site',
+
+		GET_LIGHT_HOUSE_LIST: 'lighthouse/list/detail',
+		DELETE_LIGHT_HOUSE: 'lighthouse',
+		EXPORT_LIGHT_HOUSE: 'lighthouse/download',
     };
 
     return Constant;
