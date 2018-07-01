@@ -18,4 +18,6 @@ public interface ITotalDao {
 	Integer update(TotalVO vo);
 
 	Integer delete(TotalVO vo);
+
+	List<String> findProvince();
 }

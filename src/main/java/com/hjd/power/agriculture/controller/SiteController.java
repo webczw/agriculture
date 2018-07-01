@@ -47,8 +47,9 @@ public class SiteController {
 	@ApiOperation(value = "创建站点信息", notes = "创建站点信息")
 	@PostMapping()
 	@Access(roles = { Constants.ACCESS_ROLE_USER })
-	public Integer create(@RequestBody SiteVO vo) throws Exception {
-		return siteService.create(vo);
+	public SiteVO create(@RequestBody SiteVO vo) throws Exception {
+		siteService.create(vo);
+		return vo;
 	}
 
 	@ApiOperation(value = "更新站点信息", notes = "更新站点信息")

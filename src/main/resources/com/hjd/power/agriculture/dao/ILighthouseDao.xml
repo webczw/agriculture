@@ -7,6 +7,8 @@
 		<result column="site_id" property="siteId" />
 		<result column="link_status" property="linkStatus" />
 		<result column="site_number" property="siteNumber" />
+		<result column="main_site_code" property="mainSiteCode" />
+		<result column="site_name" property="siteName" />
 		<result column="province" property="province" />
 		<result column="city" property="city" />
 		<result column="county" property="county" />
@@ -32,33 +34,35 @@
 	
 	<sql id="selectSQL">
 		SELECT 
-		  lighthouse_id,
-		  site_id,
-		  link_status,
-		  site_number,
-		  province,
-		  city,
-		  county,
-		  site_code,
-		  client_name,
-		  date_time,
-		  temperature,
-		  voltage,
-		  light_status,
-		  photovoltaic,
-		  sensor_status,
-		  refresh_date,
-		  phone,
-		  fan_flag,
-		  light_flag,
-		  boot_date_delay,
-		  delivery_date,
-		  create_date,
-		  last_update_date,
-		   create_id,
-		  last_update_id
+		  t.lighthouse_id,
+		  t.site_id,
+		  t.link_status,
+		  t.site_number,
+		  t1.site_code main_site_code,
+		  t1.site_name,
+		  t1.province,
+		  t1.city,
+		  t1.county,
+		  t.site_code,
+		  t.client_name,
+		  t.date_time,
+		  t.temperature,
+		  t.voltage,
+		  t.light_status,
+		  t.photovoltaic,
+		  t.sensor_status,
+		  t.refresh_date,
+		  t.phone,
+		  t.fan_flag,
+		  t.light_flag,
+		  t.boot_date_delay,
+		  t.delivery_date,
+		  t.create_date,
+		  t.last_update_date,
+		   t.create_id,
+		  t.last_update_id
 		FROM
-		  lighthouse_t where enable_flag = 'Y' 
+		  lighthouse_t t inner join site_t t1 on t.site_id = t1.site_id where t.enable_flag = 'Y' and t1.enable_flag = 'Y'
 	</sql>
 
 	<select id="findList" resultMap="resultMap">
@@ -67,22 +71,14 @@
 
 	<select id="find" resultMap="resultMap">
 		<include refid="selectSQL" />
-		 and lighthouse_id=#{lighthouseId,jdbcType=INTEGER}  
+		 and t.lighthouse_id=#{lighthouseId,jdbcType=INTEGER}  
 	</select>
 
-	<insert id="create" parameterType="com.hjd.power.agriculture.domain.LighthouseVO">
-		<selectKey keyProperty="lighthouseId" resultType="java.lang.Integer"
-			order="AFTER">
-			SELECT LAST_INSERT_ID() as lighthouseId
-		</selectKey>
+	<insert id="create" parameterType="com.hjd.power.agriculture.domain.LighthouseVO" useGeneratedKeys="true" keyProperty="lighthouseId">
 		INSERT INTO lighthouse_t (
-		  lighthouse_id,
 		  site_id,
 		  link_status,
 		  site_number,
-		  province,
-		  city,
-		  county,
 		  site_code,
 		  client_name,
 		  date_time,
@@ -103,14 +99,10 @@
 		  create_id,
 		  last_update_id
 		) 
-		values(
-		#{lighthouseId,jdbcType=INTEGER}, 
+		values( 
 		#{siteId,jdbcType=INTEGER}, 
 		#{linkStatus,jdbcType=INTEGER}, 
 		#{siteNumber,jdbcType=VARCHAR}, 
-		#{province,jdbcType=VARCHAR},
-		#{city,jdbcType=VARCHAR}, 
-		#{county,jdbcType=VARCHAR}, 
 		#{siteCode,jdbcType=VARCHAR}, 
 		#{clientName,jdbcType=VARCHAR}, 
 		#{dateTime,jdbcType=TIMESTAMP}, 
@@ -139,15 +131,6 @@
 		</if>
 		<if test="siteNumber!=null">
 			site_number = #{siteNumber,jdbcType=VARCHAR},
-		</if>
-		<if test="province!=null">
-			province = #{province,jdbcType=VARCHAR},
-		</if>
-		<if test="city!=null">
-			city = #{city,jdbcType=VARCHAR},
-		</if>
-		<if test="county!=null">
-			county = #{county,jdbcType=VARCHAR},
 		</if>
 		<if test="siteCode!=null">
 			site_code = #{siteCode,jdbcType=VARCHAR},
@@ -212,6 +195,8 @@
 		<result column="link_status" property="linkStatus" />
 		<result column="site_number" property="siteNumber" />
 		<result column="province" property="province" />
+		<result column="main_site_code" property="mainSiteCode" />
+		<result column="site_name" property="siteName" />
 		<result column="city" property="city" />
 		<result column="county" property="county" />
 		<result column="site_code" property="siteCode" />
@@ -257,9 +242,11 @@
 				  t.site_id,
 				  t.link_status,
 				  t.site_number,
-				  t.province,
-				  t.city,
-				  t.county,
+				  tt.site_code main_site_code,
+				  tt.site_name,
+				  tt.province,
+				  tt.city,
+				  tt.county,
 				  t.site_code,
 				  t.client_name,
 				  t.date_time,
@@ -295,6 +282,8 @@
 				  t1.last_update_id t1_last_update_id
 				FROM
 				  lighthouse_t t 
+				  inner join site_t tt
+				  on t.site_id = tt.site_id
 				  INNER JOIN sensor_t t1 
 				    ON t.lighthouse_id = t1.lighthouse_id 
 				WHERE t.enable_flag = 'Y' 
@@ -305,5 +294,6 @@
 				  AND t.lighthouse_id = #{lighthouseId,jdbcType=INTEGER}
 				  </if>
 				  AND t1.enable_flag = 'Y'
+				  AND tt.enable_flag = 'Y'
 	</select>
 </mapper>

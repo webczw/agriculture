@@ -13,6 +13,8 @@ public class LighthouseVO extends BaseVO {
 	private Integer siteId;
 	private Integer linkStatus;// 连接状态
 	private String siteNumber;// 站点编号
+	private String mainSiteCode;
+	private String siteName;
 	private String province;// 省
 	private String city;// 市
 	private String county;// 县
@@ -78,6 +80,22 @@ public class LighthouseVO extends BaseVO {
 
 	public void setSiteNumber(String siteNumber) {
 		this.siteNumber = siteNumber;
+	}
+
+	public String getMainSiteCode() {
+		return mainSiteCode;
+	}
+
+	public void setMainSiteCode(String mainSiteCode) {
+		this.mainSiteCode = mainSiteCode;
+	}
+
+	public String getSiteName() {
+		return siteName;
+	}
+
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
 	}
 
 	public String getProvince() {

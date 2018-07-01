@@ -20,4 +20,6 @@ public interface ITotalService {
 	Integer delete(Integer totalId) throws Exception;
 
 	XSSFWorkbook workbook(String fileName) throws Exception;
+
+	List<String> findProvince() throws Exception;
 }

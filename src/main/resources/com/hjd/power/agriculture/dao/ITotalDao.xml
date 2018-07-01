@@ -25,6 +25,10 @@
 ))d)distributed_rate
 	</select>
 	
+	<select id="findProvince" resultType="java.lang.String">
+	SELECT DISTINCT s.province FROM site_t s WHERE s.enable_flag='Y' AND s.site_id IN(SELECT t.site_id FROM lighthouse_t t WHERE t.enable_flag='Y' AND t.delivery_date IS NOT NULL)
+	</select>
+	
 	<sql id="selectSQL">
 	SELECT 
 		  total_id,

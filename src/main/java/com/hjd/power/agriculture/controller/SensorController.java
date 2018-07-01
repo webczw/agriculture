@@ -40,8 +40,9 @@ public class SensorController {
 	@ApiOperation(value = "创建传感器信息", notes = "创建传感器信息")
 	@PostMapping()
 	@Access(roles = { Constants.ACCESS_ROLE_USER })
-	public Integer create(@RequestBody SensorVO vo) throws Exception {
-		return sensorService.create(vo);
+	public SensorVO create(@RequestBody SensorVO vo) throws Exception {
+		sensorService.create(vo);
+		return vo;
 	}
 
 	@ApiOperation(value = "更新传感器信息", notes = "更新传感器信息")

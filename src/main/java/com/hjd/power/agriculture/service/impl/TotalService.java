@@ -131,4 +131,9 @@ public class TotalService implements ITotalService {
 		return totalVO;
 	}
 
+	@Override
+	public List<String> findProvince() throws Exception {
+		return totalDao.findProvince();
+	}
+
 }

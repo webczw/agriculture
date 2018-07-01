@@ -48,8 +48,9 @@ public class LighthouseController {
 	@ApiOperation(value = "创建灯塔站点信息", notes = "创建灯塔站点信息")
 	@PostMapping()
 	@Access(roles = { Constants.ACCESS_ROLE_USER })
-	public Integer create(@RequestBody LighthouseVO vo) throws Exception {
-		return lighthouseService.create(vo);
+	public LighthouseVO create(@RequestBody LighthouseVO vo) throws Exception {
+		lighthouseService.create(vo);
+		return vo;
 	}
 
 	@ApiOperation(value = "更新灯塔站点信息", notes = "更新灯塔站点信息")

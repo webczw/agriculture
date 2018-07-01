@@ -45,13 +45,9 @@
 		 and site_id=#{siteId,jdbcType=INTEGER}  
 	</select>
 
-	<insert id="create" parameterType="com.hjd.power.agriculture.domain.SiteVO">
-		<selectKey keyProperty="siteId" resultType="java.lang.Integer"
-			order="AFTER">
-			SELECT LAST_INSERT_ID() as siteId
-		</selectKey>
+	<insert id="create" parameterType="com.hjd.power.agriculture.domain.SiteVO" useGeneratedKeys="true" keyProperty="siteId">
+		
 		INSERT INTO site_t (
-		  site_id,
 		  site_code,
 		  site_name,
 		  province,
@@ -63,8 +59,7 @@
 		  create_id,
 		  last_update_id
 		) 
-		values(
-		#{siteId,jdbcType=INTEGER}, 
+		values( 
 		#{siteCode,jdbcType=VARCHAR}, 
 		#{siteName,jdbcType=VARCHAR}, 
 		#{province,jdbcType=VARCHAR}, 

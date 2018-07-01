@@ -45,6 +45,12 @@ public class TotalController {
 		return totalService.findList();
 	}
 
+	@ApiOperation(value = "查询汇总省信息", notes = "查询汇总省信息")
+	@GetMapping("/province")
+	public List<String> findProvince() throws Exception {
+		return totalService.findProvince();
+	}
+
 	@ApiOperation(value = "创建汇总信息", notes = "创建汇总信息")
 	@PostMapping()
 	@Access(roles = { Constants.ACCESS_ROLE_USER })
