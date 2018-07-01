@@ -3,6 +3,10 @@
 body { background-color: #041d55;}
 
 .webix_view { background-color: transparent;}
+.webix_window,
+.webix_window .webix_view { background-color: #fff;}
+.webix_window.has_background { background-color: #041d55;}
+.webix_window.has_background .webix_view { background-color: transparent;}
 .sider_bg { background-color: #ccc;}
 .no_border .webix_column>div,
 .no_border .webix_table_cell,
@@ -12,15 +16,18 @@ body { background-color: #041d55;}
 .webix_property_value {color:#672701;}
 .webix_property_label, .webix_property_value {font-size:12px;height: 20px; line-height: 20px;border: none;}
 .webix_property_line {min-height: 20px;}
+.webix_hcell, .webix_cell {font-size:12px;}
 .webix_cell {color:#672701;}
 .webix_window {box-shadow: none;}
 .webix_el_button button {text-align: center;}
 .webix_el_button .webix_icon { margin-left:0;}
+.webix_column>div.webix_cell_select, .webix_column>div.webix_column_select, .webix_column>div.webix_row_select {background-color: #2489cc;}
 
-.fas.active { color: #228ae6 !important; }
-.fas.normal { color: #399 !important; }
+
+.fas {cursor: pointer;}
+.fas.normal { color: #ccc !important; }
+.fas.linked { color: #399 !important; }
 .fas.error { color: #f00 !important; }
-.has_background { background-color: #041d55;}
 
 .fas { font-family: FontAwesome; font-style: normal; }
 .webix_cell .fas {color:#eee;}
@@ -45,6 +52,6 @@ body { background-color: #041d55;}
 
 .sensorStatus ul {list-style: none;padding:0;margin:0;}
 .sensorStatus li {width:50px;height:50px;float:left;text-align: center; vertical-align: middle; display: table-cell;}
-.sensorStatus i {font-size:38px; color:#399;}
+.sensorStatus i {font-size:38px; color:#eee;}
 
 .settings i {font-size:24px;}

@@ -17,6 +17,9 @@ define([
         this._statusTableId = webix.uid();
         this._loginBtnId = webix.uid();
         this._logoutBtnId = webix.uid();
+
+        this._map = null;
+        
         Module._super.constructor.call(this);
     }
     
@@ -33,8 +36,8 @@ define([
                                 {},
                                 { id: this._linkId, view: 'label', width: 300, height: 300, borderless: true, template: '<div class="link"><ul><li></li><li></li><li></li><li></li></ul></div>', on: {
                                     'onItemClick': function(){
-                                        this.trigger('LINK_CLICK');
-                                    }.bind(this)
+                                        this.trigger('DETAIL_CLICK');
+                                    }.bind(this),
                                 } },
                                 {},
                             ],
@@ -53,7 +56,7 @@ define([
                         { width: 500, height: 400, id: this._mapId, borderless: true, template: '<div class="map" style="height:100%;"></div>'}
                     ],
                 },
-                { height: 5, },
+                { height: 25, },
                 {
                     height: 25,
                     borderless: true,
@@ -85,16 +88,15 @@ define([
                                 { id: 'distributedRate', header: '全国分布率', fillspace: 1, template: function(obj, common, value){
                                     return value + '%';
                                 } },
-                                { id: 'linkStatus', header: '连接状态', fillspace: 1, template: function(){
-                                    var isConnected = 1;
-                                    return '<i class="fas '+(isConnected?'fa-link normal':'fa-unlink error')+'"></i>';
+                                { id: 'linkStatus', header: '连接状态', fillspace: 1, template: function(obj, common, value){
+                                    return '<i class="fas '+(value === 1?'fa-link linked':'fa-unlink error')+'"></i>';
                                 } },
                             ],
                         },
                         {},
                     ],
                 },
-                
+                {},
                 { height: 30, },
                 {
                     cols: [
@@ -103,7 +105,9 @@ define([
                             rows: [
                                 {
                                     cols: [
-                                        { view: 'button', label: '搜索', width: 90, type:"iconButton", icon: 'search' },
+                                        { view: 'button', label: '搜索', width: 90, type:"iconButton", icon: 'search', on: {
+                                            'onItemClick': this._showSearch.bind(this),
+                                        }  },
                                         { view: 'button', label: '设置', width: 90, type:"iconButton", icon: 'cog', on: {
                                             'onItemClick': this._showSetting.bind(this),
                                         } },
@@ -128,13 +132,14 @@ define([
                         {},
                     ],
                 },
-                {},
                 { height: 30, },
             ],
         });
-        setTimeout(function(){
-            new Map($$(this._mapId).getNode().children[0].children[0]);
-        }.bind(this), 0);
+        
+    };
+
+    Module.prototype._showSearch = function(){
+        this.trigger('SEARCH_CLICK');
     };
 
     Module.prototype._showSetting = function(){
@@ -173,8 +178,22 @@ define([
         table.parse(data);
     };
 
+    Module.prototype._getMapSuccess = function(data){
+        this._map.setValues(data);
+    };
+
     Module.prototype.ready = function(){
-        this.ajax('get', this.Constant.serviceUrls.GET_TOTAL, this._getTotalSuccess.bind(this));
+        this.ajax('get', this.Constant.serviceUrls.GET_TOTAL, {}, this._getTotalSuccess.bind(this));
+        this.ajax('get', this.Constant.serviceUrls.GET_PROVINCE, {}, this._getMapSuccess.bind(this));
+        setTimeout(function(){
+            this._map = new Map($$(this._mapId).getNode().children[0].children[0]);
+        }.bind(this), 0);
+    };
+
+    Module.prototype.destroy = function(){
+        this._map.destroy();
+        this._map = null;
+        Module._super.destroy.call(this);
     };
 
     return Module;

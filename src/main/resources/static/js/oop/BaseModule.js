@@ -20,6 +20,7 @@ define([
 		this.Util = Util;
 		this.viewId = webix.uid();
 		this.init();
+		return this;
 	};
 
 	BaseModule.prototype.init = function(){
@@ -48,12 +49,35 @@ define([
 	};
 
 	BaseModule.prototype.info = function(msg){
-		return webix.message(msg);
+		var obj = {
+			title: '警告',
+			text: msg,
+			type: 'alert-warning',
+		};
+		return webix.alert(obj);
 	};
-	BaseModule.prototype.checkLogin = function(){
+	BaseModule.prototype.message = function(msg, type){
+		var obj = {
+			text: msg,
+			type: type || 'info',
+			expire: 5000,
+		};
+		return webix.message(obj);
+	};
+	BaseModule.prototype.confirm = function(msg, callback){
+		var obj = {
+			title: '请确认',
+			text: msg,
+			ok:"确认", 
+    		cancel:"取消",
+			callback: callback,
+		};
+		return webix.confirm(obj);
+	};
+	BaseModule.prototype.checkLogin = function(callback){
 		var logined = this.Model.getInstance().getValue('USER');
 		if(!logined){
-			this.trigger('LOGIN_CLICK');
+			this.trigger('LOGIN_CLICK', callback);
 		}
 		return logined;
 	};
@@ -65,7 +89,7 @@ define([
 		}.bind(this);
 		var callback = function(jsonStr, obj, xhr){
 			var data = obj.json();
-			if(data.status === undefined){
+			if(!data || data.status === undefined){
 				return success && success(data);
 			}
 			else if(data.status === 0){

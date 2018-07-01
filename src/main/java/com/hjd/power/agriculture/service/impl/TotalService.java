@@ -2,6 +2,7 @@ package com.hjd.power.agriculture.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.hjd.power.agriculture.Enums;
 import com.hjd.power.agriculture.dao.ITotalDao;
 import com.hjd.power.agriculture.domain.TotalVO;
 import com.hjd.power.agriculture.service.ITotalService;
@@ -88,23 +90,19 @@ public class TotalService implements ITotalService {
 				cell.setCellStyle(cellStyle);
 				String value = null;
 				if (i == 0) {
-					value = vo.getTotalId().toString();
-				} else if (i == 1) {
 					value = vo.getTotalSite().toString();
-				} else if (i == 2) {
+				} else if (i == 1) {
 					value = vo.getLinkSite().toString();
-				} else if (i == 3) {
+				} else if (i == 2) {
 					value = vo.getFaultSite().toString();
-				} else if (i == 4) {
+				} else if (i == 3) {
 					value = vo.getWaitPpen().toString();
-				} else if (i == 5) {
+				} else if (i == 4) {
 					value = vo.getDistributedRate().toString();
+				} else if (i == 5) {
+					value = Enums.StatusEnum.NORMAL.getName();
 				} else if (i == 6) {
-					value = vo.getLinkStatus().toString();
-				} else if (i == 7) {
-					value = sdf.format(vo.getCreateDate());
-				} else if (i == 8) {
-					value = sdf.format(vo.getLastUpdateDate());
+					value = sdf.format(new Date());
 				}
 				if (value == null) {
 					continue;

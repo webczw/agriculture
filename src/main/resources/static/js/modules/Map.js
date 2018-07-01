@@ -10,9 +10,6 @@ define([
             subtext: '',
             left: 'center'
         },
-        tooltip : {
-            trigger: 'item'
-        },
         legend: {
             show: false,
             orient: 'vertical',
@@ -34,7 +31,7 @@ define([
                     }
                 },
                 data:[
-                    {name: '北京',value: Math.round(Math.random()*1000)},
+                    /* {name: '北京',value: Math.round(Math.random()*1000)},
                     {name: '天津',value: Math.round(Math.random()*1000)},
                     {name: '上海',value: Math.round(Math.random()*1000)},
                     {name: '重庆',value: Math.round(Math.random()*1000)},
@@ -67,7 +64,7 @@ define([
                     {name: '海南',value: Math.round(Math.random()*1000)},
                     {name: '台湾',value: Math.round(Math.random()*1000)},
                     {name: '香港',value: Math.round(Math.random()*1000)},
-                    {name: '澳门',value: Math.round(Math.random()*1000)}
+                    {name: '澳门',value: Math.round(Math.random()*1000)} */
                 ]
             },
         ]
@@ -76,11 +73,28 @@ define([
 
     function Map(el){
         this._el = el;
-        var map = echarts.init(this._el);
-        map.setOption(option);
+        this._map = echarts.init(this._el);
+        this.ready();
+        return this;
     }
 
-    Map.prototype.setValues = function(values){
+    Map.prototype.ready = function(){
+        this._map.setOption(option);
+    };
+
+    Map.prototype.setValues = function(data){
+        this._map.setOption({
+            series: [{
+                data: data.map(function(item){
+                    return { name: item, value: 1 };
+                }),
+            }],
+        });
+    };
+
+    Map.prototype.destroy = function(){
+        this._map.dispose();
+        this._map = null;
     };
 
     return Map;
