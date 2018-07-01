@@ -23,6 +23,7 @@
 		<result column="fan_flag" property="fanFlag" />
 		<result column="light_flag" property="lightFlag" />
 		<result column="boot_date_delay" property="bootDateDelay" />
+		<result column="delivery_date" property="deliveryDate" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -51,6 +52,7 @@
 		  fan_flag,
 		  light_flag,
 		  boot_date_delay,
+		  delivery_date,
 		  create_date,
 		  last_update_date,
 		   create_id,
@@ -94,6 +96,7 @@
 		   fan_flag,
 		  light_flag,
 		  boot_date_delay,
+		  delivery_date,
 		  create_date,
 		  last_update_date,
 		  enable_flag,
@@ -121,6 +124,7 @@
 		#{fanFlag,jdbcType=VARCHAR},
 		#{lightFlag,jdbcType=VARCHAR},
 		#{bootDateDelay,jdbcType=INTEGER}, 
+		#{deliveryDate,jdbcType=TIMESTAMP}, 
 		sysdate(),
 		sysdate(),
 		'Y',
@@ -185,6 +189,9 @@
 		<if test="bootDateDelay!=null">
 			boot_date_delay = #{bootDateDelay,jdbcType=INTEGER},
 		</if>
+		<if test="deliveryDate!=null">
+			delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+		</if>
 		last_update_date = sysdate(),
 		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
 		where enable_flag = 'Y' and lighthouse_id = #{lighthouseId,jdbcType=INTEGER}
@@ -220,6 +227,7 @@
 		<result column="fan_flag" property="fanFlag" />
 		<result column="light_flag" property="lightFlag" />
 		<result column="boot_date_delay" property="bootDateDelay" />
+		<result column="delivery_date" property="deliveryDate" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -265,6 +273,7 @@
 				  t.fan_flag,
 				  t.light_flag,
 				  t.boot_date_delay,
+				  t.delivery_date,
 				  t.create_date,
 				  t.last_update_date,
 				  t.create_id,

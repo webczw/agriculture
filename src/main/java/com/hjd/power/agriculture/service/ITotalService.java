@@ -9,6 +9,8 @@ import com.hjd.power.agriculture.domain.TotalVO;
 public interface ITotalService {
 	List<TotalVO> findList() throws Exception;
 
+	TotalVO findTotal() throws Exception;
+
 	TotalVO find(Integer totalId) throws Exception;
 
 	Integer create(TotalVO vo) throws Exception;

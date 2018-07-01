@@ -1,6 +1,7 @@
 package com.hjd.power.agriculture.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
@@ -30,7 +31,10 @@ public class TotalService implements ITotalService {
 
 	@Override
 	public List<TotalVO> findList() throws Exception {
-		return totalDao.findList();
+		List<TotalVO> list = new ArrayList<>();
+		TotalVO totalVO = totalDao.findTotal();
+		list.add(totalVO);
+		return list;
 	}
 
 	@Override
@@ -119,6 +123,12 @@ public class TotalService implements ITotalService {
 
 		ExcelUtils.workbookWrite(fileName, dataset.size(), workbook);
 		return workbook;
+	}
+
+	@Override
+	public TotalVO findTotal() throws Exception {
+		TotalVO totalVO = totalDao.findTotal();
+		return totalVO;
 	}
 
 }

@@ -29,6 +29,7 @@ public class LighthouseVO extends BaseVO {
 	private String fanFlag;// 风机开关 ON/OFF
 	private String lightFlag;// 灯开开关 ON/OFF
 	private Integer bootDateDelay;// 开关时间延时设置 （4-10 小时）
+	private Date deliveryDate;// 下发日期时间
 	private List<SensorVO> sensorList;
 
 	public Integer getLighthouseId() {
@@ -197,6 +198,14 @@ public class LighthouseVO extends BaseVO {
 
 	public void setSensorList(List<SensorVO> sensorList) {
 		this.sensorList = sensorList;
+	}
+
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 
 }

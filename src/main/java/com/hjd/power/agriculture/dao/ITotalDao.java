@@ -9,6 +9,8 @@ import com.hjd.power.agriculture.domain.TotalVO;
 public interface ITotalDao {
 	List<TotalVO> findList();
 
+	TotalVO findTotal();
+
 	TotalVO find(@Param("totalId") Integer totalId);
 
 	Integer create(TotalVO vo);

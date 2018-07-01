@@ -16,6 +16,15 @@
 		<result column="last_update_id" property="lastUpdateId" />
 	</resultMap>
 	
+	<select id="findTotal" resultMap="resultMap">
+	SELECT (SELECT COUNT(1) FROM site_t t WHERE t.enable_flag='Y') total_site,
+	(SELECT COUNT(1) FROM (SELECT DISTINCT t.site_id FROM lighthouse_t t WHERE t.enable_flag='Y' AND t.delivery_date IS NOT NULL)a)link_site,
+	(SELECT COUNT(1) FROM (SELECT DISTINCT t.site_id FROM lighthouse_t t WHERE t.enable_flag='Y' AND t.delivery_date IS NOT NULL AND t.link_status = 0)b)fault_site,
+	(SELECT COUNT(1) FROM (SELECT DISTINCT t.site_id FROM lighthouse_t t WHERE t.enable_flag='Y' AND t.delivery_date IS NULL)c)wait_open,
+	(SELECT COUNT(1)/34*100 FROM(SELECT DISTINCT s.province FROM site_t s WHERE s.enable_flag='Y' AND s.site_id IN(SELECT t.site_id FROM lighthouse_t t WHERE t.enable_flag='Y' AND t.delivery_date IS NOT NULL
+))d)distributed_rate
+	</select>
+	
 	<sql id="selectSQL">
 	SELECT 
 		  total_id,
