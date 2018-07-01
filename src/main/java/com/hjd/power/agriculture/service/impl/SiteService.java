@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hjd.power.agriculture.dao.ILighthouseDao;
 import com.hjd.power.agriculture.dao.ISiteDao;
 import com.hjd.power.agriculture.domain.SearchVO;
 import com.hjd.power.agriculture.domain.SiteVO;
@@ -15,6 +16,8 @@ import com.hjd.power.agriculture.utils.CommonUtils;
 public class SiteService implements ISiteService {
 	@Autowired
 	private ISiteDao siteDao;
+	@Autowired
+	ILighthouseDao lighthouseDao;
 
 	@Override
 	public List<SiteVO> findList() throws Exception {
@@ -40,6 +43,10 @@ public class SiteService implements ISiteService {
 
 	@Override
 	public Integer delete(Integer siteId) throws Exception {
+		Integer count = lighthouseDao.findCountBySiteId(siteId);
+		if (count > 0) {
+			throw new Exception("该站点下有灯塔站点信息，删除失败.");
+		}
 		SiteVO vo = new SiteVO();
 		vo.setSiteId(siteId);
 		CommonUtils.initUpdate(vo);

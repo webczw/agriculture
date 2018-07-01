@@ -21,11 +21,11 @@ public class LighthouseVO extends BaseVO {
 	private String siteCode;// 站点代号
 	private String clientName;// 客户名称
 	private Date dateTime;// 时间日期
-	private String temperature;// 环境温度
-	private String voltage;// 电池电压
+	private Double temperature;// 环境温度
+	private Double voltage;// 电池电压
 	private Integer lightStatus;// 灯状态
-	private String photovoltaic;// 光伏电压
-	private String sensorStatus;// 传感器状态
+	private Double photovoltaic;// 光伏电压
+	private Integer sensorStatus;// 传感器状态
 	private Date refreshDate;// 表头数据刷新时间
 	private String phone;// 关连手机
 	private String fanFlag;// 风机开关 ON/OFF
@@ -146,44 +146,12 @@ public class LighthouseVO extends BaseVO {
 		this.dateTime = dateTime;
 	}
 
-	public String getTemperature() {
-		return temperature;
-	}
-
-	public void setTemperature(String temperature) {
-		this.temperature = temperature;
-	}
-
-	public String getVoltage() {
-		return voltage;
-	}
-
-	public void setVoltage(String voltage) {
-		this.voltage = voltage;
-	}
-
 	public Integer getLightStatus() {
 		return lightStatus;
 	}
 
 	public void setLightStatus(Integer lightStatus) {
 		this.lightStatus = lightStatus;
-	}
-
-	public String getPhotovoltaic() {
-		return photovoltaic;
-	}
-
-	public void setPhotovoltaic(String photovoltaic) {
-		this.photovoltaic = photovoltaic;
-	}
-
-	public String getSensorStatus() {
-		return sensorStatus;
-	}
-
-	public void setSensorStatus(String sensorStatus) {
-		this.sensorStatus = sensorStatus;
 	}
 
 	public String getFanFlag() {
@@ -224,6 +192,38 @@ public class LighthouseVO extends BaseVO {
 
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
+	}
+
+	public Double getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(Double temperature) {
+		this.temperature = temperature;
+	}
+
+	public Double getVoltage() {
+		return voltage;
+	}
+
+	public void setVoltage(Double voltage) {
+		this.voltage = voltage;
+	}
+
+	public Double getPhotovoltaic() {
+		return photovoltaic;
+	}
+
+	public void setPhotovoltaic(Double photovoltaic) {
+		this.photovoltaic = photovoltaic;
+	}
+
+	public Integer getSensorStatus() {
+		return sensorStatus;
+	}
+
+	public void setSensorStatus(Integer sensorStatus) {
+		this.sensorStatus = sensorStatus;
 	}
 
 }

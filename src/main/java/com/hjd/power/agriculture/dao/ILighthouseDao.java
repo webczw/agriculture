@@ -19,4 +19,6 @@ public interface ILighthouseDao {
 	Integer delete(LighthouseVO vo);
 
 	List<LighthouseVO> findListDetail(LighthouseQueryVO vo);
+
+	Integer findCountBySiteId(@Param("siteId") Integer siteId);
 }

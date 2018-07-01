@@ -67,6 +67,7 @@
 
 	<select id="findList" resultMap="resultMap">
 		<include refid="selectSQL" />
+		order by t.create_date desc
 	</select>
 
 	<select id="find" resultMap="resultMap">
@@ -106,11 +107,11 @@
 		#{siteCode,jdbcType=VARCHAR}, 
 		#{clientName,jdbcType=VARCHAR}, 
 		#{dateTime,jdbcType=TIMESTAMP}, 
-		#{temperature,jdbcType=VARCHAR}, 
-		#{voltage,jdbcType=VARCHAR}, 
+		#{temperature,jdbcType=NUMERIC}, 
+		#{voltage,jdbcType=NUMERIC}, 
 		#{lightStatus,jdbcType=INTEGER}, 
-		#{photovoltaic,jdbcType=VARCHAR}, 
-		#{sensorStatus,jdbcType=VARCHAR}, 
+		#{photovoltaic,jdbcType=NUMERIC}, 
+		#{sensorStatus,jdbcType=INTEGER}, 
 		#{refreshDate,jdbcType=TIMESTAMP}, 
 		#{phone,jdbcType=VARCHAR}, 
 		#{fanFlag,jdbcType=VARCHAR},
@@ -142,19 +143,19 @@
 			date_time = #{dateTime,jdbcType=TIMESTAMP},
 		</if>
 		<if test="temperature!=null">
-			temperature = #{temperature,jdbcType=VARCHAR},
+			temperature = #{temperature,jdbcType=NUMERIC},
 		</if>
 		<if test="voltage!=null">
-			voltage = #{voltage,jdbcType=VARCHAR},
+			voltage = #{voltage,jdbcType=NUMERIC},
 		</if>
 		<if test="lightStatus!=null">
 			light_status = #{lightStatus,jdbcType=INTEGER},
 		</if>
 		<if test="photovoltaic!=null">
-			photovoltaic = #{photovoltaic,jdbcType=VARCHAR},
+			photovoltaic = #{photovoltaic,jdbcType=NUMERIC},
 		</if>
 		<if test="sensorStatus!=null">
-			sensor_status = #{sensorStatus,jdbcType=VARCHAR},
+			sensor_status = #{sensorStatus,jdbcType=INTEGER},
 		</if>
 		
 		<if test="refreshDate!=null">
@@ -221,6 +222,7 @@
             <id column="sensor_id" property="sensorId" />
 			<result column="t1_lighthouse_id" property="lighthouseId" />
 			<result column="t1_site_id" property="siteId" />
+			<result column="t1_link_status" property="linkStatus" />
 			<result column="number" property="number" />
 			<result column="address_code" property="addressCode" />
 			<result column="t1_photovoltaic" property="photovoltaic" />
@@ -268,6 +270,7 @@
 				  t1.sensor_id,
 				  t1.lighthouse_id t1_lighthouse_id,
 				  t1.site_id t1_site_id,
+				  t1.link_status t1_link_status,
 				  t1.number,
 				  t1.address_code,
 				  t1.photovoltaic t1_photovoltaic,
@@ -295,5 +298,11 @@
 				  </if>
 				  AND t1.enable_flag = 'Y'
 				  AND tt.enable_flag = 'Y'
+				  
+				  order by t.create_date,t1.create_date desc
+	</select>
+	
+	<select id="findCountBySiteId" resultType="java.lang.Integer">
+		select count(1) from lighthouse_t t where t.enable_flag = 'Y' and t.site_id = #{siteId,jdbcType=INTEGER}
 	</select>
 </mapper>

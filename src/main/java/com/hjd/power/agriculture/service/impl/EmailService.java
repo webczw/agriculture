@@ -66,7 +66,7 @@ public class EmailService implements IEmailService {
 			e.printStackTrace();
 			logger.error("sendMail-->Error", e);
 		}
-		mailSender.send(message);
+		// mailSender.send(message);
 	}
 
 }

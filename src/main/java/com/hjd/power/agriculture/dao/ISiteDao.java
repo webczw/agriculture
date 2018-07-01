@@ -19,4 +19,6 @@ public interface ISiteDao {
 	Integer update(SiteVO vo);
 
 	Integer delete(SiteVO vo);
+
+	Integer findDefualtSiteId();
 }

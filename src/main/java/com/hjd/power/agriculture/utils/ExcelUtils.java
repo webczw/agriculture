@@ -144,6 +144,25 @@ public class ExcelUtils {
 		return cellStyle;
 	}
 
+	public static CellStyle formatFillCellStyle(XSSFWorkbook workbook, HSSFColorPredefined predefined, String format) {
+
+		XSSFFont font3 = workbook.createFont();
+		font3.setColor(predefined.getIndex());
+		XSSFDataFormat dataFormat = workbook.createDataFormat();
+		CellStyle cellStyle = workbook.createCellStyle();
+		cellStyle.setFont(font3);
+		cellStyle.setDataFormat(dataFormat.getFormat(format));
+		// cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		cellStyle.setBorderBottom(BorderStyle.THIN); // 下边框
+		cellStyle.setBorderLeft(BorderStyle.THIN);// 左边框
+		cellStyle.setBorderTop(BorderStyle.THIN);// 上边框
+		cellStyle.setBorderRight(BorderStyle.THIN);// 右边框
+
+		cellStyle.setFillForegroundColor(HSSFColorPredefined.SKY_BLUE.getIndex());
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		return cellStyle;
+	}
+
 	public static CellStyle formatCellStyle(XSSFWorkbook workbook, HSSFColorPredefined predefined, String format) {
 		XSSFFont font3 = workbook.createFont();
 		XSSFDataFormat dataFormat = workbook.createDataFormat();

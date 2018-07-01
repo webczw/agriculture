@@ -6,6 +6,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.hjd.power.agriculture.domain.LighthouseQueryVO;
 import com.hjd.power.agriculture.domain.LighthouseVO;
+import com.hjd.power.agriculture.domain.SiteVO;
 
 public interface ILighthouseService {
 	List<LighthouseVO> findList() throws Exception;
@@ -21,4 +22,6 @@ public interface ILighthouseService {
 	List<LighthouseVO> findListDetail(LighthouseQueryVO vo) throws Exception;
 
 	XSSFWorkbook workbook(LighthouseQueryVO vo, String fileName) throws Exception;
+
+	SiteVO findSite(LighthouseQueryVO vo) throws Exception;
 }

@@ -15,10 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.hjd.power.agriculture.Enums.StatusEnum;
 import com.hjd.power.agriculture.dao.ILighthouseDao;
+import com.hjd.power.agriculture.dao.ISensorDao;
+import com.hjd.power.agriculture.dao.ISiteDao;
 import com.hjd.power.agriculture.domain.LighthouseQueryVO;
 import com.hjd.power.agriculture.domain.LighthouseVO;
 import com.hjd.power.agriculture.domain.SensorVO;
+import com.hjd.power.agriculture.domain.SiteVO;
 import com.hjd.power.agriculture.service.ILighthouseService;
 import com.hjd.power.agriculture.utils.CommonUtils;
 import com.hjd.power.agriculture.utils.ExcelUtils;
@@ -27,7 +31,10 @@ import com.hjd.power.agriculture.utils.ExcelUtils;
 public class LighthouseService implements ILighthouseService {
 	@Autowired
 	private ILighthouseDao lighthouseDao;
-
+	@Autowired
+	private ISensorDao sensorDao;
+	@Autowired
+	private ISiteDao siteDao;
 	@Value("${agriculture.lighthouse.excel.headers}")
 	private String lighthouseExcelHeaders;
 
@@ -58,6 +65,10 @@ public class LighthouseService implements ILighthouseService {
 
 	@Override
 	public Integer delete(Integer lighthouseId) throws Exception {
+		Integer count = sensorDao.findCountByLighthouseId(lighthouseId);
+		if (count > 0) {
+			throw new Exception("该灯塔站点下有传感器信息，删除失败.");
+		}
 		LighthouseVO vo = new LighthouseVO();
 		vo.setLighthouseId(lighthouseId);
 		CommonUtils.initUpdate(vo);
@@ -66,6 +77,10 @@ public class LighthouseService implements ILighthouseService {
 
 	@Override
 	public List<LighthouseVO> findListDetail(LighthouseQueryVO vo) throws Exception {
+		if (vo.getSiteId() == null && vo.getLighthouseId() == null) {
+			Integer siteId = siteDao.findDefualtSiteId();
+			vo.setSiteId(siteId);
+		}
 		return lighthouseDao.findListDetail(vo);
 	}
 
@@ -86,6 +101,14 @@ public class LighthouseService implements ILighthouseService {
 		CellStyle lighthouseCellStyle = ExcelUtils.lighthouseCellStyle(workbook, HSSFColorPredefined.BLUE);
 		CellStyle boderCellStyle = ExcelUtils.boderCellStyle(workbook, HSSFColorPredefined.BLUE);
 		CellStyle formatCellStyle = ExcelUtils.formatCellStyle(workbook, HSSFColorPredefined.BLUE, "0.00%");
+
+		CellStyle photovoltaicFillCellStyle = ExcelUtils.formatFillCellStyle(workbook, HSSFColorPredefined.BLUE, "0V");
+		CellStyle voltageFillCellStyle = ExcelUtils.formatFillCellStyle(workbook, HSSFColorPredefined.BLUE, "0.00V");
+		CellStyle temperatureFillCellStyle = ExcelUtils.formatFillCellStyle(workbook, HSSFColorPredefined.BLUE, "0℃");
+
+		CellStyle photovoltaicCellStyle = ExcelUtils.formatCellStyle(workbook, HSSFColorPredefined.BLUE, "0V");
+		CellStyle voltageCellStyle = ExcelUtils.formatCellStyle(workbook, HSSFColorPredefined.BLUE, "0.00V");
+		CellStyle temperatureCellStyle = ExcelUtils.formatCellStyle(workbook, HSSFColorPredefined.BLUE, "0℃");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for (LighthouseVO vo : list) {
 			index++;
@@ -95,7 +118,7 @@ public class LighthouseService implements ILighthouseService {
 				cell.setCellStyle(lighthouseCellStyle);
 				String value = null;
 				if (i == 0) {
-					value = vo.getLinkStatus().toString();
+					value = StatusEnum.getName(vo.getLinkStatus());
 				} else if (i == 1) {
 					value = vo.getSiteNumber();
 				} else if (i == 2) {
@@ -111,15 +134,18 @@ public class LighthouseService implements ILighthouseService {
 				} else if (i == 7) {
 					value = sdf.format(vo.getDateTime());
 				} else if (i == 8) {
-					value = vo.getTemperature();
+					value = vo.getTemperature().toString();
+					cell.setCellStyle(temperatureFillCellStyle);
 				} else if (i == 9) {
-					value = vo.getVoltage();
+					value = vo.getVoltage().toString();
+					cell.setCellStyle(voltageFillCellStyle);
 				} else if (i == 10) {
-					value = vo.getLightStatus().toString();
+					value = StatusEnum.getName(vo.getLightStatus());
 				} else if (i == 11) {
-					value = vo.getPhotovoltaic();
+					value = vo.getPhotovoltaic().toString();
+					cell.setCellStyle(photovoltaicFillCellStyle);
 				} else if (i == 12) {
-					value = vo.getSensorStatus();
+					value = StatusEnum.getName(vo.getSensorStatus());
 				}
 				if (value == null) {
 					continue;
@@ -143,28 +169,32 @@ public class LighthouseService implements ILighthouseService {
 						sensorCell.setCellStyle(boderCellStyle);
 						String sensorValue = null;
 						if (j == 1) {
-							sensorValue = sensorVO.getNumber();
+							sensorValue = StatusEnum.getName(sensorVO.getLinkStatus());
 						} else if (j == 2) {
-							sensorValue = sensorVO.getAddressCode();
+							sensorValue = sensorVO.getNumber();
 						} else if (j == 3) {
-							sensorValue = sensorVO.getPhotovoltaic();
+							sensorValue = sensorVO.getAddressCode();
 						} else if (j == 4) {
-							sensorValue = sensorVO.getVoltage();
+							sensorValue = sensorVO.getPhotovoltaic().toString();
+							sensorCell.setCellStyle(photovoltaicCellStyle);
 						} else if (j == 5) {
-							sensorValue = sensorVO.getHumidity();
+							sensorValue = sensorVO.getVoltage().toString();
+							sensorCell.setCellStyle(voltageCellStyle);
+						} else if (j == 6) {
+							sensorValue = sensorVO.getTemperature().toString();
+							sensorCell.setCellStyle(temperatureCellStyle);
+						} else if (j == 7) {
+							sensorValue = sensorVO.getHumidity().toString();
 							if (!StringUtils.isEmpty(sensorValue)) {
-								sensorValue = sensorValue.replace("%", "");
 								Double humidity = Double.parseDouble(sensorValue);
 								if (humidity > 0) {
 									sensorValue = String.valueOf((humidity / 100));
 								}
 								sensorCell.setCellStyle(formatCellStyle);
 							}
-						} else if (j == 6) {
-							sensorValue = sensorVO.getTemperature();
-						} else if (j == 7) {
-							sensorValue = sensorVO.getPhValue().toString();
 						} else if (j == 8) {
+							sensorValue = sensorVO.getPhValue().toString();
+						} else if (j == 9) {
 							sensorValue = sensorVO.getFault();
 						}
 						if (sensorValue == null) {
@@ -182,6 +212,18 @@ public class LighthouseService implements ILighthouseService {
 		}
 		ExcelUtils.workbookWrite(fileName, list.size(), workbook);
 		return workbook;
+	}
+
+	@Override
+	public SiteVO findSite(LighthouseQueryVO vo) throws Exception {
+		Integer siteId = vo.getSiteId();
+		if (siteId == null) {
+			siteId = siteDao.findDefualtSiteId();
+		}
+		SiteVO siteVO = siteDao.find(siteId);
+		List<LighthouseVO> lighthouseList = lighthouseDao.findListDetail(vo);
+		siteVO.setLighthouseList(lighthouseList);
+		return siteVO;
 	}
 
 }

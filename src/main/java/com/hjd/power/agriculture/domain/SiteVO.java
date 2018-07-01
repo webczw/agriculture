@@ -1,5 +1,7 @@
 package com.hjd.power.agriculture.domain;
 
+import java.util.List;
+
 public class SiteVO extends BaseVO {
 
 	/**
@@ -12,6 +14,7 @@ public class SiteVO extends BaseVO {
 	private String province;// 省
 	private String city;// 市
 	private String county;// 县
+	private List<LighthouseVO> lighthouseList;
 
 	public Integer getSiteId() {
 		return siteId;
@@ -59,6 +62,14 @@ public class SiteVO extends BaseVO {
 
 	public void setCounty(String county) {
 		this.county = county;
+	}
+
+	public List<LighthouseVO> getLighthouseList() {
+		return lighthouseList;
+	}
+
+	public void setLighthouseList(List<LighthouseVO> lighthouseList) {
+		this.lighthouseList = lighthouseList;
 	}
 
 }

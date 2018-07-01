@@ -14,6 +14,7 @@
 		<result column="temperature" property="temperature" />
 		<result column="ph_value" property="phValue" />
 		<result column="fault" property="fault" />
+		<result column="link_status" property="linkStatus" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -25,6 +26,7 @@
 		sensor_id,
 		  lighthouse_id,
 		  site_id,
+		  link_status,
 		  number,
 		  address_code,
 		  photovoltaic,
@@ -43,6 +45,12 @@
 
 	<select id="findList" resultMap="resultMap">
 		<include refid="selectSQL" />
+		order by create_date desc
+	</select>
+	
+	<select id="findCountByLighthouseId" resultType="java.lang.Integer">
+	 SELECT COUNT(1) FROM
+		  sensor_t where enable_flag = 'Y' and lighthouse_id = #{lighthouseId,jdbcType=INTEGER}
 	</select>
 
 	<select id="find" resultMap="resultMap">
@@ -54,6 +62,7 @@
 		INSERT INTO sensor_t (
 		  lighthouse_id,
 		  site_id,
+		  link_status,
 		  number,
 		  address_code,
 		  photovoltaic,
@@ -71,12 +80,13 @@
 		values(
 		#{lighthouseId,jdbcType=INTEGER}, 
 		#{siteId,jdbcType=INTEGER}, 
+		#{linkStatus,jdbcType=INTEGER}, 
 		#{number,jdbcType=VARCHAR}, 
 		#{addressCode,jdbcType=VARCHAR},
-		#{photovoltaic,jdbcType=VARCHAR}, 
-		#{voltage,jdbcType=VARCHAR}, 
-		#{humidity,jdbcType=VARCHAR}, 
-		#{temperature,jdbcType=VARCHAR}, 
+		#{photovoltaic,jdbcType=NUMERIC}, 
+		#{voltage,jdbcType=NUMERIC}, 
+		#{humidity,jdbcType=NUMERIC}, 
+		#{temperature,jdbcType=NUMERIC}, 
 		#{phValue,jdbcType=NUMERIC}, 
 		#{fault,jdbcType=VARCHAR}, 
 		sysdate(),
@@ -88,6 +98,9 @@
 
 	<update id="update" parameterType="com.hjd.power.agriculture.domain.SensorVO">
 		update sensor_t set
+		<if test="linkStatus!=null">
+			link_status = #{linkStatus,jdbcType=INTEGER},
+		</if>
 		<if test="number!=null">
 			number = #{number,jdbcType=VARCHAR},
 		</if>
@@ -95,16 +108,16 @@
 			address_code = #{addressCode,jdbcType=VARCHAR},
 		</if>
 		<if test="photovoltaic!=null">
-			photovoltaic = #{photovoltaic,jdbcType=VARCHAR},
+			photovoltaic = #{photovoltaic,jdbcType=NUMERIC},
 		</if>
 		<if test="voltage!=null">
-			voltage = #{voltage,jdbcType=VARCHAR},
+			voltage = #{voltage,jdbcType=NUMERIC},
 		</if>
 		<if test="humidity!=null">
-			humidity = #{humidity,jdbcType=VARCHAR},
+			humidity = #{humidity,jdbcType=NUMERIC},
 		</if>
 		<if test="temperature!=null">
-			temperature = #{temperature,jdbcType=VARCHAR},
+			temperature = #{temperature,jdbcType=NUMERIC},
 		</if>
 		<if test="phValue!=null">
 			ph_value = #{phValue,jdbcType=NUMERIC},

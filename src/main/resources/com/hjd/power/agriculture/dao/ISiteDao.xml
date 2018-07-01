@@ -33,11 +33,19 @@
 	
 	<select id="findListBySearch" resultMap="resultMap">
 		<include refid="selectSQL" />
+		<if test="key!=null">
 		and (site_code like concat('%',#{key},'%') or site_name like concat('%',#{key},'%'))
+		order by create_date desc
+		</if>
+	</select>
+	
+	<select id="findDefualtSiteId" resultType="java.lang.Integer">
+	SELECT t.site_id FROM site_t t WHERE t.enable_flag='Y' ORDER BY t.create_date DESC LIMIT 0, 1
 	</select>
 
 	<select id="findList" resultMap="resultMap">
 		<include refid="selectSQL" />
+		order by create_date desc
 	</select>
 
 	<select id="find" resultMap="resultMap">

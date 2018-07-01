@@ -11,12 +11,13 @@ public class SensorVO extends BaseVO {
 	private Integer siteId;// 主站点ID
 	private String number;// 编号
 	private String addressCode;// 地址码
-	private String photovoltaic;// 光伏电压
-	private String voltage;// 电池电压
-	private String humidity;// 湿度
-	private String temperature;// 温度
+	private Double photovoltaic;// 光伏电压
+	private Double voltage;// 电池电压
+	private Double temperature;// 温度
+	private Double humidity;// 湿度
 	private Double phValue;// PH值
 	private String fault;// 故障
+	private Integer linkStatus;// 连接状态
 
 	public Integer getLighthouseId() {
 		return lighthouseId;
@@ -42,35 +43,35 @@ public class SensorVO extends BaseVO {
 		this.addressCode = addressCode;
 	}
 
-	public String getPhotovoltaic() {
+	public Double getPhotovoltaic() {
 		return photovoltaic;
 	}
 
-	public void setPhotovoltaic(String photovoltaic) {
+	public void setPhotovoltaic(Double photovoltaic) {
 		this.photovoltaic = photovoltaic;
 	}
 
-	public String getVoltage() {
+	public Double getVoltage() {
 		return voltage;
 	}
 
-	public void setVoltage(String voltage) {
+	public void setVoltage(Double voltage) {
 		this.voltage = voltage;
 	}
 
-	public String getHumidity() {
+	public Double getHumidity() {
 		return humidity;
 	}
 
-	public void setHumidity(String humidity) {
+	public void setHumidity(Double humidity) {
 		this.humidity = humidity;
 	}
 
-	public String getTemperature() {
+	public Double getTemperature() {
 		return temperature;
 	}
 
-	public void setTemperature(String temperature) {
+	public void setTemperature(Double temperature) {
 		this.temperature = temperature;
 	}
 
@@ -104,6 +105,14 @@ public class SensorVO extends BaseVO {
 
 	public void setSiteId(Integer siteId) {
 		this.siteId = siteId;
+	}
+
+	public Integer getLinkStatus() {
+		return linkStatus;
+	}
+
+	public void setLinkStatus(Integer linkStatus) {
+		this.linkStatus = linkStatus;
 	}
 
 }

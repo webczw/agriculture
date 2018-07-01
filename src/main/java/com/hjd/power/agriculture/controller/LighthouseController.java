@@ -21,6 +21,7 @@ import com.hjd.power.agriculture.Constants;
 import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.LighthouseQueryVO;
 import com.hjd.power.agriculture.domain.LighthouseVO;
+import com.hjd.power.agriculture.domain.SiteVO;
 import com.hjd.power.agriculture.service.ILighthouseService;
 
 import io.swagger.annotations.ApiOperation;
@@ -71,6 +72,12 @@ public class LighthouseController {
 	@GetMapping("/list/detail")
 	public List<LighthouseVO> findListDetail(LighthouseQueryVO vo) throws Exception {
 		return lighthouseService.findListDetail(vo);
+	}
+
+	@ApiOperation(value = "根据主站点ID查询站点信息集合详情", notes = "根据主站点ID查询站点信息集合详情，包含传感器信息")
+	@GetMapping("/site/detail")
+	public SiteVO findSite(LighthouseQueryVO vo) throws Exception {
+		return lighthouseService.findSite(vo);
 	}
 
 	@ApiOperation(value = "导出下载Excel文档", notes = "导出下载Excel文档")

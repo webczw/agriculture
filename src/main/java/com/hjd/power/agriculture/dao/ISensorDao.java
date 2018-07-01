@@ -16,4 +16,6 @@ public interface ISensorDao {
 	Integer update(SensorVO vo);
 
 	Integer delete(SensorVO vo);
+
+	Integer findCountByLighthouseId(@Param("lighthouseId") Integer lighthouseId);
 }
