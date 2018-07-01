@@ -14,6 +14,7 @@ define([
     function Module(){
         this._linkId = webix.uid();
         this._mapId = webix.uid();
+        this._loadingId = webix.uid();
         this._statusTableId = webix.uid();
         this._loginBtnId = webix.uid();
         this._logoutBtnId = webix.uid();
@@ -58,17 +59,23 @@ define([
                 },
                 { height: 25, },
                 {
+                    id: this._loadingId,
                     height: 25,
                     borderless: true,
-                    template: function(){
-                        var percents = 40;
-                        return '<div class="loading" style="height:100%;"><div><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="spacer"></div></div>';
+                    template: function(values){
+                        var percents = values && values.percents || 0;
+                        var html = '';
+                        for(var i=0; i<10; i++){
+                            if(percents/10 >= i) html += '<i class="loaded"></i>';
+                            else html += '<i></i>';
+                        }
+                        return '<div class="loading" style="height:100%;"><div>'+html+'</div><div class="spacer"></div></div>';
                     },
                 },
                 {
                     height: 30,
                     borderless: true,
-                    template: '<div style="text-align:center;">2018-06-10 ---- BDN001 ---- REV10</div>',
+                    template: '<div style="text-align:center;line-height:30px;">2018-06-10 ---- BDN001 ---- REV10</div>',
                 },
                 { height: 30, },
                 {
@@ -182,12 +189,29 @@ define([
         this._map.setValues(data);
     };
 
+    Module.prototype._refreshLoading = function(){
+        var percents = 0;
+        var refreshLoading = function(){
+            var loading_st = setTimeout(function(){
+                var loading = $$(this._loadingId);
+                if(!loading) return;
+                percents += Math.random() * (20 - 0) + 0; // 加0-20随机数
+                loading.setValues({percents:percents});
+                if(percents < 100) refreshLoading();
+            }.bind(this), Math.random() * (500 - 50) + 0); // 加50-500随机数
+        }.bind(this);
+        refreshLoading();
+    };
+
     Module.prototype.ready = function(){
         this.ajax('get', this.Constant.serviceUrls.GET_TOTAL, {}, this._getTotalSuccess.bind(this));
         this.ajax('get', this.Constant.serviceUrls.GET_PROVINCE, {}, this._getMapSuccess.bind(this));
         setTimeout(function(){
             this._map = new Map($$(this._mapId).getNode().children[0].children[0]);
         }.bind(this), 0);
+
+        // 刷新loading条
+        this._refreshLoading();
     };
 
     Module.prototype.destroy = function(){

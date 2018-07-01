@@ -1,6 +1,7 @@
 @charset "utf-8";
 
 body { background-color: #041d55;}
+a { color: #2489cc; cursor: pointer;}
 
 .webix_view { background-color: transparent;}
 .webix_window,
@@ -13,16 +14,16 @@ body { background-color: #041d55;}
 .no_border .webix_ss_header td { border-color: transparent;}
 .webix_dd_drag_column, .webix_ss_header, .webix_ss_header TD, .webix_ss_vscroll_header { background-color: #001448; color:#eee;}
 .webix_property_label {color:#eee;}
-.webix_property_value {color:#672701;}
+.webix_property_value {color:#bd5b21;}
 .webix_property_label, .webix_property_value {font-size:12px;height: 20px; line-height: 20px;border: none;}
 .webix_property_line {min-height: 20px;}
 .webix_hcell, .webix_cell {font-size:12px;}
-.webix_cell {color:#672701;}
+.webix_cell {color:#bd5b21;}
 .webix_window {box-shadow: none;}
 .webix_el_button button {text-align: center;}
 .webix_el_button .webix_icon { margin-left:0;}
 .webix_column>div.webix_cell_select, .webix_column>div.webix_column_select, .webix_column>div.webix_row_select {background-color: #2489cc;}
-
+.webix_view .webix_win_head>.webix_view>.webix_template { text-align: left;padding-left:15px;background-color: #001448;color:#eee;}
 
 .fas {cursor: pointer;}
 .fas.normal { color: #ccc !important; }

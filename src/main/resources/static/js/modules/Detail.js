@@ -17,6 +17,9 @@ define([
         this._settingWindowId = webix.uid();
         this._propertyId = webix.uid();
         this._sensorListStatusId = webix.uid();
+        this._addLightHouseWindowId = webix.uid();
+        this._addSensorWindowId = webix.uid();
+        this._lightHouseSettingWindowId = webix.uid();
 
         this._popup = null;
         this._gauges = [];
@@ -100,14 +103,14 @@ define([
                     select: 'row',
                     columns: [
                         //{ header: '', template: '{common.icon()}', width:50, },
-                        { header: '<i class="fas fa-plus-circle add"></i>', template: '<i class="fas fa-minus-circle delete"></i> <i class="fas fa-cog setting"></i>', width: 60, },
+                        { header: '<i class="fas fa-plus-circle add"></i>', template: '<i class="fas fa-minus-circle delete"></i> <i class="fas fa-cog setting"></i>', width: 50, },
                         { id: 'linkStatus', header: '连接状态', fillspace: 1, template: function(obj, common, value){
                             return '<i class="fas fa-circle '+(value === 1? 'linked': 'error')+'"></i>';
                         } },
                         { id: 'siteNumber', header: '站点编号', fillspace: 1, },
-                        { id: 'province', header: '省', fillspace: 1, },
-                        { id: 'city', header: '市', fillspace: 1, },
-                        { id: 'county', header: '县', fillspace: 1, },
+                        { id: 'province', header: '省', fillspace: 0.8, },
+                        { id: 'city', header: '市', fillspace: 0.8, },
+                        { id: 'county', header: '县', fillspace: 0.8, },
                         { id: 'siteCode', header: '站点代号', fillspace: 1, },
                         { id: 'siteName', header: '站点名称', fillspace: 1, },
                         { id: 'dateTime', header: '时间/日期', fillspace: 1, format: function(value){
@@ -125,7 +128,7 @@ define([
                         { id: 'photovoltaic', header: '光伏电压', fillspace: 1, template: function(obj, common, value){
                             return value+'V';
                         } },
-                        { id: 'sensorStatus', header: '传感器状态', fillspace: 1, template: function(obj, common, value){
+                        { id: 'sensorStatus', header: '传感器状态', fillspace: 1.2, template: function(obj, common, value){
                             return value === 1? '正常': '故障';
                         } },
                     ],
@@ -185,40 +188,49 @@ define([
     Module.prototype.ready = function(){
         this.ajax('get', this.Constant.serviceUrls.GET_LIGHT_HOUSE_LIST, {siteId: this._mainSiteData.siteId}, function(data){
             var datatable = $$(this._datatableId);
-            datatable.parse(data);
-            datatable.select(datatable.getIdByIndex(0));
-            if(data && data.length > 0){
-                this._mainSiteData.siteId = data[0].siteId;
-                this._mainSiteData.siteCode = data[0].mainSiteCode;
-            }
+            datatable.parse(data.lighthouseList || []);
+            var firstId = datatable.getIdByIndex(0);
+            if(!!firstId) datatable.select(firstId);
+            this._mainSiteData = data;
+            
         }.bind(this));
     };
 
 
     Module.prototype._headerClick = function(ids, e, node){
         if($(e.target).hasClass('add')){
-            webix.ui({
+            var view = webix.ui({
+                id: this._addLightHouseWindowId,
                 view: 'window',
                 head: '增加灯塔',
                 position:"center",
                 borderless: true,
                 body: {
                     view: 'form',
+                    width: 400,
                     rows: [
-                        { id: 'siteCode', header: '站点代号' },
+                        { name: 'siteCode', view: 'text', label: '站点代号', labelWidth: 120, },
                         {
                             height: 30,
                             cols: [
                                 {},
                                 { view: 'button', label: '确定', width: 90, on: {
                                     'onItemClick': function(){
-                                        this._doSearch();
-                                        $$(this._searchWindowId).close();
+                                        var values = $$(this._addLightHouseWindowId).getBody().getValues();
+                                        values.siteId = this._mainSiteData.siteId;
+                                        this.ajax('post', this.Constant.serviceUrls.ADD_LIGHT_HOUSE, values, function(data){
+                                            this.message(this.Constant.info.SUCCESS);
+                                            data.sensorList = data.sensorList || []; // 可能sensorList为空的情况
+                                            var datatable = $$(this._datatableId);
+                                            datatable.add(data);
+                                            this._mainSiteData.lighthouseList.push(data);
+                                            $$(this._addLightHouseWindowId).close();
+                                        }.bind(this));
                                     }.bind(this),
                                 } },
                                 { view: 'button', label: '取消', width: 90, on: {
                                     'onItemClick': function(){
-                                        $$(this._searchWindowId).close();
+                                        $$(this._addLightHouseWindowId).close();
                                     }.bind(this),
                                 } },
                                 {},
@@ -226,7 +238,9 @@ define([
                         },
                     ],
                 }
-            }).show();
+            });
+            view.show();
+            view.resize();
         }
     };
 
@@ -237,20 +251,72 @@ define([
         if($(e.target).hasClass('delete')){
             this.confirm('确认删除？', function(confirm){
                 if(!confirm) return;
-                this.ajax(this.Constant.serviceUrls.DELETE_LIGHT_HOUSE + '/' + rowData.lighthouseId, {}, function(){
+                this.ajax('del', this.Constant.serviceUrls.DELETE_LIGHT_HOUSE + '/' + rowData.lighthouseId, {}, function(){
                     this.message(this.Constant.info.SUCCESS);
+                    var index = datatable.getIndexById(ids.row);
                     datatable.remove(ids.row);
+                    this._mainSiteData.lighthouseList.splice(index, 1);
                 }.bind(this));
             }.bind(this));
             return;
         }
+        else if($(e.target).hasClass('setting')){
+            var view = webix.ui({
+                id: this._lightHouseSettingWindowId,
+                view: 'window',
+                head: '灯塔设置',
+                position:"center",
+                borderless: true,
+                body: {
+                    view: 'form',
+                    width: 400,
+                    rows: [
+                        { name: 'siteCode', view: 'text', label: '站点代号', labelWidth: 120, },
+                        {
+                            height: 30,
+                            cols: [
+                                {},
+                                { view: 'button', label: '确定', width: 90, on: {
+                                    'onItemClick': function(){
+                                        var values = $$(this._lightHouseSettingWindowId).getBody().getValues();
+                                        values.siteId = this._mainSiteData.siteId;
+                                        this.ajax('put', this.Constant.serviceUrls.SETTING_LIGHT_HOUSE, values, function(data){
+                                            this.message(this.Constant.info.SUCCESS);
+                                            var datatable = $$(this._datatableId);
+                                            var rowData = datatable.getSelectedItem();
+                                            webix.extend(rowData, data, true);
+                                            $$(this._lightHouseSettingWindowId).close();
+                                        }.bind(this));
+                                    }.bind(this),
+                                } },
+                                { view: 'button', label: '取消', width: 90, on: {
+                                    'onItemClick': function(){
+                                        $$(this._lightHouseSettingWindowId).close();
+                                    }.bind(this),
+                                } },
+                                {},
+                            ],
+                        },
+                    ],
+                },
+            });
+            view.show();
+            view.resize();
+            view.getBody().setValues(rowData);
+            return;
+        }
 
 
-        var sensorList = rowData.sensorList;
+        var sensorList = rowData.sensorList || [];
         var popupDatatable = this._popup.getBody().getChildViews()[0];
         popupDatatable.clearAll();
         popupDatatable.parse(sensorList);
         this._popup.show(datatable.getItemNode(ids.row));
+        this._refreshSensorListStatus();
+    };
+
+    Module.prototype._refreshSensorListStatus = function(){
+        var sensorList = $$(this._datatableId).getSelectedItem().sensorList || [];
         $$(this._sensorListStatusId).setValues({
             sensorListStatus: sensorList.map(function(sensor){
                 return sensor.linkStatus;
@@ -262,18 +328,18 @@ define([
         var datatable = $$(this._datatableId);
         var id = datatable.getSelectedId();
         var rowData = datatable.getItem(id);
-        var sensorData = rowData.sensorList.filter(function(sensor){
+        var sensorData = rowData.sensorList && rowData.sensorList.filter(function(sensor){
             return sensor.linkStatus === 1;
         })[0] || {};
 
         // 属性
         var propertyData = {
             "mainSiteCode": rowData.mainSiteCode,
-            "sensorCount": rowData.sensorList.length,
+            "sensorCount": rowData.sensorList && rowData.sensorList.length || 0,
             "siteCode": rowData.siteCode,
-            "faultySites": rowData.sensorList.filter(function(sensor){
+            "faultySites": rowData.sensorList && rowData.sensorList.filter(function(sensor){
                 return sensor.linkStatus === 0;
-            }).length,
+            }).length || 0,
             "temperature": rowData.temperature + '°C',
             "voltage": rowData.voltage + 'V',
             "photovoltaic": rowData.photovoltaic + 'V',
@@ -315,6 +381,7 @@ define([
                     {
                         view: 'datatable',
                         css: 'no_border',
+                        scrollX: false,
                         columns: [
                             { header: '<i class="fas fa-plus-circle add"></i>', template: '<i class="fas fa-minus-circle delete"></i>', width:50, },
                             { id: 'linkStatus', header: '连接状态', fillspace: 1, template: function(obj, common, value){
@@ -337,6 +404,73 @@ define([
                             { id: 'phValue', header: 'PH值', fillspace: 1, },
                             { id: 'fault', header: '故障', fillspace: 1, },
                         ],
+                        on: {
+                            'onItemClick': function(ids, e, node){
+                                var datatable = this._popup.getBody().getChildViews()[0];
+                                var rowData = datatable.getItem(ids.row);
+
+                                if($(e.target).hasClass('delete')){
+                                    this.confirm('确认删除？', function(confirm){
+                                        if(!confirm) return;
+                                        this.ajax('del', this.Constant.serviceUrls.DELETE_SENSOR + '/' + rowData.sensorId, {}, function(){
+                                            this.message(this.Constant.info.SUCCESS);
+                                            var index = datatable.getIndexById(ids.row);
+                                            datatable.remove(ids.row);
+                                            $$(this._datatableId).getSelectedItem().sensorList.splice(index, 1);
+                                            this._refreshSensorListStatus();
+                                        }.bind(this));
+                                    }.bind(this));
+                                    return;
+                                }
+                            }.bind(this),
+                            'onHeaderClick': function(ids, e, node){
+                                if($(e.target).hasClass('add')){
+                                    var view = webix.ui({
+                                        id: this._addSensorWindowId,
+                                        view: 'window',
+                                        head: '增加传感器',
+                                        position:"center",
+                                        borderless: true,
+                                        body: {
+                                            view: 'form',
+                                            width: 400,
+                                            rows: [
+                                                { name: 'addressCode', view: 'text', label: '地址码', labelWidth: 120, },
+                                                {
+                                                    height: 30,
+                                                    cols: [
+                                                        {},
+                                                        { view: 'button', label: '确定', width: 90, on: {
+                                                            'onItemClick': function(){
+                                                                var values = $$(this._addSensorWindowId).getBody().getValues();
+                                                                values.siteId = this._mainSiteData.siteId;
+                                                                values.lighthouseId = $$(this._datatableId).getSelectedItem().lighthouseId;
+                                                                this.ajax('post', this.Constant.serviceUrls.ADD_SENSOR, values, function(data){
+                                                                    this.message(this.Constant.info.SUCCESS);
+                                                                    var datatable = this._popup.getBody().getChildViews()[0];
+                                                                    datatable.add(data);
+                                                                    $$(this._datatableId).getSelectedItem().sensorList.push(data);
+                                                                    this._refreshSensorListStatus();
+                                                                    $$(this._addSensorWindowId).close();
+                                                                }.bind(this));
+                                                            }.bind(this),
+                                                        } },
+                                                        { view: 'button', label: '取消', width: 90, on: {
+                                                            'onItemClick': function(){
+                                                                $$(this._addSensorWindowId).close();
+                                                            }.bind(this),
+                                                        } },
+                                                        {},
+                                                    ],
+                                                },
+                                            ],
+                                        }
+                                    });
+                                    view.show();
+                                    view.resize();
+                                }
+                            }.bind(this),
+                        },
                     },
                     {
                         rows: [
@@ -354,6 +488,7 @@ define([
                                 } },
                                 { width: 20, },
                             ] },
+                            { height: 20, },
                             {},
                         ],
                     },

@@ -33,9 +33,14 @@ define([], function(){
 		DELETE_MAIN_SITE: 'site',
 		ADD_MAIN_SITE: 'site',
 
-		GET_LIGHT_HOUSE_LIST: 'lighthouse/list/detail',
+		GET_LIGHT_HOUSE_LIST: 'lighthouse/site/detail',
+		ADD_LIGHT_HOUSE: 'lighthouse',
 		DELETE_LIGHT_HOUSE: 'lighthouse',
 		EXPORT_LIGHT_HOUSE: 'lighthouse/download',
+		SETTING_LIGHT_HOUSE: 'lighthouse',
+
+		DELETE_SENSOR: 'sensor',
+		ADD_SENSOR: 'sensor',
     };
 
     return Constant;
