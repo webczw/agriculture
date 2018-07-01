@@ -287,8 +287,9 @@
 				  lighthouse_t t 
 				  inner join site_t tt
 				  on t.site_id = tt.site_id
-				  INNER JOIN sensor_t t1 
+				  LEFT JOIN sensor_t t1 
 				    ON t.lighthouse_id = t1.lighthouse_id 
+				     AND t1.enable_flag = 'Y'
 				WHERE t.enable_flag = 'Y' 
 					<if test="siteId!=null">
 				  	AND t.site_id = #{siteId,jdbcType=INTEGER}
@@ -296,7 +297,7 @@
 				  <if test="lighthouseId!=null">
 				  AND t.lighthouse_id = #{lighthouseId,jdbcType=INTEGER}
 				  </if>
-				  AND t1.enable_flag = 'Y'
+				 
 				  AND tt.enable_flag = 'Y'
 				  
 				  order by t.create_date,t1.create_date desc

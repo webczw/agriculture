@@ -110,6 +110,7 @@ public class LighthouseService implements ILighthouseService {
 		CellStyle voltageCellStyle = ExcelUtils.formatCellStyle(workbook, HSSFColorPredefined.BLUE, "0.00V");
 		CellStyle temperatureCellStyle = ExcelUtils.formatCellStyle(workbook, HSSFColorPredefined.BLUE, "0℃");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		int siteNumber = 1;
 		for (LighthouseVO vo : list) {
 			index++;
 			XSSFRow row = sheet.createRow(index);
@@ -120,7 +121,7 @@ public class LighthouseService implements ILighthouseService {
 				if (i == 0) {
 					value = StatusEnum.getName(vo.getLinkStatus());
 				} else if (i == 1) {
-					value = vo.getSiteNumber();
+					value = (siteNumber++) + "";
 				} else if (i == 2) {
 					value = vo.getProvince();
 				} else if (i == 3) {
@@ -132,17 +133,25 @@ public class LighthouseService implements ILighthouseService {
 				} else if (i == 6) {
 					value = vo.getClientName();
 				} else if (i == 7) {
-					value = sdf.format(vo.getDateTime());
+					if (vo.getDateTime() != null) {
+						value = sdf.format(vo.getDateTime());
+					}
 				} else if (i == 8) {
-					value = vo.getTemperature().toString();
+					if (vo.getTemperature() != null) {
+						value = vo.getTemperature().toString();
+					}
 					cell.setCellStyle(temperatureFillCellStyle);
 				} else if (i == 9) {
-					value = vo.getVoltage().toString();
+					if (vo.getVoltage() != null) {
+						value = vo.getVoltage().toString();
+					}
 					cell.setCellStyle(voltageFillCellStyle);
 				} else if (i == 10) {
 					value = StatusEnum.getName(vo.getLightStatus());
 				} else if (i == 11) {
-					value = vo.getPhotovoltaic().toString();
+					if (vo.getPhotovoltaic() != null) {
+						value = vo.getPhotovoltaic().toString();
+					}
 					cell.setCellStyle(photovoltaicFillCellStyle);
 				} else if (i == 12) {
 					value = StatusEnum.getName(vo.getSensorStatus());
@@ -160,6 +169,7 @@ public class LighthouseService implements ILighthouseService {
 			List<SensorVO> sensorList = vo.getSensorList();
 			if (!CollectionUtils.isEmpty(sensorList)) {
 				index++;
+				int number = 1;
 				ExcelUtils.createExcelHeader(workbook, sheet, sensorHeaders, headerLength, index, 1);
 				for (SensorVO sensorVO : sensorList) {
 					index++;
@@ -171,29 +181,39 @@ public class LighthouseService implements ILighthouseService {
 						if (j == 1) {
 							sensorValue = StatusEnum.getName(sensorVO.getLinkStatus());
 						} else if (j == 2) {
-							sensorValue = sensorVO.getNumber();
+							sensorValue = (number++) + "";
 						} else if (j == 3) {
 							sensorValue = sensorVO.getAddressCode();
 						} else if (j == 4) {
-							sensorValue = sensorVO.getPhotovoltaic().toString();
+							if (sensorVO.getPhotovoltaic() != null) {
+								sensorValue = sensorVO.getPhotovoltaic().toString();
+							}
 							sensorCell.setCellStyle(photovoltaicCellStyle);
 						} else if (j == 5) {
-							sensorValue = sensorVO.getVoltage().toString();
+							if (sensorVO.getVoltage() != null) {
+								sensorValue = sensorVO.getVoltage().toString();
+							}
 							sensorCell.setCellStyle(voltageCellStyle);
 						} else if (j == 6) {
-							sensorValue = sensorVO.getTemperature().toString();
+							if (sensorVO.getTemperature() != null) {
+								sensorValue = sensorVO.getTemperature().toString();
+							}
 							sensorCell.setCellStyle(temperatureCellStyle);
 						} else if (j == 7) {
-							sensorValue = sensorVO.getHumidity().toString();
-							if (!StringUtils.isEmpty(sensorValue)) {
-								Double humidity = Double.parseDouble(sensorValue);
-								if (humidity > 0) {
-									sensorValue = String.valueOf((humidity / 100));
+							if (sensorVO.getHumidity() != null) {
+								sensorValue = sensorVO.getHumidity().toString();
+								if (!StringUtils.isEmpty(sensorValue)) {
+									Double humidity = Double.parseDouble(sensorValue);
+									if (humidity > 0) {
+										sensorValue = String.valueOf((humidity / 100));
+									}
 								}
-								sensorCell.setCellStyle(formatCellStyle);
 							}
+							sensorCell.setCellStyle(formatCellStyle);
 						} else if (j == 8) {
-							sensorValue = sensorVO.getPhValue().toString();
+							if (sensorVO.getPhValue() != null) {
+								sensorValue = sensorVO.getPhValue().toString();
+							}
 						} else if (j == 9) {
 							sensorValue = sensorVO.getFault();
 						}
@@ -222,6 +242,19 @@ public class LighthouseService implements ILighthouseService {
 		}
 		SiteVO siteVO = siteDao.find(siteId);
 		List<LighthouseVO> lighthouseList = lighthouseDao.findListDetail(vo);
+		if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(lighthouseList)) {
+			int i = 1;
+			for (LighthouseVO lighthouseVO : lighthouseList) {
+				lighthouseVO.setSiteNumber((i++) + "");
+				List<SensorVO> sensorList = lighthouseVO.getSensorList();
+				if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(sensorList)) {
+					int j = 1;
+					for (SensorVO sensorVO : sensorList) {
+						sensorVO.setNumber((j++) + "");
+					}
+				}
+			}
+		}
 		siteVO.setLighthouseList(lighthouseList);
 		return siteVO;
 	}

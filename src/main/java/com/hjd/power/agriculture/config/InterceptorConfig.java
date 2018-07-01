@@ -5,11 +5,12 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import com.hjd.power.agriculture.interceptor.AccessInterceptor;
+
 @Configuration
 public class InterceptorConfig extends WebMvcConfigurationSupport {
 	public void addInterceptors(InterceptorRegistry registry) {
-		// registry.addInterceptor(new
-		// AccessInterceptor()).addPathPatterns("/**");
+		registry.addInterceptor(new AccessInterceptor()).addPathPatterns("/**");
 	}
 
 	@Override
