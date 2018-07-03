@@ -30,6 +30,7 @@
 
 	<select id="findList" resultMap="resultMap">
 		<include refid="selectSQL" />
+		and config_type = #{configType,jdbcType=VARCHAR}
 	</select>
 
 	<select id="find" resultMap="resultMap">

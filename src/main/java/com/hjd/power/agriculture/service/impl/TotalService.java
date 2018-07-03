@@ -12,11 +12,12 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.hjd.power.agriculture.Enums;
+import com.hjd.power.agriculture.Enums.ConfigEnum;
+import com.hjd.power.agriculture.Enums.StatusEnum;
 import com.hjd.power.agriculture.dao.ITotalDao;
 import com.hjd.power.agriculture.domain.TotalVO;
 import com.hjd.power.agriculture.service.ITotalService;
@@ -27,9 +28,6 @@ import com.hjd.power.agriculture.utils.ExcelUtils;
 public class TotalService implements ITotalService {
 	@Autowired
 	private ITotalDao totalDao;
-
-	@Value("${agriculture.total.excel.headers}")
-	private String excelHeaders;
 
 	@Override
 	public List<TotalVO> findList() throws Exception {
@@ -71,6 +69,7 @@ public class TotalService implements ITotalService {
 		if (CollectionUtils.isEmpty(dataset)) {
 			return null;
 		}
+		String excelHeaders = CommonUtils.getSysConfig(ConfigEnum.TOTAL_EXCEL_HEADERS.getCode());
 		String[] headers = excelHeaders.split(",");
 		int headerLength = headers.length;
 		XSSFWorkbook workbook = new XSSFWorkbook();
@@ -126,6 +125,7 @@ public class TotalService implements ITotalService {
 	@Override
 	public TotalVO findTotal() throws Exception {
 		TotalVO totalVO = totalDao.findTotal();
+		totalVO.setLinkStatus(StatusEnum.NORMAL.getCode());
 		return totalVO;
 	}
 

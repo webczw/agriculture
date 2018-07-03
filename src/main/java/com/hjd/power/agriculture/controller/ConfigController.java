@@ -36,7 +36,8 @@ public class ConfigController {
 	@ApiOperation(value = "查询配置信息集合", notes = "查询配置信息集合")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public List<ConfigVO> findList() throws Exception {
-		return configService.findList();
+		String configType = "MAIN_CONFIG";
+		return configService.findList(configType);
 	}
 
 	@ApiOperation(value = "创建配置信息", notes = "创建配置信息")
@@ -58,5 +59,11 @@ public class ConfigController {
 	@Access(roles = { Constants.ACCESS_ROLE_ADMIN })
 	public Integer delete(@PathVariable("configId") Integer configId) throws Exception {
 		return configService.delete(configId);
+	}
+
+	@ApiOperation(value = "刷新系統配置緩存", notes = "刷新系統配置緩存")
+	@GetMapping("/sysConfig")
+	public void find() throws Exception {
+		configService.sysConfig();
 	}
 }

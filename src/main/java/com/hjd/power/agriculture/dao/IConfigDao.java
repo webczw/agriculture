@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.hjd.power.agriculture.domain.ConfigVO;
 
 public interface IConfigDao {
-	List<ConfigVO> findList();
+	List<ConfigVO> findList(@Param("configType") String configType);
 
 	ConfigVO find(@Param("configId") Integer configId);
 

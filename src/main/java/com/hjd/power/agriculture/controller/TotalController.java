@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hjd.power.agriculture.Constants;
+import com.hjd.power.agriculture.Enums.ConfigEnum;
 import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.TotalVO;
 import com.hjd.power.agriculture.service.ITotalService;
+import com.hjd.power.agriculture.utils.CommonUtils;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -29,9 +30,6 @@ import io.swagger.annotations.ApiOperation;
 public class TotalController {
 	@Autowired
 	private ITotalService totalService;
-
-	@Value("${agriculture.total.excel.fileName:TotalDownload.xlsx}")
-	private String fileName;
 
 	@ApiOperation(value = "查询汇总信息", notes = "根据入参ID查询汇总信息")
 	@GetMapping("/{totalId}")
@@ -76,6 +74,7 @@ public class TotalController {
 	@GetMapping("/download")
 	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public void downstudents(HttpServletResponse response) throws Exception {
+		String fileName = CommonUtils.getSysConfig(ConfigEnum.TOTAL_EXCEL_FILENAME.getCode());
 		XSSFWorkbook workbook = totalService.workbook(fileName);
 		if (workbook == null) {
 			return;

@@ -11,7 +11,7 @@ public class AESUtilsTest {
 
 	@Test
 	public void testEncryptStringStringString() {
-		String str = "1Qaz2Wsx";
+		String str = "126yjw820517";
 		String encryptStr = AESUtils.encrypt(str, Constants.AES_KEY, Constants.AES_IV);
 		System.out.println("encryptStr : " + encryptStr);
 		String decryptStr = AESUtils.decrypt(encryptStr, Constants.AES_KEY, Constants.AES_IV);

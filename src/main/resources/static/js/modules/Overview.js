@@ -59,23 +59,28 @@ define([
                 },
                 { height: 25, },
                 {
-                    id: this._loadingId,
-                    height: 25,
-                    borderless: true,
-                    template: function(values){
-                        var percents = values && values.percents || 0;
-                        var html = '';
-                        for(var i=0; i<10; i++){
-                            if(percents/10 >= i) html += '<i class="loaded"></i>';
-                            else html += '<i></i>';
-                        }
-                        return '<div class="loading" style="height:100%;"><div>'+html+'</div><div class="spacer"></div></div>';
-                    },
+                    height: 20,
+                    rows: [
+                        {
+                            id: this._loadingId,
+                            height: 20,
+                            borderless: true,
+                            template: function(values){
+                                var percents = values && values.percents || 0;
+                                var html = '';
+                                for(var i=0; i<10; i++){
+                                    if(percents/10 >= i) html += '<i class="loaded"></i>';
+                                    else html += '<i></i>';
+                                }
+                                return '<div class="loading" style="height:100%;">'+html+'</div>';
+                            },
+                        },
+                    ],
                 },
                 {
                     height: 30,
                     borderless: true,
-                    template: '<div style="text-align:center;line-height:30px;">2018-06-10 ---- BDN001 ---- REV10</div>',
+                    template: '<div class="spacer"></div><div style="text-align:center;line-height:30px;">2018-06-10 ---- BDN001 ---- REV10</div>',
                 },
                 { height: 30, },
                 {
@@ -116,12 +121,18 @@ define([
                                             'onItemClick': this._showSearch.bind(this),
                                         }  },
                                         { view: 'button', label: '设置', width: 90, type:"iconButton", icon: 'cog', on: {
-                                            'onItemClick': this._showSetting.bind(this),
+                                            'onItemClick': function(){
+                                                this.checkLogin(this._showSetting.bind(this));
+                                            }.bind(this),
                                         } },
                                         { view: 'button', label: '导出', width: 90, type:"iconButton", icon: 'file', on: {
-                                            'onItemClick': this._doExport.bind(this),
+                                            'onItemClick': function(){
+                                                this.checkLogin(this._doExport.bind(this));
+                                            }.bind(this),
                                         } },
-                                        { view: 'button', label: '连接', width: 90, type:"iconButton", icon: 'link', },
+                                        { view: 'button', label: '连接', width: 90, type:"iconButton", icon: 'link', on: {
+                                            'onItemClick': this._doConnect.bind(this),
+                                        } },
                                     ],
                                 },
                                 { cols: [
@@ -150,9 +161,7 @@ define([
     };
 
     Module.prototype._showSetting = function(){
-        if(this.checkLogin()){
-            this.trigger('SETTING_CLICK');
-        }
+        this.trigger('SETTING_CLICK');
     };
 
     Module.prototype._showLogin = function(){
@@ -164,8 +173,12 @@ define([
     Module.prototype._doExport = function(){
         window.open(this.Constant.serviceUrls.BASE_URL + this.Constant.serviceUrls.EXPORT_TOTAL);
     };
+    Module.prototype._doConnect = function(){
+        this._refreshLoading();
+    };
 
     Module.prototype.addListners = function(){
+        Module._super.addListners.call(this);
         this.on('LOGIN_SUCCESS', this._loginSuccess.bind(this));
         this.on('LOGOUT_SUCCESS', this._logoutSuccess.bind(this));
     };
@@ -190,7 +203,10 @@ define([
     };
 
     Module.prototype._refreshLoading = function(){
+        var loading = $$(this._loadingId);
         var percents = 0;
+        loading.setValues({percents:percents});
+        loading.show();
         var refreshLoading = function(){
             var loading_st = setTimeout(function(){
                 var loading = $$(this._loadingId);
@@ -198,12 +214,19 @@ define([
                 percents += Math.random() * (20 - 0) + 0; // 加0-20随机数
                 loading.setValues({percents:percents});
                 if(percents < 100) refreshLoading();
+                //else loading.hide();
             }.bind(this), Math.random() * (500 - 50) + 0); // 加50-500随机数
         }.bind(this);
         refreshLoading();
     };
 
     Module.prototype.ready = function(){
+        if(!this.Model.getInstance().getValue('USER')){
+            this.trigger('GET_USER');
+        }
+        else{
+            this._loginSuccess();
+        }
         this.ajax('get', this.Constant.serviceUrls.GET_TOTAL, {}, this._getTotalSuccess.bind(this));
         this.ajax('get', this.Constant.serviceUrls.GET_PROVINCE, {}, this._getMapSuccess.bind(this));
         setTimeout(function(){

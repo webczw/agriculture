@@ -10,11 +10,11 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.hjd.power.agriculture.Enums.ConfigEnum;
 import com.hjd.power.agriculture.Enums.StatusEnum;
 import com.hjd.power.agriculture.dao.ILighthouseDao;
 import com.hjd.power.agriculture.dao.ISensorDao;
@@ -35,11 +35,6 @@ public class LighthouseService implements ILighthouseService {
 	private ISensorDao sensorDao;
 	@Autowired
 	private ISiteDao siteDao;
-	@Value("${agriculture.lighthouse.excel.headers}")
-	private String lighthouseExcelHeaders;
-
-	@Value("${agriculture.sensor.excel.headers}")
-	private String sensorExcelHeaders;
 
 	@Override
 	public List<LighthouseVO> findList() throws Exception {
@@ -90,6 +85,8 @@ public class LighthouseService implements ILighthouseService {
 		if (CollectionUtils.isEmpty(list)) {
 			return null;
 		}
+		String lighthouseExcelHeaders = CommonUtils.getSysConfig(ConfigEnum.LIGHTHOUSE_EXCEL_HEADERS.getCode());
+		String sensorExcelHeaders = CommonUtils.getSysConfig(ConfigEnum.SENSOR_EXCEL_HEADERS.getCode());
 		String[] headers = lighthouseExcelHeaders.split(",");
 		String[] sensorHeaders = sensorExcelHeaders.split(",");
 		int headerLength = headers.length;

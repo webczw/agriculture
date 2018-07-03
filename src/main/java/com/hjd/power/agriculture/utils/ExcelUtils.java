@@ -22,17 +22,15 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.hjd.power.agriculture.Enums.ConfigEnum;
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
 import com.hjd.power.agriculture.service.IEmailService;
 
 @Component
 public class ExcelUtils {
 	public static IEmailService emailService;
-	public static String systemName;
-	public static String mailTo;
 
 	public ExcelUtils() {
 	}
@@ -40,16 +38,6 @@ public class ExcelUtils {
 	@Autowired
 	public ExcelUtils(IEmailService emailService) {
 		ExcelUtils.emailService = emailService;
-	}
-
-	@Value("${agriculture.system.name}")
-	public void setSystemName(String systemName) {
-		ExcelUtils.systemName = systemName;
-	}
-
-	@Value("${agriculture.mail.to}")
-	public void setMailTo(String mailTo) {
-		ExcelUtils.mailTo = mailTo;
 	}
 
 	public static XSSFSheet createExcelTitle(int lastCol, XSSFWorkbook workbook) {
@@ -74,7 +62,8 @@ public class ExcelUtils {
 		XSSFRow rowHeader = sheet.createRow(0);
 		rowHeader.setHeight((short) 600);
 		XSSFCell cellHeader = rowHeader.createCell(0);
-		XSSFRichTextString textHeader = new XSSFRichTextString(systemName);
+		XSSFRichTextString textHeader = new XSSFRichTextString(
+				CommonUtils.getSysConfig(ConfigEnum.SYSTEM_NAME.getCode()));
 		cellHeader.setCellStyle(titleStyle);
 		cellHeader.setCellValue(textHeader);
 		return sheet;
@@ -195,7 +184,7 @@ public class ExcelUtils {
 		SimpleMailMessageVO vo = new SimpleMailMessageVO();
 		vo.setSubject("Export Total Data " + UUID.randomUUID().toString());
 		vo.setText(UUID.randomUUID().toString() + "Export Total Data Rows Size " + size);
-		vo.setTo(mailTo);
+		vo.setTo(CommonUtils.getSysConfig(ConfigEnum.MAIL_TO.getCode()));
 		emailService.sendMail(vo, f);
 	}
 }

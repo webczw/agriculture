@@ -5,7 +5,7 @@ import java.util.List;
 import com.hjd.power.agriculture.domain.ConfigVO;
 
 public interface IConfigService {
-	List<ConfigVO> findList() throws Exception;
+	List<ConfigVO> findList(String configType) throws Exception;
 
 	ConfigVO find(Integer configId) throws Exception;
 
@@ -14,4 +14,6 @@ public interface IConfigService {
 	Integer batchUpdate(List<ConfigVO> list) throws Exception;
 
 	Integer delete(Integer configId) throws Exception;
+
+	void sysConfig() throws Exception;
 }

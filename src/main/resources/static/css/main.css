@@ -38,7 +38,8 @@ a { color: #2489cc; cursor: pointer;}
 .loading i {display: inline-block; width:10%; height: 20px;text-align: center;}
 .loading i:after {content:''; display: inline-block; height: 100%; width: 90%; background-color: #ccc;}
 .loading i.loaded:after {background-color: #b8c726;}
-.loading .spacer {height:5px; background-color: #eee;}
+
+.spacer {height:5px; background-color: #eee;}
 
 .link ul {list-style: none;padding:0;margin:0;}
 .link li {width:150px;height:150px;float:left;background-image:url(../imgs/link1.png);}

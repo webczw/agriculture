@@ -14,6 +14,7 @@ import com.hjd.power.agriculture.Constants;
 import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
 import com.hjd.power.agriculture.service.IEmailService;
+import com.hjd.power.agriculture.utils.AESUtils;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -41,5 +42,11 @@ public class DefaultController {
 	@Access(roles = { Constants.ACCESS_ROLE_USER })
 	public void send(@RequestBody SimpleMailMessageVO vo) throws Exception {
 		emailServicemailService.sendSimpleMail(vo);
+	}
+
+	@ApiOperation(value = "加密", notes = "加密")
+	@GetMapping("/encrypt/{key}")
+	public String encrypt(@PathVariable("key") String key) {
+		return AESUtils.encrypt(key, Constants.AES_KEY, Constants.AES_IV);
 	}
 }

@@ -25,6 +25,8 @@ define([
 
 	BaseModule.prototype.init = function(){
 		this.ui();
+		var view = this.getView();
+		if(view) view.attachEvent('onDestruct', this.destroy.bind(this));
 		this.addListners();
 		this.ready();
 	};
@@ -33,8 +35,6 @@ define([
 	};
 
 	BaseModule.prototype.addListners = function(){
-		var view = this.getView();
-		view.attachEvent('onDestructor', this.destroy.bind(this));
 	};
 
 	BaseModule.prototype.ready = function(){
@@ -79,6 +79,9 @@ define([
 		if(!logined){
 			this.trigger('LOGIN_CLICK', callback);
 		}
+		else{
+			callback();
+		}
 		return logined;
 	};
 
@@ -103,7 +106,7 @@ define([
 					fail(data);
 				}
 			}
-		};
+		}.bind(this);
 		return webix.ajax().headers({
 			"Content-type":"application/json"
 		})[method](url, data, {

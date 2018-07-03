@@ -1,5 +1,7 @@
 package com.hjd.power.agriculture.utils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,16 @@ import com.hjd.power.agriculture.domain.BaseVO;
 import com.hjd.power.agriculture.domain.UserVO;
 
 public class CommonUtils {
+	private static final Map<String, String> hashMap = new HashMap<String, String>();
+
+	public static String getSysConfig(String key) {
+		return hashMap.get(key);
+	}
+
+	public static void addSysConfig(String key, String value) {
+		hashMap.put(key, value);
+	}
+
 	public static HttpServletRequest getRequest() {
 		try {
 			return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();

@@ -24,7 +24,7 @@ define(['webix','jquery'], function(){
     EventSystem.prototype.off = function(){
         var evts = this._evts;
         for(var evt in evts){
-            if(evts.hasOwnerPrototy(evt)){
+            if(evts.hasOwnProperty(evt)){
                 evts[evt].forEach(function(obj){
                     eventBus.off(evt, obj.handler);
                 });

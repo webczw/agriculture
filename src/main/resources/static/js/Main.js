@@ -86,26 +86,30 @@ require([
         this.on('LOGOUT_CLICK', this._doLogout.bind(this));
         this.on('SEARCH_CLICK', this._showSearch.bind(this));
         this.on('MAIN_SITE_CLICK', this._showMainSite.bind(this));
+        this.on('GET_USER', this._getUser.bind(this));
     };
 
     Main.prototype.ready = function(){
         this._showOverview();
+    };
+
+    Main.prototype._getUser = function(){
         this.ajax('get', this.Constant.serviceUrls.GET_USER_SESSION, {}, this._loginSuccess.bind(this, null), function(){});
     };
 
     Main.prototype._showOverview = function(){
         var container = this.getContainer();
         var childView = container.getChildViews()[0];
-        this.overview = new Overview();
         if(childView) container.removeView(childView.config.id);
+        this.overview = new Overview();
         container.addView(this.overview.getView());
     };
 
     Main.prototype._showDetail = function(obj, mainSiteData){
         var container = this.getContainer();
         var childView = container.getChildViews()[0];
-        this.detail = new Detail(mainSiteData);
         if(childView) container.removeView(childView.config.id);
+        this.detail = new Detail(mainSiteData);
         container.addView(this.detail.getView());
     };
 
@@ -173,6 +177,42 @@ require([
 
     Main.prototype._showMainSite = function(event, keywords){
         if(!$$(this._mainSiteWindowId)){
+            var provinces = [
+                {id: '北京', value: '北京',},
+                {id: '天津', value: '天津',},
+                {id: '上海', value: '上海',},
+                {id: '重庆', value: '重庆',},
+                {id: '河北', value: '河北',},
+                {id: '河南', value: '河南',},
+                {id: '云南', value: '云南',},
+                {id: '辽宁', value: '辽宁',},
+                {id: '黑龙江', value: '黑龙江',},
+                {id: '湖南', value: '湖南',},
+                {id: '安徽', value: '安徽',},
+                {id: '山东', value: '山东',},
+                {id: '新疆', value: '新疆',},
+                {id: '江苏', value: '江苏',},
+                {id: '浙江', value: '浙江',},
+                {id: '江西', value: '江西',},
+                {id: '湖北', value: '湖北',},
+                {id: '广西', value: '广西',},
+                {id: '甘肃', value: '甘肃',},
+                {id: '山西', value: '山西',},
+                {id: '内蒙古', value: '内蒙古',},
+                {id: '陕西', value: '陕西',},
+                {id: '吉林', value: '吉林',},
+                {id: '福建', value: '福建',},
+                {id: '贵州', value: '贵州',},
+                {id: '广东', value: '广东',},
+                {id: '青海', value: '青海',},
+                {id: '西藏', value: '西藏',},
+                {id: '四川', value: '四川',},
+                {id: '宁夏', value: '宁夏',},
+                {id: '海南', value: '海南',},
+                {id: '台湾', value: '台湾',},
+                {id: '香港', value: '香港',},
+                {id: '澳门', value: '澳门',}
+            ];
             var view = webix.ui({
                 view: 'window',
                 id: this._mainSiteWindowId,
@@ -219,9 +259,9 @@ require([
                                                 width: 400,
                                                 view: 'form',
                                                 rows: [
-                                                    { name: 'siteCode', view: 'text', label: '站点编码', labelWidth: 120, },
-                                                    { name: 'siteName', view: 'text', label: '站点名称', labelWidth: 120, },
-                                                    { name: 'province', view: 'text', label: '省', labelWidth: 120, },
+                                                    { name: 'siteCode', view: 'text', label: '站点编码', labelWidth: 120, required: true, },
+                                                    { name: 'siteName', view: 'text', label: '站点名称', labelWidth: 120, required: true, },
+                                                    { name: 'province', view: 'combo', label: '省', labelWidth: 120, options: provinces, required: true, },
                                                     { name: 'city', view: 'text', label: '市', labelWidth: 120, },
                                                     { name: 'county', view: 'text', label: '县', labelWidth: 120, },
                                                     {
@@ -231,6 +271,7 @@ require([
                                                             { view: 'button', label: '确定', width: 90, on: {
                                                                 'onItemClick': function(){
                                                                     var form = $$(this._mainSiteAddWindowId).getBody();
+                                                                    if(!form.validate()) return;
                                                                     var values = form.getValues();
                                                                     this.ajax('post', this.Constant.serviceUrls.ADD_MAIN_SITE, values, function(data){
                                                                         var datatable = $$(this._mainSiteWindowId).getBody().getChildViews()[0];
