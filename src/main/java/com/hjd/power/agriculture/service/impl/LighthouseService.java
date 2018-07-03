@@ -236,6 +236,7 @@ public class LighthouseService implements ILighthouseService {
 		Integer siteId = vo.getSiteId();
 		if (siteId == null) {
 			siteId = siteDao.findDefualtSiteId();
+			vo.setSiteId(siteId);
 		}
 		SiteVO siteVO = siteDao.find(siteId);
 		List<LighthouseVO> lighthouseList = lighthouseDao.findListDetail(vo);
