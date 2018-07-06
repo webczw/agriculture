@@ -20,6 +20,7 @@ define([
         this._logoutBtnId = webix.uid();
 
         this._map = null;
+        this._linkStatus = null;
         
         Module._super.constructor.call(this);
     }
@@ -80,7 +81,7 @@ define([
                 {
                     height: 30,
                     borderless: true,
-                    template: '<div class="spacer"></div><div style="text-align:center;line-height:30px;">2018-06-10 ---- BDN001 ---- REV10</div>',
+                    template: '<div class="spacer"></div><div style="text-align:center;line-height:30px;">BDN001REV1020180610</div>',
                 },
                 { height: 30, },
                 {
@@ -181,6 +182,8 @@ define([
         Module._super.addListners.call(this);
         this.on('LOGIN_SUCCESS', this._loginSuccess.bind(this));
         this.on('LOGOUT_SUCCESS', this._logoutSuccess.bind(this));
+        this.on('ADD_MAIN_SITE_SUCCESS', this._getTotalData.bind(this));
+        this.on('DELETE_MAIN_SITE_SUCCESS', this._getTotalData.bind(this));
     };
 
     Module.prototype._loginSuccess = function(){
@@ -193,6 +196,8 @@ define([
     };
 
     Module.prototype._getTotalSuccess = function(data){
+        //data[0].linkStatus = 1;
+        this._linkStatus = data[0] && data[0].linkStatus || 0;
         var table = $$(this._statusTableId);
         table.clearAll();
         table.parse(data);
@@ -207,6 +212,12 @@ define([
         var percents = 0;
         loading.setValues({percents:percents});
         loading.show();
+        var table = $$(this._statusTableId);
+        var totalData = table.serialize();
+        if(totalData[0]){
+            totalData[0].linkStatus = 0;
+            table.refresh(totalData[0].id);
+        }
         var refreshLoading = function(){
             var loading_st = setTimeout(function(){
                 var loading = $$(this._loadingId);
@@ -215,9 +226,20 @@ define([
                 loading.setValues({percents:percents});
                 if(percents < 100) refreshLoading();
                 //else loading.hide();
+                else{
+                    var totalData = table.serialize();
+                    if(totalData[0]){
+                        totalData[0].linkStatus = this._linkStatus;
+                        table.refresh(totalData[0].id);
+                    }
+                }
             }.bind(this), Math.random() * (500 - 50) + 0); // 加50-500随机数
         }.bind(this);
         refreshLoading();
+    };
+
+    Module.prototype._getTotalData = function(){
+        this.ajax('get', this.Constant.serviceUrls.GET_TOTAL, {}, this._getTotalSuccess.bind(this));
     };
 
     Module.prototype.ready = function(){
@@ -227,7 +249,7 @@ define([
         else{
             this._loginSuccess();
         }
-        this.ajax('get', this.Constant.serviceUrls.GET_TOTAL, {}, this._getTotalSuccess.bind(this));
+        this._getTotalData();
         this.ajax('get', this.Constant.serviceUrls.GET_PROVINCE, {}, this._getMapSuccess.bind(this));
         setTimeout(function(){
             this._map = new Map($$(this._mapId).getNode().children[0].children[0]);

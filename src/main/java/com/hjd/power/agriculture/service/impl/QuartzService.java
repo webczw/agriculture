@@ -36,7 +36,7 @@ public class QuartzService implements IQuartzService {
 		if (config == null) {
 			new RuntimeException("未找到此定时任务");
 		}
-		if ("1".equals(status)) {
+		if (QuartzConfigEnum.STATUS_STOP.getCode().equals(status)) {
 			// stop 禁用
 			config.setStatus(QuartzConfigEnum.STATUS_STOP.getCode());
 			deleteJob(config);

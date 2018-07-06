@@ -135,12 +135,12 @@ require([
                     width: 400,
                     borderless: true,
                     rows: [
-                        { name: 'refresh_date', view: 'text', label: '自动更新时间', labelWidth: 120, },
+                        //{ name: 'refresh_date', view: 'text', label: '自动更新时间', labelWidth: 120, },
                         { name: 'export_format', view: 'combo', label: '导出文件格式', labelWidth: 120, options: [{id:'excel',value:'EXCEL'}] },
-                        { name: 'export_path', view: 'text', label: '导出文件路径', labelWidth: 120, },
-                        { name: 'file_storage_time', view: 'text', label: '自动存储时间', labelWidth: 120, },
-                        { name: 'storage_site', view: 'text', label: '可进行数据存储的站点', labelWidth: 120, },
-                        { name: 'storage_file', view: 'text', label: '常备的存储文件', labelWidth: 120, },
+                        //{ name: 'export_path', view: 'text', label: '导出文件路径', labelWidth: 120, },
+                        //{ name: 'file_storage_time', view: 'text', label: '自动存储时间', labelWidth: 120, },
+                        //{ name: 'storage_site', view: 'text', label: '可进行数据存储的站点', labelWidth: 120, },
+                        //{ name: 'storage_file', view: 'text', label: '常备的存储文件', labelWidth: 120, },
                         { name: 'email_address', view: 'text', label: '发送的邮件地址', labelWidth: 120, },
                         { name: 'sending_time', view: 'text', label: '定点发送时间', labelWidth: 120, },
                         {
@@ -278,6 +278,7 @@ require([
                                                                         this.message(this.Constant.info.SUCCESS);
                                                                         datatable.add(data);
                                                                         $$(this._mainSiteAddWindowId).close();
+                                                                        this.trigger('ADD_MAIN_SITE_SUCCESS');
                                                                     }.bind(this));
                                                                 }.bind(this),
                                                             } },
@@ -303,6 +304,7 @@ require([
                                             this.ajax('del', this.Constant.serviceUrls.DELETE_MAIN_SITE+'/'+rowData.siteId, {}, function(){
                                                 this.message(this.Constant.info.SUCCESS);
                                                 datatable.remove(ids.row);
+                                                this.trigger('DELETE_MAIN_SITE_SUCCESS');
                                             }.bind(this));
                                         }.bind(this));
                                     }

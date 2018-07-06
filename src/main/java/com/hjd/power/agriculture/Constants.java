@@ -7,4 +7,8 @@ public class Constants {
 
 	public static final String ACCESS_ROLE_USER = "user";
 	public static final String ACCESS_ROLE_ADMIN = "admin";
+
+	public static final Integer SENDING_TIME_ID = 8;
+
+	public static final Long SEND_EMAIL_JOB_ID = 1L;
 }
