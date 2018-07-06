@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjd.power.agriculture.dao.IQuartzConfigDao">
+	<resultMap type="com.hjd.power.agriculture.domain.QuartzConfigVO"
+		id="resultMap">
+		<id column="id" property="id" />
+		<result column="c_name" property="name" />
+		<result column="c_group" property="group" />
+		<result column="c_class_path" property="classPath" />
+		<result column="c_method_name" property="methodName" />
+		<result column="c_status" property="status" />
+		<result column="c_cron" property="cron" />
+	</resultMap>
+	
+	<sql id="selectSQL">
+		SELECT 
+		  id,
+		  c_name,
+		  c_group,
+		  c_class_path,
+		  c_method_name,
+		  c_status,
+		  c_cron 
+		FROM
+		  quartz_config_t
+	</sql>
+
+	<select id="findAll" resultMap="resultMap">
+		<include refid="selectSQL" />
+	</select>
+
+	<select id="findOne" resultMap="resultMap">
+		<include refid="selectSQL" />
+		 where id=#{id,jdbcType=NUMERIC}  
+	</select>
+
+	<update id="setStatusById">
+		update quartz_config_t set
+			c_status = #{status,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+
+	<update id="setScheduleById">
+		update quartz_config_t set
+			c_cron = #{cronSchedule,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+
+</mapper>

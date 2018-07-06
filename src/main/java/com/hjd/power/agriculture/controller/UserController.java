@@ -58,6 +58,13 @@ public class UserController {
 		return userService.update(vo);
 	}
 
+	@ApiOperation(value = "修改密码", notes = "修改密码")
+	@PutMapping("/update/password/{loginName}/{oldPwd}/{newPwd}")
+	public Integer updatePassword(@PathVariable("loginName") String loginName, @PathVariable("oldPwd") String oldPwd,
+			@PathVariable("newPwd") String newPwd) throws Exception {
+		return userService.updatePwd(loginName, oldPwd, newPwd);
+	}
+
 	@ApiOperation(value = "删除用户信息", notes = "删除用户信息")
 	@DeleteMapping("/{userId}")
 	@Access(roles = { Constants.ACCESS_ROLE_ADMIN })

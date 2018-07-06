@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -13,12 +14,13 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.hjd.power.agriculture.Enums;
 import com.hjd.power.agriculture.Enums.ConfigEnum;
 import com.hjd.power.agriculture.Enums.StatusEnum;
+import com.hjd.power.agriculture.dao.ISiteDao;
 import com.hjd.power.agriculture.dao.ITotalDao;
+import com.hjd.power.agriculture.domain.SiteVO;
 import com.hjd.power.agriculture.domain.TotalVO;
 import com.hjd.power.agriculture.service.ITotalService;
 import com.hjd.power.agriculture.utils.CommonUtils;
@@ -29,10 +31,14 @@ public class TotalService implements ITotalService {
 	@Autowired
 	private ITotalDao totalDao;
 
+	@Autowired
+	private ISiteDao siteDao;
+
 	@Override
 	public List<TotalVO> findList() throws Exception {
 		List<TotalVO> list = new ArrayList<>();
 		TotalVO totalVO = totalDao.findTotal();
+		totalVO.setLinkStatus(StatusEnum.NORMAL.getCode());
 		list.add(totalVO);
 		return list;
 	}
@@ -115,7 +121,45 @@ public class TotalService implements ITotalService {
 				}
 
 			}
+		}
 
+		List<SiteVO> siteList = siteDao.findList();
+		if (CollectionUtils.isNotEmpty(siteList)) {
+			for (SiteVO vo : siteList) {
+				index++;
+				XSSFRow row = sheet.createRow(index);
+				for (int i = 0; i < headerLength; i++) {
+					XSSFCell cell = row.createCell(i);
+					cell.setCellStyle(cellStyle);
+					String value = null;
+					if (i == 0) {
+						value = vo.getSiteCode();
+					} else if (i == 1) {
+						value = vo.getSiteName();
+					} else if (i == 2) {
+						value = vo.getProvince();
+					} else if (i == 3) {
+						value = vo.getCity();
+					} else if (i == 4) {
+						value = vo.getCounty();
+					} else if (i == 5) {
+						value = Enums.StatusEnum.getName(vo.getLinkStatus());
+					} else if (i == 6) {
+						value = " ";
+					}
+					if (value == null) {
+						continue;
+					}
+
+					if (CommonUtils.isNumeric(value)) {
+						// 是数字当作double处理
+						cell.setCellValue(Double.parseDouble(value));
+					} else {
+						cell.setCellValue(value);
+					}
+
+				}
+			}
 		}
 
 		ExcelUtils.workbookWrite(fileName, dataset.size(), workbook);

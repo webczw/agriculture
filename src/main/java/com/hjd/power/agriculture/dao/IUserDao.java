@@ -18,4 +18,6 @@ public interface IUserDao {
 	Integer delete(UserVO vo);
 
 	UserVO findUser(UserVO vo);
+
+	Integer updatePassowrd(UserVO vo);
 }

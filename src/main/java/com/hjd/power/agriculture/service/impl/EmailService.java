@@ -54,7 +54,13 @@ public class EmailService implements IEmailService {
 			message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			helper.setFrom(Sender);
-			helper.setTo(vo.getTo());
+			String to = vo.getTo();
+			if (to.indexOf(";") >= 0) {
+				helper.setTo(to.toString().split(";"));
+			} else {
+				helper.setTo(to);
+			}
+
 			helper.setSubject(vo.getSubject());
 			helper.setText(vo.getText());
 			// 注意项目路径问题，自动补用项目路径

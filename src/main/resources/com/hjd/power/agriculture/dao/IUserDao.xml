@@ -125,4 +125,11 @@
 		 where enable_flag = 'Y' and user_id = #{userId,jdbcType=INTEGER}  
 	</delete>
 
+	<update id="updatePassowrd" parameterType="com.hjd.power.agriculture.domain.UserVO">
+		update user_t set
+			password = #{password,jdbcType=VARCHAR},
+			last_update_date = sysdate()
+		where enable_flag = 'Y' and login_name = #{loginName,jdbcType=VARCHAR}
+	</update>
+
 </mapper>

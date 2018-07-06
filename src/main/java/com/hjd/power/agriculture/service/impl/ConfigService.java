@@ -43,6 +43,7 @@ public class ConfigService implements IConfigService {
 			}
 			return configDao.batchUpdate(list);
 		}
+		this.sysConfig();
 		return 0;
 	}
 
@@ -56,7 +57,7 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public void sysConfig() throws Exception {
-		String configType = "SYS_CONFIG";
+		String configType = null;
 		List<ConfigVO> list = this.findList(configType);
 		for (ConfigVO configVO : list) {
 			CommonUtils.addSysConfig(configVO.getConfigCode(), configVO.getConfigValue());

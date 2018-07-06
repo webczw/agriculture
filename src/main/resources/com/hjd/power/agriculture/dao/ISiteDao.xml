@@ -9,6 +9,7 @@
 		<result column="province" property="province" />
 		<result column="city" property="city" />
 		<result column="county" property="county" />
+		<result column="link_status" property="linkStatus" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -17,24 +18,28 @@
 	
 	<sql id="selectSQL">
 		SELECT 
-		  site_id,
-		  site_code,
-		  site_name,
-		  province,
-		  city,
-		  county,
-		  create_id,
-		  create_date,
-		  last_update_id,
-		  last_update_date
+		  t.site_id,
+		  t.site_code,
+		  t.site_name,
+		  t.province,
+		  t.city,
+		  t.county,
+		  v.link_status,
+		  t.create_id,
+		  t.create_date,
+		  t.last_update_id,
+		  t.last_update_date 
 		FROM
-		  site_t where enable_flag = 'Y' 
+		  site_t t 
+		  LEFT JOIN total_v v 
+		    ON t.site_id = v.site_id
+		WHERE t.enable_flag = 'Y'
 	</sql>
 	
 	<select id="findListBySearch" resultMap="resultMap">
 		<include refid="selectSQL" />
 		<if test="key!=null">
-		and (site_code like concat('%',#{key},'%') or site_name like concat('%',#{key},'%'))
+		and (t.site_code like concat('%',#{key},'%') or t.site_name like concat('%',#{key},'%') or t.province like concat('%',#{key},'%') or t.city like concat('%',#{key},'%') or t.county like concat('%',#{key},'%'))
 		order by create_date desc
 		</if>
 	</select>
@@ -45,12 +50,12 @@
 
 	<select id="findList" resultMap="resultMap">
 		<include refid="selectSQL" />
-		order by create_date desc
+		order by t.create_date desc
 	</select>
 
 	<select id="find" resultMap="resultMap">
 		<include refid="selectSQL" />
-		 and site_id=#{siteId,jdbcType=INTEGER}  
+		 and t.site_id=#{siteId,jdbcType=INTEGER}  
 	</select>
 
 	<insert id="create" parameterType="com.hjd.power.agriculture.domain.SiteVO" useGeneratedKeys="true" keyProperty="siteId">

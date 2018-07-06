@@ -82,4 +82,21 @@ public class UserService implements IUserService {
 		}
 	}
 
+	@Override
+	public Integer updatePwd(String loginName, String oldPwd, String newPwd) throws Exception {
+		UserVO vo = new UserVO();
+		vo.setLoginName(loginName);
+		UserVO userVO = userDao.findUser(vo);
+		if (userVO != null) {
+			String password = userVO.getPassword();
+			oldPwd = AESUtils.encrypt(oldPwd, Constants.AES_KEY, Constants.AES_IV);
+			if (password.equalsIgnoreCase(oldPwd)) {
+				newPwd = AESUtils.encrypt(newPwd, Constants.AES_KEY, Constants.AES_IV);
+				vo.setPassword(newPwd);
+				return userDao.updatePassowrd(vo);
+			}
+		}
+		return 0;
+	}
+
 }

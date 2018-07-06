@@ -17,4 +17,6 @@ public interface IUserService {
 	Integer delete(Integer userId) throws Exception;
 
 	ResutUtils<UserVO> loggin(UserVO vo) throws Exception;
+
+	Integer updatePwd(String loginName, String oldPwd, String newPwd) throws Exception;
 }

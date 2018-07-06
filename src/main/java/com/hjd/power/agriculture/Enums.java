@@ -36,7 +36,7 @@ public interface Enums {
 	}
 
 	public enum StatusEnum {
-		FAULT(0, "故障"), NORMAL(1, "正常");
+		FAULT(0, "故障"), NORMAL(1, "正常"),TO_BE_OPENED(2, "待开通");
 		private Integer code;
 		private String name;
 
@@ -77,8 +77,9 @@ public interface Enums {
 		TOTAL_EXCEL_HEADERS("agriculture.total.excel.headers"),
 		TOTAL_EXCEL_FILENAME("agriculture.total.excel.fileName"),
 		LIGHTHOUSE_EXCEL_HEADERS("agriculture.lighthouse.excel.headers"),
-		SENSOR_EXCEL_HEADERS("agriculture.sensor.excel.headers");
-
+		SENSOR_EXCEL_HEADERS("agriculture.sensor.excel.headers"),
+		EMAIL_ADDRESS("email_address"),
+		SENDING_TIME("sending_time");
 		//
 		private String code;
 
@@ -95,5 +96,34 @@ public interface Enums {
 			this.code = code;
 		}
 
+	}
+	
+	public enum QuartzConfigEnum{
+		STATUS_START("0","启用"),
+	    STATUS_STOP("1","禁用");
+	    private String code;
+	    private String message;
+
+	    QuartzConfigEnum(String code, String message) {
+	        this.code = code;
+	        this.message = message;
+	    }
+
+	    public String getCode() {
+	        return code;
+	    }
+
+	    public String getMessage() {
+	        return message;
+	    }
+
+	    public static String findByMessage(String code){
+	        for (QuartzConfigEnum configEnum : QuartzConfigEnum.values()) {
+	            if (configEnum.code.equals(code)){
+	                return configEnum.getMessage();
+	            }
+	        }
+	        return null;
+	    }
 	}
 }

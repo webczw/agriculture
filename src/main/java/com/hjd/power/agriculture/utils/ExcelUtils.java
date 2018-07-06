@@ -42,7 +42,7 @@ public class ExcelUtils {
 
 	public static XSSFSheet createExcelTitle(int lastCol, XSSFWorkbook workbook) {
 		XSSFSheet sheet = workbook.createSheet("Sheet1");
-		// sheet.setDefaultColumnWidth((short) 15);
+		sheet.setDefaultColumnWidth((short) 15);
 
 		// 表头的样式
 		XSSFCellStyle titleStyle = workbook.createCellStyle();// 样式对象
@@ -80,7 +80,7 @@ public class ExcelUtils {
 		cellStyle.setBorderLeft(BorderStyle.THIN);// 左边框
 		cellStyle.setBorderTop(BorderStyle.THIN);// 上边框
 		cellStyle.setBorderRight(BorderStyle.THIN);// 右边框
-
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
 		for (int i = 0; i < headersLength; i++) {
 			XSSFCell cell = row.createCell(i);
 			if (i >= offset && i <= headers.length) {
@@ -97,6 +97,7 @@ public class ExcelUtils {
 
 		CellStyle cellStyle = workbook.createCellStyle();
 		cellStyle.setFont(font3);
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
 		return cellStyle;
 	}
 
@@ -112,7 +113,7 @@ public class ExcelUtils {
 		cellStyle.setBorderLeft(BorderStyle.THIN);// 左边框
 		cellStyle.setBorderTop(BorderStyle.THIN);// 上边框
 		cellStyle.setBorderRight(BorderStyle.THIN);// 右边框
-
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
 		cellStyle.setFillForegroundColor(HSSFColorPredefined.SKY_BLUE.getIndex());
 		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		return cellStyle;
@@ -124,7 +125,7 @@ public class ExcelUtils {
 
 		CellStyle cellStyle = workbook.createCellStyle();
 		cellStyle.setFont(font3);
-
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
 		// cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		cellStyle.setBorderBottom(BorderStyle.THIN); // 下边框
 		cellStyle.setBorderLeft(BorderStyle.THIN);// 左边框
@@ -146,7 +147,7 @@ public class ExcelUtils {
 		cellStyle.setBorderLeft(BorderStyle.THIN);// 左边框
 		cellStyle.setBorderTop(BorderStyle.THIN);// 上边框
 		cellStyle.setBorderRight(BorderStyle.THIN);// 右边框
-
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
 		cellStyle.setFillForegroundColor(HSSFColorPredefined.SKY_BLUE.getIndex());
 		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		return cellStyle;
@@ -165,6 +166,7 @@ public class ExcelUtils {
 		cellStyle.setBorderLeft(BorderStyle.THIN);// 左边框
 		cellStyle.setBorderTop(BorderStyle.THIN);// 上边框
 		cellStyle.setBorderRight(BorderStyle.THIN);// 右边框
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
 		return cellStyle;
 	}
 
@@ -184,7 +186,7 @@ public class ExcelUtils {
 		SimpleMailMessageVO vo = new SimpleMailMessageVO();
 		vo.setSubject("Export Total Data " + UUID.randomUUID().toString());
 		vo.setText(UUID.randomUUID().toString() + "Export Total Data Rows Size " + size);
-		vo.setTo(CommonUtils.getSysConfig(ConfigEnum.MAIL_TO.getCode()));
+		vo.setTo(CommonUtils.getSysConfig(ConfigEnum.EMAIL_ADDRESS.getCode()));
 		emailService.sendMail(vo, f);
 	}
 }
