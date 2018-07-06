@@ -100,7 +100,7 @@ define([
 			}
 			else if(data.status === 1){
 				if(data.errorCode === 'COM_HJD_POWER_00003'){
-					this.info(this.Constant.info.NO_LOGIN);
+					//this.info(this.Constant.info.NO_LOGIN);
 				}
 				else{
 					fail(data);
