@@ -94,7 +94,9 @@ require([
     };
 
     Main.prototype._getUser = function(){
-        this.ajax('get', this.Constant.serviceUrls.GET_USER_SESSION, {}, this._loginSuccess.bind(this, null), function(){});
+        this.ajax('get', this.Constant.serviceUrls.GET_USER_SESSION, {}, function(data){
+            if(data) this._loginSuccess(function(){}, data);
+        }.bind(this));
     };
 
     Main.prototype._showOverview = function(){

@@ -77,9 +77,9 @@ define([
                 },
                 { height: 45, },
                 { cols: [
-                    { id: this._siteStatusId, view: 'label', width: 100, height: 30, borderless: true, template: function(obj){
+                    { id: this._siteStatusId, width: 100, height: 30, borderless: true, template: function(obj){
                         var siteStatus = obj.siteStatus;
-                        return '<div class="'+(siteStatus === 1? 'bg_normal': 'bg_error')+'" style="height:100%;text-align:center;color:#fff;">'+(siteStatus === 1? '正常': '故障')+'</div>';
+                        return '<div class="'+(siteStatus === 1? 'bg_normal': 'bg_error')+'" style="height:100%;line-height:30px;text-align:center;color:#fff;">'+(siteStatus === 1? '正常': '故障')+'</div>';
                     } },
                     { width: 10 },
                     {
@@ -205,7 +205,7 @@ define([
             datatable.parse(data.lighthouseList || []);
             var firstId = datatable.getIdByIndex(0);
             if(!!firstId) datatable.select(firstId);
-            
+            $$(this._siteStatusId).setValues({siteStatus:data.siteStatus});
             this._mainSiteData = data;
             
         }.bind(this));
@@ -291,7 +291,7 @@ define([
             "sensorCount": rowData.sensorList && rowData.sensorList.length || 0,
             "siteCode": rowData.siteCode !== null ? rowData.siteCode: '',
             "faultySites": rowData.sensorList && rowData.sensorList.filter(function(sensor){
-                return sensor.linkStatus === 0;
+                return sensor.linkStatus !== 1;
             }).length || 0,
             "temperature": rowData.temperature !== null ? (rowData.temperature + '°C'): '',
             "voltage": rowData.voltage !== null ? (rowData.voltage + 'V'): '',
@@ -627,14 +627,14 @@ define([
             borderless: true,
             body: {
                 view: 'form',
-                width: 500,
+                width: 550,
                 rows: [
                     //{ name: 'refreshDate', view: 'datepicker', timepicker: true, stringResult: false, format: '%Y-%m-%d %H:%i:%s', label: '表头数据刷新时间', labelWidth: 150, },
-                    { name: 'refreshDate', view: 'text', label: '灯塔数据上传周期', labelWidth: 180, },
-                    { name: 'phone', view: 'text', label: '提示信息关连手机', labelWidth: 180, },
-                    { name: 'onOffFlag', view: 'radio', label: '风机/灯开关设置', labelWidth: 180, options: [{id:'1',value:'开'},{id:'2',value:'关'},{id:'3',value:'他控'}] },
-                    { name: 'bootDateDelay', view: 'text', label: '开关时间延时设置（4-10 小时）', labelWidth: 180, },
-                    { name: 'delay', view: 'text', label: '他控延时设置（1-24 小时）', labelWidth: 180, },
+                    { name: 'refreshDate', view: 'text', label: '灯塔数据上传周期', labelWidth: 250, },
+                    { name: 'phone', view: 'text', label: '提示信息关连手机', labelWidth: 250, },
+                    { name: 'onOffFlag', view: 'radio', label: '风机/灯开关设置', labelWidth: 250, options: [{id:'1',value:'开'},{id:'2',value:'关'},{id:'3',value:'他控'}] },
+                    { name: 'bootDateDelay', view: 'text', label: '开关时间延时设置（4-10小时）', labelWidth: 250, },
+                    { name: 'delay', view: 'text', label: '他控延时设置（1-24小时）', labelWidth: 250, },
                     {
                         height: 30,
                         cols: [
