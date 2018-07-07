@@ -12,6 +12,8 @@ define([
     Oop.extend(Module, BaseModule);
 
     function Module(mainSiteData){
+        this._siteStatusId = webix.uid();
+        this._loadingId = webix.uid();
         this._gaugeId = webix.uid();
         this._datatableId = webix.uid();
         this._settingWindowId = webix.uid();
@@ -75,17 +77,26 @@ define([
                 },
                 { height: 45, },
                 { cols: [
-                    { view: 'label', width: 100, height: 30, borderless: true, template: '<div style="height:100%;text-align:center;background-color:#399;color:#fff;">正常</div>'},
+                    { id: this._siteStatusId, view: 'label', width: 100, height: 30, borderless: true, template: function(obj){
+                        var siteStatus = obj.siteStatus;
+                        return '<div class="'+(siteStatus === 1? 'bg_normal': 'bg_error')+'" style="height:100%;text-align:center;color:#fff;">'+(siteStatus === 1? '正常': '故障')+'</div>';
+                    } },
                     { width: 10 },
                     {
                         rows: [
                             {},
                             {
+                                id: this._loadingId,
                                 height: 20,
                                 borderless: true,
-                                template: function(){
-                                    var percents = 37;
-                                    return '<div class="loading" style="height:100%;"><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i><i class="loaded"></i></div>';
+                                template: function(values){
+                                    var percents = values && values.percents || 0;
+                                    var html = '';
+                                    for(var i=0; i<10; i++){
+                                        if(percents/10 >= i) html += '<i class="loaded"></i>';
+                                        else html += '<i></i>';
+                                    }
+                                    return '<div class="loading" style="height:100%;">'+html+'</div>';
                                 },
                             },
                             {},
@@ -123,12 +134,14 @@ define([
                             return (value !== null && value !== '')? (value+'V'): '';
                         } },
                         { id: 'lightStatus', header: '灯状态', fillspace: 1, template: function(obj, common, value){
+                            if(value === null || value === '') return '';
                             return value === 1? '正常': '故障';
                         } },
                         { id: 'photovoltaic', header: '光伏电压', fillspace: 1, template: function(obj, common, value){
                             return (value !== null && value !== '')? (value+'V'): '';
                         } },
                         { id: 'sensorStatus', header: '传感器状态', fillspace: 1.2, template: function(obj, common, value){
+                            if(value === null || value === '') return '';
                             return value === 1? '正常': '故障';
                         } },
                     ],
@@ -192,11 +205,35 @@ define([
             datatable.parse(data.lighthouseList || []);
             var firstId = datatable.getIdByIndex(0);
             if(!!firstId) datatable.select(firstId);
+            
             this._mainSiteData = data;
             
         }.bind(this));
+
+        var loading = $$(this._loadingId);
+        var percents = 100;
+        loading.setValues({percents:percents});
     };
 
+    Module.prototype._refreshLoading = function(){
+        var loading = $$(this._loadingId);
+        var percents = 0;
+        loading.setValues({percents:percents});
+        loading.show();
+        var refreshLoading = function(){
+            var loading_st = setTimeout(function(){
+                var loading = $$(this._loadingId);
+                if(!loading) return;
+                percents += Math.random() * (20 - 0) + 0; // 加0-20随机数
+                loading.setValues({percents:percents});
+                if(percents < 100) refreshLoading();
+                //else loading.hide();
+                else{
+                }
+            }.bind(this), Math.random() * (500 - 50) + 0); // 加50-500随机数
+        }.bind(this);
+        refreshLoading();
+    };
 
     Module.prototype._headerClick = function(ids, e, node){
         if($(e.target).hasClass('add')){
@@ -592,11 +629,12 @@ define([
                 view: 'form',
                 width: 500,
                 rows: [
-                    { name: 'refreshDate', view: 'datepicker', timepicker: true, stringResult: false, format: '%Y-%m-%d %H:%i:%s', label: '表头数据刷新时间', labelWidth: 150, },
-                    { name: 'phone', view: 'text', label: '关连手机', labelWidth: 150, },
-                    { name: 'fanFlag', view: 'combo', label: '风机开关 ON/OFF', labelWidth: 150, options: [{id:'ON',value:'ON'},{id:'OFF',value:'OFF'}] },
-                    { name: 'lightFlag', view: 'combo', label: '灯开开关 ON/OFF', labelWidth: 150, options: [{id:'ON',value:'ON'},{id:'OFF',value:'OFF'}] },
-                    { name: 'bootDateDelay', view: 'text', label: '开关时间延时设置（4-10 小时）', labelWidth: 150, },
+                    //{ name: 'refreshDate', view: 'datepicker', timepicker: true, stringResult: false, format: '%Y-%m-%d %H:%i:%s', label: '表头数据刷新时间', labelWidth: 150, },
+                    { name: 'refreshDate', view: 'text', label: '灯塔数据上传周期', labelWidth: 180, },
+                    { name: 'phone', view: 'text', label: '提示信息关连手机', labelWidth: 180, },
+                    { name: 'onOffFlag', view: 'radio', label: '风机/灯开关设置', labelWidth: 180, options: [{id:'1',value:'开'},{id:'2',value:'关'},{id:'3',value:'他控'}] },
+                    { name: 'bootDateDelay', view: 'text', label: '开关时间延时设置（4-10 小时）', labelWidth: 180, },
+                    { name: 'delay', view: 'text', label: '他控延时设置（1-24 小时）', labelWidth: 180, },
                     {
                         height: 30,
                         cols: [
@@ -605,13 +643,13 @@ define([
                                 'onItemClick': function(){
                                     var values = $$(this._lightHouseSettingWindowId).getBody().getValues();
                                     //values.siteId = this._mainSiteData.siteId;
-                                    values.refreshDate = values.refreshDate.getTime();
                                     values.lighthouseId = rowData.lighthouseId;
                                     this.ajax('put', this.Constant.serviceUrls.SETTING_LIGHT_HOUSE, values, function(data){
                                         this.message(this.Constant.info.SUCCESS);
                                         webix.extend(rowData, values, true);
                                         datatable.refresh(rowData.id);
                                         $$(this._lightHouseSettingWindowId).close();
+                                        this._refreshLoading();
                                     }.bind(this));
                                 }.bind(this),
                             } },
