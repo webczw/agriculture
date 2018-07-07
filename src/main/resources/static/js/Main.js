@@ -445,7 +445,10 @@ require([
         this.ajax('post', this.Constant.serviceUrls.LOGIN, {
             loginName: userId,
             password: password,
-        }, this._loginSuccess.bind(this,callback));
+        }, function(data){
+            this.message(this.Constant.info.SUCCESS);
+            this._loginSuccess(callback, data);
+        }.bind(this));
     };
     Main.prototype._doLogout = function(){
         this.ajax('get', this.Constant.serviceUrls.LOGOUT, {
@@ -470,7 +473,6 @@ require([
     };
 
     Main.prototype._loginSuccess = function(callback, data){
-        this.message(this.Constant.info.SUCCESS);
         $$(this._loginWindowId) && $$(this._loginWindowId).close();
         this.Model.getInstance().setValue('USER', data);
         if(callback) callback(data);

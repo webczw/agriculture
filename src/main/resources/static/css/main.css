@@ -25,12 +25,14 @@ a { color: #2489cc; cursor: pointer;}
 .webix_column>div.webix_cell_select, .webix_column>div.webix_column_select, .webix_column>div.webix_row_select {background-color: #2489cc;}
 .webix_view .webix_win_head>.webix_view>.webix_template { text-align: left;padding-left:15px;background-color: #001448;color:#eee;}
 
-.fas {cursor: pointer;}
+.fas { font-family: FontAwesome; font-style: normal;cursor: pointer; }
 .fas.normal { color: #ccc !important; }
 .fas.linked { color: #399 !important; }
 .fas.error { color: #f00 !important; }
 
-.fas { font-family: FontAwesome; font-style: normal; }
+.bg_normal { background-color: #399;}
+.bg_error { background-color: #f00;}
+
 .webix_cell .fas {color:#eee;}
 .webix_template, .webix_el_label { padding:0;}
 
