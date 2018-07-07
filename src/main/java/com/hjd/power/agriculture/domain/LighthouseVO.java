@@ -26,12 +26,15 @@ public class LighthouseVO extends BaseVO {
 	private Integer lightStatus;// 灯状态
 	private Double photovoltaic;// 光伏电压
 	private Integer sensorStatus;// 传感器状态
-	private Date refreshDate;// 表头数据刷新时间
+	private Integer refreshDate;// 灯塔数据上传周期
 	private String phone;// 关连手机
 	private String fanFlag;// 风机开关 ON/OFF
 	private String lightFlag;// 灯开开关 ON/OFF
 	private Integer bootDateDelay;// 开关时间延时设置 （4-10 小时）
 	private Date deliveryDate;// 下发日期时间
+	private Integer onOffFlag;// 开关设置1开,2关,3他控
+	private Integer delay;// 他控延时设置：1-24 小时
+
 	private List<SensorVO> sensorList;
 
 	public Integer getLighthouseId() {
@@ -50,11 +53,11 @@ public class LighthouseVO extends BaseVO {
 		this.siteId = siteId;
 	}
 
-	public Date getRefreshDate() {
+	public Integer getRefreshDate() {
 		return refreshDate;
 	}
 
-	public void setRefreshDate(Date refreshDate) {
+	public void setRefreshDate(Integer refreshDate) {
 		this.refreshDate = refreshDate;
 	}
 
@@ -224,6 +227,22 @@ public class LighthouseVO extends BaseVO {
 
 	public void setSensorStatus(Integer sensorStatus) {
 		this.sensorStatus = sensorStatus;
+	}
+
+	public Integer getOnOffFlag() {
+		return onOffFlag;
+	}
+
+	public void setOnOffFlag(Integer onOffFlag) {
+		this.onOffFlag = onOffFlag;
+	}
+
+	public Integer getDelay() {
+		return delay;
+	}
+
+	public void setDelay(Integer delay) {
+		this.delay = delay;
 	}
 
 }

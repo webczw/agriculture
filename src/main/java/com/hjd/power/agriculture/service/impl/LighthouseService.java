@@ -3,6 +3,7 @@ package com.hjd.power.agriculture.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -11,7 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.hjd.power.agriculture.Enums.ConfigEnum;
@@ -164,7 +164,7 @@ public class LighthouseService implements ILighthouseService {
 				}
 			}
 			List<SensorVO> sensorList = vo.getSensorList();
-			if (!CollectionUtils.isEmpty(sensorList)) {
+			if (CollectionUtils.isNotEmpty(sensorList)) {
 				index++;
 				int number = 1;
 				ExcelUtils.createExcelHeader(workbook, sheet, sensorHeaders, headerLength, index, 1);
@@ -239,13 +239,21 @@ public class LighthouseService implements ILighthouseService {
 			vo.setSiteId(siteId);
 		}
 		SiteVO siteVO = siteDao.find(siteId);
+		// 默认故障
+		siteVO.setSiteStatus(StatusEnum.FAULT.getCode());
 		List<LighthouseVO> lighthouseList = lighthouseDao.findListDetail(vo);
-		if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(lighthouseList)) {
+		if (CollectionUtils.isNotEmpty(lighthouseList)) {
 			int i = 1;
 			for (LighthouseVO lighthouseVO : lighthouseList) {
 				lighthouseVO.setSiteNumber((i++) + "");
+				Integer refreshDate = lighthouseVO.getRefreshDate();
+				Double temperature = lighthouseVO.getTemperature();
+				// 有下发，有采集数据返回，标识状态正常
+				if (refreshDate != null && temperature != null) {
+					siteVO.setSiteStatus(StatusEnum.NORMAL.getCode());
+				}
 				List<SensorVO> sensorList = lighthouseVO.getSensorList();
-				if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(sensorList)) {
+				if (CollectionUtils.isNotEmpty(sensorList)) {
 					int j = 1;
 					for (SensorVO sensorVO : sensorList) {
 						sensorVO.setNumber((j++) + "");

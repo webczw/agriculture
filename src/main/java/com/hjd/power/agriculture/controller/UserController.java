@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.hjd.power.agriculture.Constants;
-import com.hjd.power.agriculture.Enums.FailEnum;
 import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.UserVO;
 import com.hjd.power.agriculture.service.IUserService;
@@ -107,14 +106,12 @@ public class UserController {
 
 	@ApiOperation(value = "会话用户", notes = "会话用户")
 	@GetMapping("/session/user")
-	@Access(roles = { Constants.ACCESS_ROLE_ADMIN })
 	public ResutUtils<?> sessionUser(HttpServletRequest request) throws Exception {
 		HttpSession httpSession = request.getSession();
 		Object object = httpSession.getAttribute(Constants.SESSION_KEY_USER);
-		if (object == null) {
-			return ResutUtils.fail(FailEnum.COM_HJD_POWER_00001);
-		} else {
+		if (object != null) {
 			return ResutUtils.success(object);
 		}
+		return ResutUtils.success(null);
 	}
 }

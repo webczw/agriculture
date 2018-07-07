@@ -26,6 +26,8 @@
 		<result column="light_flag" property="lightFlag" />
 		<result column="boot_date_delay" property="bootDateDelay" />
 		<result column="delivery_date" property="deliveryDate" />
+		<result column="on_off_flag" property="onOffFlag" />
+		<result column="delay" property="delay" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -57,6 +59,8 @@
 		  t.light_flag,
 		  t.boot_date_delay,
 		  t.delivery_date,
+		  t.on_off_flag,
+		  t.delay,
 		  t.create_date,
 		  t.last_update_date,
 		   t.create_id,
@@ -94,6 +98,8 @@
 		  light_flag,
 		  boot_date_delay,
 		  delivery_date,
+		  on_off_flag,
+		  delay,
 		  create_date,
 		  last_update_date,
 		  enable_flag,
@@ -112,12 +118,14 @@
 		#{lightStatus,jdbcType=INTEGER}, 
 		#{photovoltaic,jdbcType=NUMERIC}, 
 		#{sensorStatus,jdbcType=INTEGER}, 
-		#{refreshDate,jdbcType=TIMESTAMP}, 
+		#{refreshDate,jdbcType=INTEGER}, 
 		#{phone,jdbcType=VARCHAR}, 
 		#{fanFlag,jdbcType=VARCHAR},
 		#{lightFlag,jdbcType=VARCHAR},
 		#{bootDateDelay,jdbcType=INTEGER}, 
 		#{deliveryDate,jdbcType=TIMESTAMP}, 
+		#{onOffFlag,jdbcType=INTEGER}, 
+		#{delay,jdbcType=INTEGER}, 
 		sysdate(),
 		sysdate(),
 		'Y',
@@ -159,7 +167,7 @@
 		</if>
 		
 		<if test="refreshDate!=null">
-			refresh_date = #{refreshDate,jdbcType=TIMESTAMP},
+			refresh_date = #{refreshDate,jdbcType=INTEGER},
 		</if>
 		<if test="phone!=null">
 			phone = #{phone,jdbcType=VARCHAR},
@@ -175,6 +183,12 @@
 		</if>
 		<if test="deliveryDate!=null">
 			delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+		</if>
+		<if test="onOffFlag!=null">
+			on_off_flag = #{onOffFlag,jdbcType=INTEGER},
+		</if>
+		<if test="delay!=null">
+			delay = #{delay,jdbcType=INTEGER},
 		</if>
 		last_update_date = sysdate(),
 		last_update_id = #{lastUpdateId,jdbcType=INTEGER}
@@ -214,6 +228,8 @@
 		<result column="light_flag" property="lightFlag" />
 		<result column="boot_date_delay" property="bootDateDelay" />
 		<result column="delivery_date" property="deliveryDate" />
+		<result column="on_off_flag" property="onOffFlag" />
+		<result column="delay" property="delay" />
 		<result column="create_date" property="createDate" />
 		<result column="last_update_date" property="lastUpdateDate" />
 		<result column="create_id" property="createId" />
@@ -263,6 +279,8 @@
 				  t.light_flag,
 				  t.boot_date_delay,
 				  t.delivery_date,
+				  t.on_off_flag,
+		  		  t.delay,
 				  t.create_date,
 				  t.last_update_date,
 				  t.create_id,

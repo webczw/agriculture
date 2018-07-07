@@ -15,6 +15,7 @@ public class SiteVO extends BaseVO {
 	private String city;// 市
 	private String county;// 县
 	private Integer linkStatus;// 连接状态，0连接，1故障，2待开通
+	private Integer siteStatus;// 站点状态
 	private List<LighthouseVO> lighthouseList;
 
 	public Integer getSiteId() {
@@ -79,6 +80,14 @@ public class SiteVO extends BaseVO {
 
 	public void setLinkStatus(Integer linkStatus) {
 		this.linkStatus = linkStatus;
+	}
+
+	public Integer getSiteStatus() {
+		return siteStatus;
+	}
+
+	public void setSiteStatus(Integer siteStatus) {
+		this.siteStatus = siteStatus;
 	}
 
 }
