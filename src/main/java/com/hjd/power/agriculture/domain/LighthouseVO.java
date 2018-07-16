@@ -23,7 +23,7 @@ public class LighthouseVO extends BaseVO {
 	private Date dateTime;// 时间日期
 	private Double temperature;// 环境温度
 	private Double voltage;// 电池电压
-	private Integer lightStatus;// 灯状态
+	private Integer lightStatus;// 灯塔状态
 	private Double photovoltaic;// 光伏电压
 	private Integer sensorStatus;// 传感器状态
 	private Integer refreshDate;// 灯塔数据上传周期

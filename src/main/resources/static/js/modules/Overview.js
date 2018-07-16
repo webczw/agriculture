@@ -204,7 +204,7 @@ define([
     };
 
     Module.prototype._getMapSuccess = function(data){
-        this._map.setValues(data);
+        this._map && this._map.setValues(data);
     };
 
     Module.prototype._refreshLoading = function(){

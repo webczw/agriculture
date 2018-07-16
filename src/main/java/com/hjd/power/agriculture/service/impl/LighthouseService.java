@@ -144,7 +144,7 @@ public class LighthouseService implements ILighthouseService {
 					}
 					cell.setCellStyle(voltageFillCellStyle);
 				} else if (i == 10) {
-					value = StatusEnum.getName(vo.getLightStatus());
+					value = vo.getLightStatus() + "";// StatusEnum.getName(vo.getLightStatus());
 				} else if (i == 11) {
 					if (vo.getPhotovoltaic() != null) {
 						value = vo.getPhotovoltaic().toString();

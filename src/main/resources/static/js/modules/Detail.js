@@ -65,7 +65,7 @@ define([
                                         { id:"temperature", label:"环境温度", type:"text",},
                                         { id:"voltage", label:"电池电压", type:"text",},
                                         { id:"photovoltaic", label:"光伏电压", type:"text",},
-                                        { id:"lightStatus", label:"灯状态", type:"text",},
+                                        { id:"lightStatus", label:"灯塔状态", type:"text",},
                                         { id:"sensorStatus", label:"传感器状态", type:"text",},
                                         { id:"datetime", label:"时间日期", type:"text",},
                                     ]
@@ -133,10 +133,10 @@ define([
                         { id: 'voltage', header: '电池电压', fillspace: 1, template: function(obj, common, value){
                             return (value !== null && value !== '')? (value+'V'): '';
                         } },
-                        { id: 'lightStatus', header: '灯状态', fillspace: 1, template: function(obj, common, value){
+                        { id: 'lightStatus', header: '灯塔状态', fillspace: 1, /* template: function(obj, common, value){
                             if(value === null || value === '') return '';
                             return value === 1? '正常': '故障';
-                        } },
+                        } */ },
                         { id: 'photovoltaic', header: '光伏电压', fillspace: 1, template: function(obj, common, value){
                             return (value !== null && value !== '')? (value+'V'): '';
                         } },
@@ -297,7 +297,7 @@ define([
             "voltage": rowData.voltage !== null ? (rowData.voltage + 'V'): '',
             "photovoltaic": rowData.photovoltaic !== null ? (rowData.photovoltaic + 'V'): '',
             "lightStatus": rowData.lightStatus !== null ? rowData.lightStatus: '',
-            "sensorStatus": rowData.sensorStatus !== null ? rowData.sensorStatus: '',
+            "sensorStatus": rowData.sensorStatus !== null && rowData.sensorStatus !== '' ? (rowData.sensorStatus === 1? '正常': '故障'): '',
             "datetime": webix.Date.dateToStr('%Y-%m-%d')(new Date()),
         };
         $$(this._propertyId).parse(propertyData);
