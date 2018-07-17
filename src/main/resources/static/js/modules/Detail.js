@@ -277,11 +277,19 @@ define([
         });
     };
 
-    Module.prototype._rowItemSelect = function(){
+
+
+    Module.prototype._sensorRowItemSelect = function(){
+        var sensorDatatable = this._popup.getBody().getChildViews()[0];
+        var sensorSelectedItem = sensorDatatable.getSelectedItem();
+        this._rowItemSelect(sensorSelectedItem);
+    };
+
+    Module.prototype._rowItemSelect = function(sensorSelectedItem){
         var datatable = $$(this._datatableId);
         var id = datatable.getSelectedId();
         var rowData = datatable.getItem(id);
-        var sensorData = rowData.sensorList && rowData.sensorList.filter(function(sensor){
+        var sensorData = sensorSelectedItem || rowData.sensorList && rowData.sensorList.filter(function(sensor){
             return sensor.linkStatus === 1;
         })[0] || {};
 
@@ -335,6 +343,7 @@ define([
                         view: 'datatable',
                         css: 'no_border',
                         scrollX: false,
+                        select: 'row',
                         columns: [
                             { header: '<i class="fas fa-plus-circle add"></i>', template: '<i class="fas fa-minus-circle delete"></i>', width:50, },
                             { id: 'linkStatus', header: '连接状态', fillspace: 1, template: function(obj, common, value){
@@ -358,6 +367,7 @@ define([
                             { id: 'fault', header: '故障', fillspace: 1, },
                         ],
                         on: {
+                            'onSelectChange': this._sensorRowItemSelect.bind(this),
                             'onItemClick': function(ids, e, node){
                                 var datatable = this._popup.getBody().getChildViews()[0];
                                 var rowData = datatable.getItem(ids.row);
