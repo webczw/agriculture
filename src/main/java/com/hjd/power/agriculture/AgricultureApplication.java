@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 
 import com.hjd.power.agriculture.utils.AESUtils;
 
+import feign.Logger;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
@@ -26,6 +27,11 @@ public class AgricultureApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AgricultureApplication.class, args);
+	}
+
+	@Bean
+	public Logger.Level feignLoggerLevel() {
+		return feign.Logger.Level.FULL;
 	}
 
 	@Bean(name = "dataSource")
