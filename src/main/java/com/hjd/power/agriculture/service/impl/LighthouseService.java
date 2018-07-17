@@ -62,7 +62,8 @@ public class LighthouseService implements ILighthouseService {
 	public Integer update(LighthouseVO vo) throws Exception {
 		CommonUtils.initUpdate(vo);
 		Integer count = lighthouseDao.update(vo);
-		String resut = feignService.updateLightHouse(vo.getSiteCode(), vo.getOnOffFlag(), vo.getDelay(),
+		LighthouseVO oldVO = this.find(vo.getLighthouseId());
+		String resut = feignService.updateLightHouse(oldVO.getSiteCode(), vo.getOnOffFlag(), vo.getDelay(),
 				vo.getBootDateDelay());
 		logger.info("updateLightHouse_resut=" + resut);
 		return count;

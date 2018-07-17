@@ -12,6 +12,6 @@ public interface IFeignService {
 
 	@RequestMapping(value = "/controlLightHouse", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
 	public String updateLightHouse(@RequestParam("site_code") String site_code,
-			@RequestParam("on_off_flag") Integer on_off_flag, @RequestParam("site_code") Integer delay,
+			@RequestParam("on_off_flag") Integer on_off_flag, @RequestParam("delay") Integer delay,
 			@RequestParam("boot_date_delay") Integer boot_date_delay);
 }
