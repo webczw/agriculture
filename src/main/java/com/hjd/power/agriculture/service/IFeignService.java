@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(url = "${agriculture.control.url}", name = "light")
 public interface IFeignService {
-	@RequestMapping(value = "/controlLightHouse", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/updateLightHouse", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
 	public String connect();
 
 	@RequestMapping(value = "/controlLightHouse", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
