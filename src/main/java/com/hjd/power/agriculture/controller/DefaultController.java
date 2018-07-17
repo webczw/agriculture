@@ -14,16 +14,24 @@ import com.hjd.power.agriculture.Constants;
 import com.hjd.power.agriculture.annotation.Access;
 import com.hjd.power.agriculture.domain.SimpleMailMessageVO;
 import com.hjd.power.agriculture.service.IEmailService;
+import com.hjd.power.agriculture.service.IFeignService;
 import com.hjd.power.agriculture.utils.AESUtils;
 
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/main")
+@RequestMapping("/connect")
 public class DefaultController {
 	private Logger logger = LoggerFactory.getLogger(DefaultController.class);
 	@Autowired
 	private IEmailService emailServicemailService;
+	@Autowired
+	IFeignService feignService;
+
+	@GetMapping
+	public String connect() throws Exception {
+		return feignService.connect();
+	}
 
 	@ApiOperation(value = "日志测试", notes = "根据入参内容测试日志")
 	@GetMapping("/test/{name}")

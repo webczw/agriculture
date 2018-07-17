@@ -10,6 +10,8 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,18 +25,22 @@ import com.hjd.power.agriculture.domain.LighthouseQueryVO;
 import com.hjd.power.agriculture.domain.LighthouseVO;
 import com.hjd.power.agriculture.domain.SensorVO;
 import com.hjd.power.agriculture.domain.SiteVO;
+import com.hjd.power.agriculture.service.IFeignService;
 import com.hjd.power.agriculture.service.ILighthouseService;
 import com.hjd.power.agriculture.utils.CommonUtils;
 import com.hjd.power.agriculture.utils.ExcelUtils;
 
 @Service
 public class LighthouseService implements ILighthouseService {
+	private Logger logger = LoggerFactory.getLogger(LighthouseService.class);
 	@Autowired
 	private ILighthouseDao lighthouseDao;
 	@Autowired
 	private ISensorDao sensorDao;
 	@Autowired
 	private ISiteDao siteDao;
+	@Autowired
+	IFeignService feignService;
 
 	@Override
 	public List<LighthouseVO> findList() throws Exception {
@@ -55,7 +61,11 @@ public class LighthouseService implements ILighthouseService {
 	@Override
 	public Integer update(LighthouseVO vo) throws Exception {
 		CommonUtils.initUpdate(vo);
-		return lighthouseDao.update(vo);
+		Integer count = lighthouseDao.update(vo);
+		String resut = feignService.updateLightHouse(vo.getSiteCode(), vo.getOnOffFlag(), vo.getDelay(),
+				vo.getBootDateDelay());
+		logger.info("updateLightHouse_resut=" + resut);
+		return count;
 	}
 
 	@Override

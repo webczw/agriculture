@@ -176,6 +176,7 @@ define([
     };
     Module.prototype._doConnect = function(){
         this._refreshLoading();
+        this.ajax('get', this.Constant.serviceUrls.CONNECT, {});
     };
 
     Module.prototype.addListners = function(){

@@ -363,14 +363,16 @@ define([
                                 var rowData = datatable.getItem(ids.row);
 
                                 if($(e.target).hasClass('delete')){
-                                    this.confirm('确认删除？', function(confirm){
-                                        if(!confirm) return;
-                                        this.ajax('del', this.Constant.serviceUrls.DELETE_SENSOR + '/' + rowData.sensorId, {}, function(){
-                                            this.message(this.Constant.info.SUCCESS);
-                                            var index = datatable.getIndexById(ids.row);
-                                            datatable.remove(ids.row);
-                                            $$(this._datatableId).getSelectedItem().sensorList.splice(index, 1);
-                                            this._refreshSensorListStatus();
+                                    this.checkLogin(function(){
+                                        this.confirm('确认删除？', function(confirm){
+                                            if(!confirm) return;
+                                            this.ajax('del', this.Constant.serviceUrls.DELETE_SENSOR + '/' + rowData.sensorId, {}, function(){
+                                                this.message(this.Constant.info.SUCCESS);
+                                                var index = datatable.getIndexById(ids.row);
+                                                datatable.remove(ids.row);
+                                                $$(this._datatableId).getSelectedItem().sensorList.splice(index, 1);
+                                                this._refreshSensorListStatus();
+                                            }.bind(this));
                                         }.bind(this));
                                     }.bind(this));
                                     return;
@@ -378,52 +380,54 @@ define([
                             }.bind(this),
                             'onHeaderClick': function(ids, e, node){
                                 if($(e.target).hasClass('add')){
-                                    var view = webix.ui({
-                                        id: this._addSensorWindowId,
-                                        view: 'window',
-                                        head: '增加传感器',
-                                        position:"center",
-                                        borderless: true,
-                                        body: {
-                                            view: 'form',
-                                            width: 400,
-                                            rows: [
-                                                { name: 'addressCode', view: 'text', label: '地址码', labelWidth: 120, required: true, },
-                                                {
-                                                    height: 30,
-                                                    cols: [
-                                                        {},
-                                                        { view: 'button', label: '确定', width: 90, on: {
-                                                            'onItemClick': function(){
-                                                                var addSensorWindow = $$(this._addSensorWindowId);
-                                                                var addSensorForm = addSensorWindow.getBody();
-                                                                if(!addSensorForm.validate()) return;
-                                                                var values = addSensorForm.getValues();
-                                                                values.siteId = this._mainSiteData.siteId;
-                                                                values.lighthouseId = $$(this._datatableId).getSelectedItem().lighthouseId;
-                                                                this.ajax('post', this.Constant.serviceUrls.ADD_SENSOR, values, function(data){
-                                                                    this.message(this.Constant.info.SUCCESS);
-                                                                    var datatable = this._popup.getBody().getChildViews()[0];
-                                                                    datatable.add(data);
-                                                                    $$(this._datatableId).getSelectedItem().sensorList.push(data);
-                                                                    this._refreshSensorListStatus();
-                                                                    addSensorWindow.close();
-                                                                }.bind(this));
-                                                            }.bind(this),
-                                                        } },
-                                                        { view: 'button', label: '取消', width: 90, on: {
-                                                            'onItemClick': function(){
-                                                                $$(this._addSensorWindowId).close();
-                                                            }.bind(this),
-                                                        } },
-                                                        {},
-                                                    ],
-                                                },
-                                            ],
-                                        }
-                                    });
-                                    view.show();
-                                    view.resize();
+                                    this.checkLogin(function(){
+                                        var view = webix.ui({
+                                            id: this._addSensorWindowId,
+                                            view: 'window',
+                                            head: '增加传感器',
+                                            position:"center",
+                                            borderless: true,
+                                            body: {
+                                                view: 'form',
+                                                width: 400,
+                                                rows: [
+                                                    { name: 'addressCode', view: 'text', label: '地址码', labelWidth: 120, required: true, },
+                                                    {
+                                                        height: 30,
+                                                        cols: [
+                                                            {},
+                                                            { view: 'button', label: '确定', width: 90, on: {
+                                                                'onItemClick': function(){
+                                                                    var addSensorWindow = $$(this._addSensorWindowId);
+                                                                    var addSensorForm = addSensorWindow.getBody();
+                                                                    if(!addSensorForm.validate()) return;
+                                                                    var values = addSensorForm.getValues();
+                                                                    values.siteId = this._mainSiteData.siteId;
+                                                                    values.lighthouseId = $$(this._datatableId).getSelectedItem().lighthouseId;
+                                                                    this.ajax('post', this.Constant.serviceUrls.ADD_SENSOR, values, function(data){
+                                                                        this.message(this.Constant.info.SUCCESS);
+                                                                        var datatable = this._popup.getBody().getChildViews()[0];
+                                                                        datatable.add(data);
+                                                                        $$(this._datatableId).getSelectedItem().sensorList.push(data);
+                                                                        this._refreshSensorListStatus();
+                                                                        addSensorWindow.close();
+                                                                    }.bind(this));
+                                                                }.bind(this),
+                                                            } },
+                                                            { view: 'button', label: '取消', width: 90, on: {
+                                                                'onItemClick': function(){
+                                                                    $$(this._addSensorWindowId).close();
+                                                                }.bind(this),
+                                                            } },
+                                                            {},
+                                                        ],
+                                                    },
+                                                ],
+                                            }
+                                        });
+                                        view.show();
+                                        view.resize();
+                                    }.bind(this));
                                 }
                             }.bind(this),
                         },

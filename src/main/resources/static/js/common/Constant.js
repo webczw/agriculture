@@ -22,6 +22,7 @@ define([], function(){
 		LOGIN: 'user/loggin',
 		LOGOUT: 'user/exit',
 		GET_USER_SESSION: 'user/session/user',
+		CONNECT: 'connect',
 
 		GET_TOTAL: 'total/list',
 		EXPORT_TOTAL: 'total/download',
