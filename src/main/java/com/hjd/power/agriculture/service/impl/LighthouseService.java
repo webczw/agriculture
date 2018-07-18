@@ -264,12 +264,21 @@ public class LighthouseService implements ILighthouseService {
 					siteVO.setSiteStatus(StatusEnum.NORMAL.getCode());
 				}
 				List<SensorVO> sensorList = lighthouseVO.getSensorList();
+				Integer sensorStatus = 0;
 				if (CollectionUtils.isNotEmpty(sensorList)) {
 					int j = 1;
 					for (SensorVO sensorVO : sensorList) {
 						sensorVO.setNumber((j++) + "");
+						Integer linkStatus = sensorVO.getLinkStatus();
+						String fault = sensorVO.getFault();
+						if (StatusEnum.NORMAL.getCode().equals(linkStatus)
+								&& StatusEnum.NORMAL.getCode().toString().equals(fault)) {
+							sensorStatus = StatusEnum.NORMAL.getCode();
+						}
 					}
 				}
+
+				lighthouseVO.setSensorStatus(sensorStatus);
 			}
 		}
 		siteVO.setLighthouseList(lighthouseList);
