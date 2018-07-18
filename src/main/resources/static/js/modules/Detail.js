@@ -397,6 +397,7 @@ define([
                                             head: '增加传感器',
                                             position:"center",
                                             borderless: true,
+                                            modal: true,
                                             body: {
                                                 view: 'form',
                                                 width: 400,
@@ -575,6 +576,7 @@ define([
             head: '增加灯塔',
             position:"center",
             borderless: true,
+            modal: true,
             body: {
                 view: 'form',
                 width: 400,
@@ -639,6 +641,7 @@ define([
             head: '灯塔设置',
             position:"center",
             borderless: true,
+            modal: true,
             body: {
                 view: 'form',
                 width: 550,
