@@ -270,9 +270,10 @@ public class LighthouseService implements ILighthouseService {
 					for (SensorVO sensorVO : sensorList) {
 						sensorVO.setNumber((j++) + "");
 						Integer linkStatus = sensorVO.getLinkStatus();
+						// 0为成功，其他为失败
 						String fault = sensorVO.getFault();
 						if (StatusEnum.NORMAL.getCode().equals(linkStatus)
-								&& StatusEnum.NORMAL.getCode().toString().equals(fault)) {
+								&& StatusEnum.FAULT.getCode().toString().equals(fault)) {
 							sensorStatus = StatusEnum.NORMAL.getCode();
 						}
 					}
