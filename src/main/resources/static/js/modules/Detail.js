@@ -38,6 +38,7 @@ define([
             rows: [
                 { height: 25, },
                 {
+                    height: 200,
                     cols: [
                         {
                             rows: [
@@ -160,7 +161,6 @@ define([
                         'onHeaderClick': this._headerClick.bind(this),
                     },
                 },
-                {},
                 { height: 30, },
                 {
                     cols: [
@@ -195,6 +195,7 @@ define([
                     ],
                 },
                 { height: 30, },
+                {},
             ],
         });
         this._createRowPopup();
@@ -343,7 +344,7 @@ define([
             css: 'has_background',
             head: false,
             position:"center",
-            width: this.Constant.default.BODY_WIDTH,
+            width: this.Constant.default.BODY_WIDTH - 100,
             padding: 0, margin: 0, 
             borderless: true,
             body: {

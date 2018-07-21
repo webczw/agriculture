@@ -1,7 +1,8 @@
 @charset "utf-8";
 
-body { background-color: #041d55;}
+body { background-color: #ccc}
 a { color: #2489cc; cursor: pointer;}
+#main { background-color: #041d55;}
 
 .webix_view { background-color: transparent;}
 .webix_window,

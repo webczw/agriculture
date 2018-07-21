@@ -50,9 +50,8 @@ require([
         Main._super.ui.call(this);
         var view = webix.ui({
             id: this.viewId,
-            container: 'app',
+            container: 'main',
             cols: [
-                { css: 'sider_bg' },
                 {
                     width: this.Constant.default.BODY_WIDTH,
                     paddingX: 50,
@@ -70,7 +69,6 @@ require([
                         },
                     ],
                 },
-                { css: 'sider_bg' },
             ],
             
         });
