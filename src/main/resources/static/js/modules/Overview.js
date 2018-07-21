@@ -200,6 +200,7 @@ define([
         //data[0].linkStatus = 1;
         this._linkStatus = data[0] && data[0].linkStatus || 0;
         var table = $$(this._statusTableId);
+        if(!table) return;
         table.clearAll();
         table.parse(data);
     };

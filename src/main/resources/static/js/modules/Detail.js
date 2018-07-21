@@ -102,6 +102,15 @@ define([
                             {},
                         ]
                     },
+                    { width: 10 },
+                    { view: 'label', height: 30, template: '<i style="line-height:30px;font-size: 20px;" class="fas fa-cog setting"></i>', width: 20, on: {
+                        'onItemClick': function(){
+                            this.checkLogin(function(){
+                                var selectedId = $$(this._datatableId).getSelectedId();
+                                if(selectedId) this._settingLightHouse(selectedId);
+                            }.bind(this));
+                        }.bind(this),
+                    } },
                 ] },
                 
                 { height: 30, },

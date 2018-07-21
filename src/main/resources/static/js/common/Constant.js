@@ -4,7 +4,7 @@ define([], function(){
 	var Constant = {};
 
 	Constant.default = {
-		BODY_WIDTH: 1020,
+		BODY_WIDTH: 1120,
 	};
 
 	Constant.info = {

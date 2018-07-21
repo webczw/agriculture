@@ -53,9 +53,9 @@ require([
             container: 'app',
             cols: [
                 { css: 'sider_bg' },
-                { width: 50 },
                 {
                     width: this.Constant.default.BODY_WIDTH,
+                    paddingX: 50,
                     rows: [
                         {
                             height: 120,
@@ -70,7 +70,6 @@ require([
                         },
                     ],
                 },
-                { width: 50 },
                 { css: 'sider_bg' },
             ],
             

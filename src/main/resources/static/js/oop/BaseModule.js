@@ -86,7 +86,10 @@ define([
 	};
 
 	BaseModule.prototype.ajax = function(method, url, data, success, fail){
+		method = method.toLowerCase();
 		url = this.Constant.serviceUrls.BASE_URL + url;
+		data = data || {};
+		if(method === 'get') data.__t = +new Date();
 		fail = fail || function(data){
 			this.info(this.Constant.info.FAIL);
 		}.bind(this);
