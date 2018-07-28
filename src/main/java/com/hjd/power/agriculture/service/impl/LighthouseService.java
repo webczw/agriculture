@@ -257,12 +257,20 @@ public class LighthouseService implements ILighthouseService {
 			int i = 1;
 			for (LighthouseVO lighthouseVO : lighthouseList) {
 				lighthouseVO.setSiteNumber((i++) + "");
-				Integer refreshDate = lighthouseVO.getRefreshDate();
-				Double temperature = lighthouseVO.getTemperature();
+				// Integer refreshDate = lighthouseVO.getRefreshDate();
+				// Double temperature = lighthouseVO.getTemperature();
 				// 有下发，有采集数据返回，标识状态正常
-				if (refreshDate != null && temperature != null) {
+				// if (refreshDate != null && temperature != null) {
+				// siteVO.setSiteStatus(StatusEnum.NORMAL.getCode());
+				// }
+
+				// 只要有一个灯塔站点连接成功，站点标识状态正常
+				Integer lighthouseLinkStatus = lighthouseVO.getLinkStatus();
+				if (StatusEnum.NORMAL.getCode().equals(lighthouseLinkStatus)
+						&& StatusEnum.FAULT.getCode().equals(siteVO.getSiteCode())) {
 					siteVO.setSiteStatus(StatusEnum.NORMAL.getCode());
 				}
+
 				List<SensorVO> sensorList = lighthouseVO.getSensorList();
 				Integer sensorStatus = 0;
 				if (CollectionUtils.isNotEmpty(sensorList)) {
