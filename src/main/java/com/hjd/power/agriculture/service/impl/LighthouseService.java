@@ -267,7 +267,7 @@ public class LighthouseService implements ILighthouseService {
 				// 只要有一个灯塔站点连接成功，站点标识状态正常
 				Integer lighthouseLinkStatus = lighthouseVO.getLinkStatus();
 				if (StatusEnum.NORMAL.getCode().equals(lighthouseLinkStatus)
-						&& StatusEnum.FAULT.getCode().equals(siteVO.getSiteCode())) {
+						&& StatusEnum.FAULT.getCode().equals(siteVO.getSiteStatus())) {
 					siteVO.setSiteStatus(StatusEnum.NORMAL.getCode());
 				}
 
